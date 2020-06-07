@@ -36,22 +36,13 @@ public class MapleGame extends GameApplication {
 	VBox vbox1, vbox2;
 	
 	protected void initUI() {
-		TextField ip;
-		ip = new TextField("IP address");
 		Button create = getUIFactoryService().newButton("CREATE");
         create.setOnAction(e -> {
-        	//ip = new TextField("IP address");
-        	//getDialogService().showInputBox(" ", ipAddress -> {
-        		//typePort();
-        	//});
         	remove();
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
-        	//getDialogService().showInputBox(" ", ipAddress -> {
-        		//typePort();
-        	//});
         	remove();
         });
         
@@ -64,7 +55,7 @@ public class MapleGame extends GameApplication {
         vbox1.setTranslateX(400);
         vbox1.setTranslateY(300);
         vbox1.getChildren().addAll(
-                create, join, quit, ip
+                create, join, quit
         );
 
         getGameScene().addUINode(vbox1);
@@ -122,9 +113,6 @@ public class MapleGame extends GameApplication {
 	}
 	
 	protected void type() {
-		//getDialogService().showInputBox(" ", Port -> {
-		//	
-		//});
 		TextField ip = new TextField();
 		ip.setPromptText("IP");
 		TextField port = new TextField();
