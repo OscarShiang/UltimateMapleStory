@@ -11,9 +11,14 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -43,6 +48,7 @@ public class MapleGame extends GameApplication {
 	}
 	
 	VBox vbox1, vbox2;
+	Pane pane;
 	
 	protected void initUI() {
 		Button create = getUIFactoryService().newButton("CREATE");
@@ -66,8 +72,24 @@ public class MapleGame extends GameApplication {
         vbox1.getChildren().addAll(
                 create, join, quit
         );
+        
+        //getGameScene().addUINode(vbox1);
 
-        getGameScene().addUINode(vbox1);
+        Button mushroom = new Button("", new ImageView(image("sprites/mushroom_sprite (Custom).png")));
+        mushroom.setOnAction(e -> {
+        	
+        });
+        mushroom.setPrefSize(100, 100);
+        mushroom.setTranslateX(150);
+        mushroom.setTranslateY(150);
+        
+        pane = new Pane();
+        pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
+        pane.setTranslateX(getAppWidth()/2 - 520);
+        pane.setTranslateY(getAppHeight()/2 - 350);
+        pane.setPrefSize(1040, 700);
+        pane.getChildren().addAll(mushroom);
+        getGameScene().addUINodes(pane);
 	}
 	
 	@Override
@@ -214,7 +236,6 @@ public class MapleGame extends GameApplication {
         });
         
         vbox2 = new VBox(10);
-        //vbox2.setBackground();
         vbox2.setTranslateX(getAppWidth()/2 - 100);
         vbox2.setTranslateY(400);
         vbox2.getChildren().addAll(
