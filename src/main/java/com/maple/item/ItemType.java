@@ -1,5 +1,5 @@
 package com.maple.item;
 
 public enum ItemType {
-	redflag, tomb, coin
+	redflag, tomb, coin, balloon
 }

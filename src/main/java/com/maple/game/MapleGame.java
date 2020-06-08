@@ -6,12 +6,14 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +31,7 @@ public class MapleGame extends GameApplication {
 	private Entity player;
 	private Entity destination;
 	private Entity tomb;
+	private Entity balloon;
 	private String IPaddress, Port;
 	
 	@Override
@@ -58,8 +61,8 @@ public class MapleGame extends GameApplication {
         });
         
         vbox1 = new VBox(10);
-        vbox1.setTranslateX(400);
-        vbox1.setTranslateY(300);
+        vbox1.setTranslateX(getAppWidth()/2 - 100);
+        vbox1.setTranslateY(400);
         vbox1.getChildren().addAll(
                 create, join, quit
         );
@@ -104,6 +107,10 @@ public class MapleGame extends GameApplication {
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
 		
+		balloon = null;
+		balloon = getGameWorld().spawn("balloon");
+		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
+		
 		player = null;
 		player = getGameWorld().spawn("player");
 		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
@@ -146,7 +153,7 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.ITEM) {
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
 				getDialogService().showMessageBox("Finish!");
@@ -170,6 +177,12 @@ public class MapleGame extends GameApplication {
 		tomb = getGameWorld().spawn("tomb");
 		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 200));
 		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity balloon) {
+				player.getComponent(PlayerComponent.class).recover();
+			}
+		});
 	}
 	
 	protected void type() {
@@ -201,8 +214,9 @@ public class MapleGame extends GameApplication {
         });
         
         vbox2 = new VBox(10);
-        vbox2.setTranslateX(400);
-        vbox2.setTranslateY(300);
+        //vbox2.setBackground();
+        vbox2.setTranslateX(getAppWidth()/2 - 100);
+        vbox2.setTranslateY(400);
         vbox2.getChildren().addAll(
                 ip, port, ok, back
         );
