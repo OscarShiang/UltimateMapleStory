@@ -412,14 +412,12 @@
   <object id="3" type="platform" x="80" y="538" width="362" height="60"/>
   <object id="4" type="platform" x="80" y="600" width="46" height="176"/>
   <object id="5" type="platform" x="126" y="726" width="244" height="50"/>
-  <object id="9" type="platform" x="2" y="0" width="2" height="800"/>
-  <object id="10" type="platform" x="0" y="0" width="1598" height="6"/>
-  <object id="11" type="platform" x="1596" y="0" width="4" height="796"/>
+  <object id="9" type="wall" x="0" y="0" width="2" height="800"/>
+  <object id="10" type="wall" x="0" y="0" width="1598" height="2"/>
+  <object id="11" type="wall" x="1598" y="0" width="2" height="796"/>
   <object id="12" type="platform" x="1430" y="514" width="94" height="228"/>
-  <object id="13" type="deadline" x="1254" y="696" width="174" height="46"/>
   <object id="14" type="platform" x="764" y="744" width="48" height="48"/>
-  <object id="16" type="coin" x="168" y="682" width="36" height="34"/>
+  <object id="16" type="coin" x="150.18" y="681.811" width="25" height="25"/>
   <object id="19" type="platform" x="1018" y="688" width="48" height="30"/>
-  <object id="21" type="platform" x="1258" y="640" width="164" height="20"/>
  </objectgroup>
 </map>

@@ -27,10 +27,18 @@ public class ItemComponent extends Component {
 		Image image;
 		
 		switch(type) {
-		case redflag:
-			image = image("item/sculpture.png");
-			idle = new AnimationChannel(image, 1, 143, 171, Duration.seconds(1), 0, 0);
-			break;
+			case redflag:
+				image = image("item/sculpture.png");
+				idle = new AnimationChannel(image, 1, 84, 100, Duration.seconds(1), 0, 0);
+				break;
+			case tomb:
+				image = image("item/tomb.png");
+				idle = new AnimationChannel(image, 1, 94, 43, Duration.seconds(1), 0, 0);
+				break;
+			case coin:
+				image = image("item/coin_sprite.png");
+				idle = new AnimationChannel(image, 4, 25, 25, Duration.seconds(0.4), 0, 3);
+				break;
 		}
 		
 		texture = new AnimatedTexture(idle);

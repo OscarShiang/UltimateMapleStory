@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import com.maple.game.*;
+import com.maple.item.*;
 
 public class PlayerComponent extends Component {
 	private PhysicsComponent physics;
@@ -140,4 +142,6 @@ public class PlayerComponent extends Component {
 	public void recover() {
 		isJump = false;
 	}
+	
+	
 }

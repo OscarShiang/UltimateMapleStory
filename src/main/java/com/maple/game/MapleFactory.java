@@ -45,21 +45,21 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
+	@Spawns("wall")
+	public Entity newWall(SpawnData data) {
+		return entityBuilder()
+				.type(MapleType.WALL)
+				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+				.with(new CollidableComponent(true))
+				.with(new PhysicsComponent())
+				.build();
+	}
+	
 	@Spawns("deadline")
 	public Entity newDeadline(SpawnData data) {
 		return entityBuilder()
 				.type(MapleType.DEADLINE)
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-				.with(new CollidableComponent(true))
-                .with(new PhysicsComponent())
-				.build();
-	}
-	
-	@Spawns("coin")
-	public Entity newCoin(SpawnData data) {
-		return entityBuilder()
-				.type(MapleType.COIN)
-				.viewWithBBox(new Circle(20, Color.GOLD))
 				.with(new CollidableComponent(true))
 				.build();
 	}
@@ -134,6 +134,17 @@ public class MapleFactory implements EntityFactory {
                 .build();
 	}
 	
+
+	@Spawns("coin")
+	public Entity newCoin(SpawnData data) {
+		return entityBuilder()
+				.type(MapleType.COIN)
+				.with(new ItemComponent(ItemType.coin))
+				.with(new CollidableComponent(true))
+				.bbox(new HitBox(BoundingShape.box(30, 30)))
+				.build();
+	}
+	
 	@Spawns("redflag")
 	public Entity newRedFlag(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
@@ -143,8 +154,21 @@ public class MapleFactory implements EntityFactory {
 				.type(MapleType.ITEM)
 				.with(physics)
 				.with(new CollidableComponent(true))
-				.with(new ItemComponent())
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.with(new ItemComponent(ItemType.redflag))
+				.bbox(new HitBox(BoundingShape.box(84, 100)))
+				.build();
+	}
+	@Spawns("tomb")
+	public Entity newTomb(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.DYNAMIC);
+		
+		return entityBuilder()
+				.type(MapleType.TOMB)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.tomb))
+				.bbox(new HitBox(BoundingShape.box(94, 43)))
 				.build();
 	}
 }

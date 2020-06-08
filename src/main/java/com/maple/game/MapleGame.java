@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
-
+import com.maple.item.ItemType;
 import com.maple.player.*;
 
 
@@ -28,6 +28,7 @@ public class MapleGame extends GameApplication {
 	
 	private Entity player;
 	private Entity destination;
+	private Entity tomb;
 	private String IPaddress, Port;
 	
 	@Override
@@ -96,6 +97,9 @@ public class MapleGame extends GameApplication {
 		spawn("background");
 		setLevelFromMap("map1.tmx");
 		
+		tomb = null;
+		
+		
 		destination = null;
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
@@ -120,7 +124,8 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
-				getDialogService().showMessageBox("You died...");
+
+				deadTomb();
 			}
 		});
 		
@@ -136,16 +141,35 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity deadline) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				getDialogService().showMessageBox("You died...");
+				
+				deadTomb();
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.ITEM) {
-			public void onCollisionBegin(Entity player, Entity redFlag) {
+			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
 				getDialogService().showMessageBox("Finish!");
 			}
 		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLATFORM) {
+			public void onCollisionBegin(Entity tomb, Entity platform) {
+				getDialogService().showMessageBox("You died...");
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.DEADLINE) {
+			public void onCollisionBegin(Entity tomb, Entity platform) {
+				getDialogService().showMessageBox("You died...");
+			}
+		});
+	}
+	
+	public void deadTomb() {
+		tomb = getGameWorld().spawn("tomb");
+		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 200));
+		
 	}
 	
 	protected void type() {
