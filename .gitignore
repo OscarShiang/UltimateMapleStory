@@ -34,4 +34,4 @@ hiscore.dat
 /target/
 
 # macOS #
-.DS_Store
+*.DS_Store
