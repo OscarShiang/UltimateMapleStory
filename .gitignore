@@ -32,3 +32,6 @@ system/
 # Space Invaders #
 hiscore.dat
 /target/
+
+# macOS #
+.DS_Store

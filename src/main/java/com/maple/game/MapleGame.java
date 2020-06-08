@@ -134,11 +134,17 @@ public class MapleGame extends GameApplication {
         	}
         });
         
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(vbox2);
+        	getGameScene().addUINode(vbox1);
+        });
+        
         vbox2 = new VBox(10);
         vbox2.setTranslateX(400);
         vbox2.setTranslateY(300);
         vbox2.getChildren().addAll(
-                ip, port, ok
+                ip, port, ok, back
         );
         
         getGameScene().addUINode(vbox2);
