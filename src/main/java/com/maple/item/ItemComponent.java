@@ -25,14 +25,16 @@ public class ItemComponent extends Component {
 	
 	public ItemComponent(ItemType type) {
 		Image image;
-		
 		switch(type) {
 		case redflag:
 			image = image("item/sculpture.png");
-			idle = new AnimationChannel(image, 1, 143, 171, Duration.seconds(1), 0, 0);
+			idle = new AnimationChannel(image, 1, 84, 100, Duration.seconds(1), 0, 0);
 			break;
-		}
-		
+		case balloon:
+			image = image("item/balloon.png");
+			idle = new AnimationChannel(image, 1, 71, 113, Duration.seconds(1), 0, 0);
+			break;
+		}	
 		texture = new AnimatedTexture(idle);
 	}
 	

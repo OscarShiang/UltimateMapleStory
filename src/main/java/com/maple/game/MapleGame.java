@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
-
+import com.maple.item.ItemType;
 import com.maple.player.*;
 
 
@@ -28,6 +28,7 @@ public class MapleGame extends GameApplication {
 	
 	private Entity player;
 	private Entity destination;
+	private Entity balloon;
 	private String IPaddress, Port;
 	
 	@Override
@@ -100,6 +101,10 @@ public class MapleGame extends GameApplication {
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
 		
+		balloon = null;
+		balloon = getGameWorld().spawn("balloon");
+		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
+		
 		player = null;
 		player = getGameWorld().spawn("player");
 		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
@@ -140,10 +145,16 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.ITEM) {
-			public void onCollisionBegin(Entity player, Entity redFlag) {
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
+			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
 				getDialogService().showMessageBox("Finish!");
+			}
+		});
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity balloon) {
+				player.getComponent(PlayerComponent.class).recover();
 			}
 		});
 	}

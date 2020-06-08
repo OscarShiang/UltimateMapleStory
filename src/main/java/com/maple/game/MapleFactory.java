@@ -143,7 +143,21 @@ public class MapleFactory implements EntityFactory {
 				.type(MapleType.ITEM)
 				.with(physics)
 				.with(new CollidableComponent(true))
-				.with(new ItemComponent())
+				.with(new ItemComponent(ItemType.redflag))
+				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.build();
+	}
+	
+	@Spawns("balloon")
+	public Entity newBalloon(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.PLATFORM)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.balloon))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}

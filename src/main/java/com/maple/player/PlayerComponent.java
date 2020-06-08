@@ -140,4 +140,8 @@ public class PlayerComponent extends Component {
 	public void recover() {
 		isJump = false;
 	}
+	
+	public void upward() {
+		physics.setVelocityX(100);
+	}
 }
