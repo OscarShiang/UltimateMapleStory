@@ -59,8 +59,8 @@ public class MapleGame extends GameApplication {
         });
         
         vbox1 = new VBox(10);
-        vbox1.setTranslateX(400);
-        vbox1.setTranslateY(300);
+        vbox1.setTranslateX(getAppWidth()/2 - 100);
+        vbox1.setTranslateY(400);
         vbox1.getChildren().addAll(
                 create, join, quit
         );
@@ -190,8 +190,8 @@ public class MapleGame extends GameApplication {
         
         vbox2 = new VBox(10);
         //vbox2.setBackground();
-        vbox2.setTranslateX(400);
-        vbox2.setTranslateY(300);
+        vbox2.setTranslateX(getAppWidth()/2 - 100);
+        vbox2.setTranslateY(400);
         vbox2.getChildren().addAll(
                 ip, port, ok, back
         );
