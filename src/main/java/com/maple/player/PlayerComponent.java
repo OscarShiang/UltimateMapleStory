@@ -44,7 +44,7 @@ public class PlayerComponent extends Component {
 			break;
 		case YETI:
 			image = image("sprites/yeti_idle_sprite (Custom).png");
-			Image walk_image = image("sprites/yeti_walk_sprite.gif (Custom).png");
+			Image walk_image = image("sprites/yeti_walk_sprite (Custom).png");
 			idle = new AnimationChannel(image, 7, 80, 80, Duration.seconds(1), 0, 5);
 			walk = new AnimationChannel(walk_image, 4, 96, 80, Duration.seconds(0.6), 0, 3);
 			jump = new AnimationChannel(image, 7, 80, 80, Duration.seconds(1), 6, 6);
