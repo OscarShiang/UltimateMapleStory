@@ -9,10 +9,14 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import com.maple.game.*;
+import com.maple.item.*;
 
 public class PlayerComponent extends Component {
 	private PhysicsComponent physics;
 	private boolean isJump;
+	private boolean isDead;
+	private boolean isWin;
 	
 	private AnimatedTexture texture;
 	private AnimationChannel idle, walk, jump;
@@ -20,6 +24,8 @@ public class PlayerComponent extends Component {
 	// default
 	public PlayerComponent() {
 		isJump = false;
+		isDead = false;
+		isWin = false;
 		
 		Image image = image("sprites/mushroom_sprite (Custom).png");
 		
@@ -32,7 +38,6 @@ public class PlayerComponent extends Component {
 	
 	// custom
 	public PlayerComponent(PlayerType type) {
-		isJump = false;
 		Image image;
 		
 		switch(type) {
@@ -102,25 +107,41 @@ public class PlayerComponent extends Component {
     	return physics.isMovingX();
     }
     
-	public void left() {
-		getEntity().setScaleX(1);
-		physics.setVelocityX(-200);
+    public void left() {
+		if(!isDead && !isWin) {
+			getEntity().setScaleX(1);
+			physics.setVelocityX(-200);
+		}
 	}
 	
 	public void right() {
-		getEntity().setScaleX(-1);
-		physics.setVelocityX(200);
+		if(!isDead && !isWin) {
+			getEntity().setScaleX(-1);
+			physics.setVelocityX(200);
+		}
 	}
 	
 	public void jump() {
-		if (isJump)
+		if (isJump || isDead || isWin)
 			return;
 		physics.setVelocityY(-400);
 		
 		isJump = true;
 	}
 	
+	public void dead() {
+		physics.setVelocityX(0);
+		isDead = true;
+	}
+	
+	public void win() {
+		physics.setVelocityX(0);
+		isWin = true;
+	}
+	
 	public void recover() {
 		isJump = false;
 	}
+	
+	
 }

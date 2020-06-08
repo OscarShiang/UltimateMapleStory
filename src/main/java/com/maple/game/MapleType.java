@@ -1,5 +1,5 @@
 package com.maple.game;
 
 public enum MapleType {
-	PLATFORM, PLAYER, COIN
+	PLATFORM, WALL, PLAYER, COIN, DEADLINE, ITEM, TOMB
 }
