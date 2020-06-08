@@ -5,10 +5,12 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.texture.Texture;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -141,6 +143,7 @@ public class MapleGame extends GameApplication {
         });
         
         vbox2 = new VBox(10);
+        //vbox2.setBackground();
         vbox2.setTranslateX(400);
         vbox2.setTranslateY(300);
         vbox2.getChildren().addAll(
