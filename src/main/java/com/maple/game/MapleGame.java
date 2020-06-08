@@ -140,7 +140,7 @@ public class MapleGame extends GameApplication {
         vbox2.getChildren().addAll(
                 ip, port, ok
         );
-        ip.setVisible(true);
+        
         getGameScene().addUINode(vbox2);
 	}
 	
