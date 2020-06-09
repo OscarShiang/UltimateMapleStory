@@ -23,11 +23,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.maple.item.ItemType;
 import com.maple.player.*;
@@ -43,12 +47,11 @@ public class MapleGame extends GameApplication {
 	private Entity tomb;
 	private Entity balloon;
 	
+	// current progress
+	private MapleStage stage;
+	
 	// GUI input
 	private String IPaddress, Port;
-	
-	// networking instances
-	Server server;
-	Client client;
 	
 	boolean isHost, isClient;
 	
@@ -64,18 +67,35 @@ public class MapleGame extends GameApplication {
 		score = new int[4];
 	}
 	
-	VBox vbox1, vbox2;
+	// network instances
+	private Server server;
+	private Client client;
+	
+	public void initNetworking() {
+		if (isHost) {
+			server = new Server(this);
+		} else if (isClient) {
+			
+		}
+	}
+	
+	VBox menuBox, hostBox, clientBox;
 	Pane pane;
 	
 	protected void initUI() {
+		// setting up menuBox
 		Button create = getUIFactoryService().newButton("CREATE");
         create.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(hostBox);
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(clientBox);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -83,15 +103,77 @@ public class MapleGame extends GameApplication {
         	System.exit(0);
         });
         
-        vbox1 = new VBox(10);
-        vbox1.setTranslateX(getAppWidth()/2 - 100);
-        vbox1.setTranslateY(400);
-        vbox1.getChildren().addAll(
+        menuBox = new VBox(10);
+        menuBox.setTranslateX(getAppWidth()/2 - 100);
+        menuBox.setTranslateY(400);
+        menuBox.getChildren().addAll(
                 create, join, quit
         );
         
-        //getGameScene().addUINode(vbox1);
+        // setting up clientBox
+        TextField ip = new TextField();
+		ip.setPromptText("IP");
+		TextField port = new TextField();
+		port.setPromptText("port");
+		
+		ip.setFont(Font.font(15));
+		port.setFont(Font.font(15));
+		
+		Button ok = getUIFactoryService().newButton("OK");
+        ok.setOnAction(e -> {
+        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
+        		ip.clear();
+        		port.clear();
+        	}
+        	else {
+        		IPaddress = ip.getText();
+        		Port = port.getText();
+        		System.out.println(ip.getText());
+        		getGameScene().removeUINode(clientBox);
+        	}
+        });
+        
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(clientBox);
+        	getGameScene().addUINode(menuBox);
+        });
+        
+        clientBox = new VBox(10);
+        clientBox.setTranslateX(getAppWidth()/2 - 100);
+        clientBox.setTranslateY(400);
+        clientBox.getChildren().addAll(
+                ip, port, ok, back
+        );
+        
+        // setting up hostBox
+        
+        // try to get ip address
+        InetAddress ip_addr = null;
+		try {
+			ip_addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e1) { e1.printStackTrace(); }
+        
+        Text host_ip = new Text();
+        Text host_port = new Text();
+        
+        host_ip.setFont(Font.font(15));
+        host_port.setFont(Font.font(15));
+        
+        host_ip.setText(ip_addr.getHostAddress());
+        host_port.setText(Server.DEFAULT_PORT.toString());
+        
+        hostBox = new VBox(10);
+        hostBox.setTranslateX(getAppWidth()/2 - 100);
+        hostBox.setTranslateY(400);
+        hostBox.getChildren().addAll(
+                host_ip, host_port
+        );
+        
+        // initial show up
+        getGameScene().addUINode(menuBox);
 
+        /* testing for connect
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
@@ -125,6 +207,50 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
         getGameScene().addUINodes(pane);
+        */
+	}
+	
+	public void showHostBox() {
+		
+	}
+	
+	public void showClientBox() {
+		TextField ip = new TextField();
+		ip.setPromptText("IP");
+		TextField port = new TextField();
+		port.setPromptText("port");
+		
+		ip.setFont(Font.font(15));
+		port.setFont(Font.font(15));
+		
+		Button ok = getUIFactoryService().newButton("OK");
+        ok.setOnAction(e -> {
+        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
+        		ip.clear();
+        		port.clear();
+        	}
+        	else {
+        		IPaddress = ip.getText();
+        		Port = port.getText();
+        		System.out.println(ip.getText());
+        		getGameScene().removeUINode(clientBox);
+        	}
+        });
+        
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(clientBox);
+        	getGameScene().addUINode(menuBox);
+        });
+        
+        clientBox = new VBox(10);
+        clientBox.setTranslateX(getAppWidth()/2 - 100);
+        clientBox.setTranslateY(400);
+        clientBox.getChildren().addAll(
+                ip, port, ok, back
+        );
+        
+        getGameScene().addUINode(clientBox);
 	}
 	
 	@Override
@@ -240,49 +366,6 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).recover();
 			}
 		});
-	}
-	
-	protected void type() {
-		TextField ip = new TextField();
-		ip.setPromptText("IP");
-		TextField port = new TextField();
-		port.setPromptText("port");
-		ip.setFont(Font.font(15));
-		port.setFont(Font.font(15));
-		
-		Button ok = getUIFactoryService().newButton("OK");
-        ok.setOnAction(e -> {
-        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
-        		ip.clear();
-        		port.clear();
-        	}
-        	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(vbox2);
-        	}
-        });
-        
-        Button back = getUIFactoryService().newButton("BACK");
-        back.setOnAction(e -> {
-        	getGameScene().removeUINode(vbox2);
-        	getGameScene().addUINode(vbox1);
-        });
-        
-        vbox2 = new VBox(10);
-        vbox2.setTranslateX(getAppWidth()/2 - 100);
-        vbox2.setTranslateY(400);
-        vbox2.getChildren().addAll(
-                ip, port, ok, back
-        );
-        
-        getGameScene().addUINode(vbox2);
-	}
-	
-	protected void remove() {
-		getGameScene().removeUINode(vbox1);
-		type();
 	}
 	
 	// interfaces of updating networking information

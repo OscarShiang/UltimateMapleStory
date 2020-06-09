@@ -6,7 +6,7 @@ import java.net.*;
 import com.maple.game.MapleGame;
 
 public class Server implements Runnable {
-	public final int DEFAULT_PORT = 8084;
+	public static final Integer DEFAULT_PORT = 8084;
 	
 	private MapleGame game;
 	private ServerSocket server;
