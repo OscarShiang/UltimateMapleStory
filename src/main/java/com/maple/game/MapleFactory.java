@@ -85,6 +85,7 @@ public class MapleFactory implements EntityFactory {
                 .with(new PlayerComponent())
                 .build();
 	}
+
 	
 	@Spawns("slime")
 	public Entity newSlime(SpawnData data) {
@@ -191,6 +192,20 @@ public class MapleFactory implements EntityFactory {
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.balloon))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.build();
+	}
+
+	@Spawns("teleport1")
+	public Entity newTeleport1(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.TELEPORT1)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.teleport1))
+				.bbox(new HitBox(BoundingShape.box(47, 80)))
 				.build();
 	}
 	
