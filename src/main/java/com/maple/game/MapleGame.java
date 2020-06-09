@@ -52,7 +52,7 @@ public class MapleGame extends GameApplication {
 	
 	private PlayerType playerType;
 	private Entity player; // main player (No COPY)
-	private Entity yeti, mushroom, slime, pig;
+	private Entity yeti, mushroom, slime, pig; 
 	
 	private Entity destination;
 	private Entity tomb;
@@ -82,6 +82,8 @@ public class MapleGame extends GameApplication {
 		settings.setHeight(900);
 		
 		score = new int[4];
+		for(int i = 0; i < 4; i++)
+			score[i] = 0;
 	}
 	
 
@@ -204,7 +206,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
-//        getGameScene().addUINode(menuBox);
+        // getGameScene().addUINode(menuBox);
 
         
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
@@ -245,14 +247,32 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
-        getGameScene().addUINodes(pane);
+        //getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank.png"), null, null, null, null)));
         rank.setTranslateX(getAppWidth() / 2 - 350);
         rank.setTranslateY(getAppHeight() / 2 - 250);
         rank.setPrefSize(700, 500);
-        //getGameScene().addUINode(rank);
+        Text scoreMushroom = new Text((Integer.toString(score[0])));
+        scoreMushroom.setTranslateX(550);
+        scoreMushroom.setTranslateY(125);
+        scoreMushroom.setFont(Font.font(25));
+        Text scoreYeti = new Text((Integer.toString(score[0])));
+        scoreYeti.setTranslateX(550);
+        scoreYeti.setTranslateY(215);
+        scoreYeti.setFont(Font.font(25));
+        Text scoreSlime = new Text((Integer.toString(score[0])));
+        scoreSlime.setTranslateX(550);
+        scoreSlime.setTranslateY(305);
+        scoreSlime.setFont(Font.font(25));
+        Text scorePig = new Text((Integer.toString(score[0])));
+        scorePig.setTranslateX(550);
+        scorePig.setTranslateY(395);
+        scorePig.setFont(Font.font(25));
+        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);
+        getGameScene().addUINode(rank);
+        
 	}
 	
 	@Override
@@ -464,6 +484,9 @@ public class MapleGame extends GameApplication {
 		return playerType;
 	}
 	
+	public void setScore() {
+		
+	}
 	
 	public static void main(String[] args) {
 		launch(args);
