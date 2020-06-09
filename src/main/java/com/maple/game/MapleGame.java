@@ -30,6 +30,7 @@ import com.almasb.fxgl.entity.GameWorld;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -50,9 +51,6 @@ public class MapleGame extends GameApplication {
 	// current progress
 	private MapleStage stage;
 	
-	// GUI input
-	private String IPaddress, Port;
-	
 	boolean isHost, isClient;
 	
 	private int[] score;
@@ -71,14 +69,6 @@ public class MapleGame extends GameApplication {
 	private Server server;
 	private Client client;
 	
-	public void initNetworking() {
-		if (isHost) {
-			server = new Server(this);
-		} else if (isClient) {
-			
-		}
-	}
-	
 	VBox menuBox, hostBox, clientBox;
 	Pane pane;
 	
@@ -89,6 +79,8 @@ public class MapleGame extends GameApplication {
         	stage = MapleStage.WAIT;
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(hostBox);
+        	
+        	server = new Server(this);
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
@@ -126,10 +118,18 @@ public class MapleGame extends GameApplication {
         		port.clear();
         	}
         	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(clientBox);
+        		boolean fail = false;
+        		
+        		try {
+					client = new Client(this, ip.getText(), Integer.parseInt(port.getText(), 10));
+				} catch (NumberFormatException | IOException e1) {
+					getDialogService().showMessageBox("Connection failed");
+					e1.printStackTrace();
+					fail = true;
+				}
+        		
+        		if (!fail)
+        			getGameScene().removeUINode(clientBox);
         	}
         });
         
@@ -147,8 +147,6 @@ public class MapleGame extends GameApplication {
         );
         
         // setting up hostBox
-        
-        // try to get ip address
         InetAddress ip_addr = null;
 		try {
 			ip_addr = InetAddress.getLocalHost();
@@ -157,17 +155,24 @@ public class MapleGame extends GameApplication {
         Text host_ip = new Text();
         Text host_port = new Text();
         
-        host_ip.setFont(Font.font(15));
-        host_port.setFont(Font.font(15));
+        host_ip.setFont(Font.font(30));
+        host_port.setFont(Font.font(30));
         
         host_ip.setText(ip_addr.getHostAddress());
         host_port.setText(Server.DEFAULT_PORT.toString());
+        
+        Button host_back = getUIFactoryService().newButton("BACK");
+        host_back.setOnAction(e -> {
+        	getGameScene().removeUINode(hostBox);
+        	getGameScene().addUINode(menuBox);
+        	server = null;
+        });
         
         hostBox = new VBox(10);
         hostBox.setTranslateX(getAppWidth()/2 - 100);
         hostBox.setTranslateY(400);
         hostBox.getChildren().addAll(
-                host_ip, host_port
+                host_ip, host_port, host_back
         );
         
         // initial show up
@@ -208,49 +213,6 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(surprise);
         getGameScene().addUINodes(pane);
         */
-	}
-	
-	public void showHostBox() {
-		
-	}
-	
-	public void showClientBox() {
-		TextField ip = new TextField();
-		ip.setPromptText("IP");
-		TextField port = new TextField();
-		port.setPromptText("port");
-		
-		ip.setFont(Font.font(15));
-		port.setFont(Font.font(15));
-		
-		Button ok = getUIFactoryService().newButton("OK");
-        ok.setOnAction(e -> {
-        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
-        		ip.clear();
-        		port.clear();
-        	}
-        	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(clientBox);
-        	}
-        });
-        
-        Button back = getUIFactoryService().newButton("BACK");
-        back.setOnAction(e -> {
-        	getGameScene().removeUINode(clientBox);
-        	getGameScene().addUINode(menuBox);
-        });
-        
-        clientBox = new VBox(10);
-        clientBox.setTranslateX(getAppWidth()/2 - 100);
-        clientBox.setTranslateY(400);
-        clientBox.getChildren().addAll(
-                ip, port, ok, back
-        );
-        
-        getGameScene().addUINode(clientBox);
 	}
 	
 	@Override

@@ -20,16 +20,17 @@ public class Client implements Runnable {
 	
 	private ServerPacket packet;
 	
-	public Client(MapleGame game, String ip, int port) {
+	public Client(MapleGame game, String ip, int port) throws UnknownHostException, IOException {
 		this.game = game;
 		this.ip = ip;
 		this.port = port;
+		
+		socket = new Socket(ip, port);
 	}
 	
 	@Override
 	public void run() {
 		try {
-			socket = new Socket(ip, port);
 			input = new ObjectInputStream(socket.getInputStream());
 			buf = new ObjectOutputStream(socket.getOutputStream());
 			
