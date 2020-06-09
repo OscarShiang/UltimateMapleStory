@@ -382,13 +382,13 @@ public class MapleGame extends GameApplication {
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.DEADLINE) {
-			public void onCollisionBegin(Entity tomb, Entity platform) {
+			public void onCollisionBegin(Entity tomb, Entity deadline) {
 				getDialogService().showMessageBox("You died...");
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
-			public void onCollisionBegin(Entity tomb, Entity platform) {
+			public void onCollisionBegin(Entity tomb, Entity player) {
 				getDialogService().showMessageBox("You died...");
 			}
 		});
@@ -405,6 +405,7 @@ public class MapleGame extends GameApplication {
 	public void deadTomb() {
 		tomb = getGameWorld().spawn("tomb");
 		tomb.setPosition(new Point2D(player.getX(), 200));
+		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 0));
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
 			@Override
