@@ -12,11 +12,11 @@ public class ClientPacket implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public int score;
+	public int[] score;
 	public PlayerType type;
 	public PlayerComponent player;
 	
-	public ClientPacket(int score, PlayerComponent player, PlayerType type) {
+	public ClientPacket(int[] score, PlayerComponent player, PlayerType type) {
 		this.score = score;
 		this.player = player;
 		this.type = type;

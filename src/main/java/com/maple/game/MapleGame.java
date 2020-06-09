@@ -8,6 +8,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.time.TimerAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
 import java.awt.*;
@@ -27,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
@@ -48,7 +50,7 @@ public class MapleGame extends GameApplication {
 	
 	private PlayerType playerType;
 	private Entity player; // main player (No COPY)
-	private Entity yeti, mushroom, slime, pig;
+	public Entity yeti, mushroom, slime, pig;
 	
 	private Entity destination;
 	private Entity tomb;
@@ -60,7 +62,7 @@ public class MapleGame extends GameApplication {
 	// current progress
 	private MapleStage stage;
 	
-	boolean isHost, isClient;
+	boolean isHost;
 	
 	private int[] score;
 	
@@ -72,13 +74,15 @@ public class MapleGame extends GameApplication {
 		settings.setHeight(900);
 		
 		score = new int[4];
+		
+		isHost = false;
 	}
 	
 	// network instances
 	private Server server;
 	private Client client;
 	
-	VBox menuBox, hostBox, clientBox;
+	VBox menuBox, hostBox, clientBox, selectBox;
 	Pane pane;
 	
 	protected void initUI() {
@@ -89,8 +93,13 @@ public class MapleGame extends GameApplication {
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(hostBox);
         	
+        	isHost = true;
+        	
         	try {
 				server = new Server(this);
+				Thread thr = new Thread(server);
+				thr.start();
+				
 			} catch (IOException e1) {
 				System.out.println("[SERVER] can not create a server");
 				e1.printStackTrace();
@@ -99,6 +108,8 @@ public class MapleGame extends GameApplication {
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
+        	isHost = false;
+        	
         	stage = MapleStage.WAIT;
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(clientBox);
@@ -132,10 +143,14 @@ public class MapleGame extends GameApplication {
         		port.clear();
         	}
         	else {
+        		System.out.println("[MENU] Clicked");
+        		
         		boolean fail = false;
         		
         		try {
-					client = new Client(this, ip.getText(), Integer.parseInt(port.getText(), 10));
+					client = new Client(this, ip.getText(), Integer.parseInt(port.getText()));
+					Thread thr = new Thread(client);
+					thr.start();
 				} catch (NumberFormatException | IOException e1) {
 					getDialogService().showMessageBox("Connection failed");
 					e1.printStackTrace();
@@ -188,6 +203,41 @@ public class MapleGame extends GameApplication {
         hostBox.setTranslateY(400);
         hostBox.getChildren().addAll(
                 host_ip, host_port, host_back
+        );
+        
+        // setting up
+        Button select_yeti = getUIFactoryService().newButton("Yeti");
+        select_yeti.setOnAction(e -> {
+        	getGameScene().removeUINode(selectBox);
+        	
+        	initPlayers();
+        	player = yeti;
+        	startGame();
+        });
+        Button select_pig = getUIFactoryService().newButton("Pig");
+        select_pig.setOnAction(e -> {
+        	getGameScene().removeUINode(selectBox);
+        	
+        	initPlayers();
+        	player = pig;
+        	startGame();
+        });
+        Button select_slime = getUIFactoryService().newButton("Slime");
+        select_slime.setOnAction(e -> {
+        	getGameScene().removeUINode(selectBox);
+        	stage = MapleStage.PLAY;
+        	
+        	initPlayers();
+        	player = slime;
+        	startGame();
+        });
+        Button select_mushroom = getUIFactoryService().newButton("Mushroom");
+        
+        selectBox = new VBox(10);
+        selectBox.setTranslateX(getAppWidth()/2 - 100);
+        selectBox.setTranslateY(400);
+        selectBox.getChildren().addAll(
+        		select_yeti, select_pig, select_slime, select_mushroom
         );
         
         // initial show up
@@ -266,6 +316,40 @@ public class MapleGame extends GameApplication {
 		}, KeyCode.W);
 	}
 	
+	private void initPlayers() {
+		yeti = getGameWorld().spawn("yeti");
+		yeti.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+		
+		slime = getGameWorld().spawn("slime");
+		slime.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+		
+		pig = getGameWorld().spawn("pig");
+		pig.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+		
+		mushroom = getGameWorld().spawn("mushroom");
+		mushroom.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+	}
+	
+	public void selectCharacter() {
+		stage = MapleStage.SELECT;
+		if (isHost)
+			getGameScene().removeUINode(hostBox);
+		else 
+			getGameScene().removeUINode(clientBox);
+		
+		getGameScene().addUINode(selectBox);
+	}
+	
+	public void startGame() {
+		Viewport viewport = getGameScene().getViewport();
+
+        viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
+        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+        viewport.setLazy(true);
+        
+        stage = MapleStage.PLAY;
+	}
+	
 	@Override
 	protected void initGame() {
 		getGameWorld().addEntityFactory(new MapleFactory(this));
@@ -273,20 +357,18 @@ public class MapleGame extends GameApplication {
 		setLevelFromMap("map1.tmx");
 		tomb = null;
 		
-		
 		destination = null;
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
-		
-		player = null;
-		player = getGameWorld().spawn("player");
-		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
-		
-		Viewport viewport = getGameScene().getViewport();
-
-        viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-        viewport.setLazy(true);
+        
+        run( () -> {
+        	if (stage != MapleStage.PLAY)
+        		return;
+        	if (isHost)
+        		server.updateAll();
+        	else
+        		client.sendClientData();
+        }, Duration.millis(500));
 	}
 	
 	@Override
@@ -356,12 +438,20 @@ public class MapleGame extends GameApplication {
 		this.score[clientNum] = score;
 	}
 	
+	public int[] getScores() {
+		return this.score;
+	}
+	
 	private void setPlayer(Entity player, PlayerComponent component) {
 		player.getComponent(PlayerComponent.class).physics = component.physics;
 		player.getComponent(PlayerComponent.class).isJump = component.isJump;
 		player.getComponent(PlayerComponent.class).isDead = component.isDead;
 		player.getComponent(PlayerComponent.class).isWin = component.isWin;
 		player.getComponent(PlayerComponent.class).texture = component.texture;
+	}
+	
+	public Entity getPlayer() {
+		return player;
 	}
 	
 	public void setYeti(PlayerComponent component) {
@@ -384,6 +474,18 @@ public class MapleGame extends GameApplication {
 		return playerType;
 	}
 	
+	public void setStage(MapleStage stage) {
+		this.stage = stage;
+		
+		switch (stage) {
+		case PLAY:
+			if (isHost)
+				getGameScene().removeUINode(hostBox);
+			else
+				getGameScene().removeUINode(clientBox);
+			break;
+		}
+	}
 	
 	public static void main(String[] args) {
 		launch(args);
