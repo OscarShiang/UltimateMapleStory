@@ -245,14 +245,14 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
-        //getGameScene().addUINodes(pane);
+        getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank.png"), null, null, null, null)));
         rank.setTranslateX(getAppWidth() / 2 - 350);
         rank.setTranslateY(getAppHeight() / 2 - 250);
         rank.setPrefSize(700, 500);
-        getGameScene().addUINode(rank);
+        //getGameScene().addUINode(rank);
 	}
 	
 	@Override
