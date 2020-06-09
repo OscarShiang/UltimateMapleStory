@@ -42,6 +42,9 @@ public class ItemComponent extends Component {
 				image = image("item/balloon.png");
 				idle = new AnimationChannel(image, 1, 71, 113, Duration.seconds(1), 0, 0);
 				break;
+			case teleport1:
+				image = image("item/teleport1.png");
+				idle = new AnimationChannel(image, 1, 47, 78, Duration.seconds(1), 0, 0);
 		}
 		
 		texture = new AnimatedTexture(idle);
