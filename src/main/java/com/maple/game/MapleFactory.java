@@ -198,26 +198,22 @@ public class MapleFactory implements EntityFactory {
 	
 	@Spawns("surprise")
 	public Entity newSurprise(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
-				.type(MapleType.DEADLINE)
-				.with(physics)
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
-				.bbox(new HitBox(BoundingShape.box(71, 113)))
+				.bbox(new HitBox(BoundingShape.box(255, 119)))
 				.build();
 	}
 	
 	@Spawns("hole")
 	public Entity newHole(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
-				.type(MapleType.COIN)
-				.with(physics)
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))

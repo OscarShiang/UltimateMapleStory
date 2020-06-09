@@ -48,7 +48,7 @@ public class ItemComponent extends Component {
 				break;
 			case surprise:
 				image = image("item/surprise.png");
-				idle = new AnimationChannel(image, 1, 71, 113, Duration.seconds(1), 0, 0);
+				idle = new AnimationChannel(image, 1, 255, 119, Duration.seconds(1), 0, 0);
 				break;
 		}
 		

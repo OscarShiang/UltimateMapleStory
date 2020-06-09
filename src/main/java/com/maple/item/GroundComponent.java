@@ -22,9 +22,7 @@ public class GroundComponent  extends Component {
 
     private ViewComponent view;
     private String currentTextureName = "lever0.png";
-    private Entity balloon;
-    private Entity hole;
-    private Entity surprise;
+    
     Input input = getInput();
 
     private MapleGame game;
@@ -40,19 +38,20 @@ public class GroundComponent  extends Component {
 
     public void trigger() {
     	if(game.isChoose == true && game.item == 1) {
-	    	balloon = null;
-			balloon = getGameWorld().spawn("balloon");
-			balloon.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+	    	game.balloon = null;
+			game.balloon = getGameWorld().spawn("balloon");
+			game.balloon.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.isChoose == true && game.item == 2) {
-	    	hole = null;
-			hole = getGameWorld().spawn("hole");
-			hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+	    	game.hole = null;
+			game.hole = getGameWorld().spawn("hole");
+			game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.isChoose == true && game.item == 3) {
-	    	surprise = null;
-			surprise = getGameWorld().spawn("surprise");
-			surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+	    	game.surprise = null;
+	    	System.out.println("fuck");
+			game.surprise = getGameWorld().spawn("surprise");
+			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}   
 		game.isChoose = false;
         
