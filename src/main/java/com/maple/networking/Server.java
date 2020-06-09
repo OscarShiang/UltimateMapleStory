@@ -6,7 +6,7 @@ import java.net.*;
 import com.maple.game.MapleGame;
 
 public class Server implements Runnable {
-	public static final Integer DEFAULT_PORT = 8084;
+	public static final Integer DEFAULT_PORT = 8086;
 	
 	private MapleGame game;
 	private ServerSocket server;
@@ -14,25 +14,27 @@ public class Server implements Runnable {
 	
 	private ObjectOutputStream[] clients;
 	
-	public Server(MapleGame game) {
+	public Server(MapleGame game) throws IOException {
 		connects = 0;
 		this.game = game;
+		
+		server = new ServerSocket(DEFAULT_PORT);
 	}
 	
 	public void host() {
-		try {
-			server = new ServerSocket(DEFAULT_PORT);
-			while (connects < 4) {
-				Socket socket = server.accept();
+		while (connects < 4) {
+			Socket socket = null;
+			try {
+				socket = server.accept();
 				ServerWorker worker = new ServerWorker(game, socket, connects);
 				worker.run();
 				
 				clients[connects] = worker.getReader();
 				connects++;
+			} catch (IOException e) {
+				System.out.println("[SERVER] fail to accept connection");
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			System.out.println("[SERVER] connection break...");
-			e.printStackTrace();
 		}
 	}
 	
