@@ -26,11 +26,19 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 
 public class MapleFactory implements EntityFactory {
+	private MapleGame game;
+	
+	
+	public MapleFactory(MapleGame game) {
+		this.game = game;
+	}
+	
 	@Spawns("background")
 	public Entity newBackground(SpawnData data) {
 		return entityBuilder()
 				.view(new ScrollingBackgroundView(texture("background/forest.png")))
                 .zIndex(-1)
+                .with(new GroundComponent(game))
                 .with(new IrremovableComponent())
 				.build();
 	}
@@ -182,6 +190,36 @@ public class MapleFactory implements EntityFactory {
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.balloon))
+				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.build();
+	}
+	
+	
+	
+	@Spawns("surprise")
+	public Entity newSurprise(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.DEADLINE)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.surprise))
+				.bbox(new HitBox(BoundingShape.box(71, 113)))
+				.build();
+	}
+	
+	@Spawns("hole")
+	public Entity newHole(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.COIN)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
