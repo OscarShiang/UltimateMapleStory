@@ -7,38 +7,72 @@ import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.HitBox;
+import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.text.Text;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.maple.item.ItemType;
+import com.maple.mouse.Mouse;
 import com.maple.player.*;
-
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import com.maple.item.ItemType;
+import com.maple.player.*;
+import com.maple.networking.*;
+
 public class MapleGame extends GameApplication {
 	
-	private Entity player;
+	private PlayerType playerType;
+	private Entity player; // main player (No COPY)
+	private Entity yeti, mushroom, slime, pig;
+	
 	private Entity destination;
 	private Entity tomb;
-	private Entity balloon;
+
 	private Entity teleport1;
-	private String IPaddress, Port;
 	private boolean isGenTeleport;
+
+	private String IPaddress, Port;
+	public boolean isChoose = false;
+	public int item = 0;
+	public Entity balloon;
+    public Entity hole;
+    public Entity surprise;
+	
+	// current progress
+	private MapleStage stage;
+	
+	boolean isHost, isClient;
+	
+	private int[] score;
 	
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -46,19 +80,38 @@ public class MapleGame extends GameApplication {
 		settings.setTitle("MapleStory");
 		settings.setWidth(1600);
 		settings.setHeight(900);
+		
+		score = new int[4];
 	}
 	
-	VBox vbox1, vbox2;
+	// network instances
+	private Server server;
+	private Client client;
+	
+	VBox menuBox, hostBox, clientBox;
+	Pane pane;
 	
 	protected void initUI() {
+		// setting up menuBox
 		Button create = getUIFactoryService().newButton("CREATE");
         create.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(hostBox);
+        	
+        	try {
+				server = new Server(this);
+			} catch (IOException e1) {
+				System.out.println("[SERVER] can not create a server");
+				e1.printStackTrace();
+			}
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(clientBox);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -66,14 +119,130 @@ public class MapleGame extends GameApplication {
         	System.exit(0);
         });
         
-        vbox1 = new VBox(10);
-        vbox1.setTranslateX(getAppWidth()/2 - 100);
-        vbox1.setTranslateY(400);
-        vbox1.getChildren().addAll(
+        menuBox = new VBox(10);
+        menuBox.setTranslateX(getAppWidth()/2 - 100);
+        menuBox.setTranslateY(400);
+        menuBox.getChildren().addAll(
                 create, join, quit
         );
+        
+        // setting up clientBox
+        TextField ip = new TextField();
+		ip.setPromptText("IP");
+		TextField port = new TextField();
+		port.setPromptText("port");
+		
+		ip.setFont(Font.font(15));
+		port.setFont(Font.font(15));
+		
+		Button ok = getUIFactoryService().newButton("OK");
+        ok.setOnAction(e -> {
+        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
+        		ip.clear();
+        		port.clear();
+        	}
+        	else {
+        		boolean fail = false;
+        		
+        		try {
+					client = new Client(this, ip.getText(), Integer.parseInt(port.getText(), 10));
+				} catch (NumberFormatException | IOException e1) {
+					getDialogService().showMessageBox("Connection failed");
+					e1.printStackTrace();
+					fail = true;
+				}
+        		
+        		if (!fail)
+        			getGameScene().removeUINode(clientBox);
+        	}
+        });
+        
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(clientBox);
+        	getGameScene().addUINode(menuBox);
+        });
+        
+        clientBox = new VBox(10);
+        clientBox.setTranslateX(getAppWidth()/2 - 100);
+        clientBox.setTranslateY(400);
+        clientBox.getChildren().addAll(
+                ip, port, ok, back
+        );
+        
+        // setting up hostBox
+        InetAddress ip_addr = null;
+		try {
+			ip_addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e1) { e1.printStackTrace(); }
+        
+        Text host_ip = new Text();
+        Text host_port = new Text();
+        
+        host_ip.setFont(Font.font(30));
+        host_port.setFont(Font.font(30));
+        
+        host_ip.setText(ip_addr.getHostAddress());
+        host_port.setText(Server.DEFAULT_PORT.toString());
+        
+        Button host_back = getUIFactoryService().newButton("BACK");
+        host_back.setOnAction(e -> {
+        	getGameScene().removeUINode(hostBox);
+        	getGameScene().addUINode(menuBox);
+        	
+        	server = null;
+        });
+        
+        hostBox = new VBox(10);
+        hostBox.setTranslateX(getAppWidth()/2 - 100);
+        hostBox.setTranslateY(400);
+        hostBox.getChildren().addAll(
+                host_ip, host_port, host_back
+        );
+        
+        // initial show up
+//        getGameScene().addUINode(menuBox);
 
-        getGameScene().addUINode(vbox1);
+        
+        Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
+        redballoon.setOnAction(e -> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 1;
+        });
+        redballoon.setTranslateX(150);
+        redballoon.setTranslateY(150);
+        
+        Button hole = new Button("", new ImageView(image("item/hole.png")));
+        hole.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 2;
+        });
+        hole.setTranslateX(300);
+        hole.setTranslateY(150);
+        
+        Button surprise = new Button("", new ImageView(image("item/surprise.png")));
+        surprise.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 3;
+        });
+        surprise.setTranslateX(600);
+        surprise.setTranslateY(150);
+        
+        pane = new Pane();
+        pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
+        pane.setTranslateX(getAppWidth()/2 - 520);
+        pane.setTranslateY(getAppHeight()/2 - 350);
+        pane.setPrefSize(1040, 700);
+        pane.getChildren().addAll(redballoon);
+        pane.getChildren().addAll(hole);
+        pane.getChildren().addAll(surprise);
+        getGameScene().addUINodes(pane);
 	}
 	
 	@Override
@@ -81,6 +250,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
@@ -88,6 +259,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).right();
 			}
 		}, KeyCode.D);
@@ -95,6 +268,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).jump();
 			}
 		}, KeyCode.W);
@@ -102,10 +277,9 @@ public class MapleGame extends GameApplication {
 	
 	@Override
 	protected void initGame() {
-		getGameWorld().addEntityFactory(new MapleFactory());
+		getGameWorld().addEntityFactory(new MapleFactory(this));
 		spawn("background");
 		setLevelFromMap("map1.tmx");
-		
 		tomb = null;
 		
 		destination = null;
@@ -148,6 +322,26 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity hole) {
+				player.setOpacity(0);
+				player.getComponent(PlayerComponent.class).dead();
+
+				deadTomb();
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity surprise) {
+				player.setOpacity(0);
+				player.getComponent(PlayerComponent.class).dead();
+
+				deadTomb();
+			}
+		});
+		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity platform) {
@@ -160,7 +354,6 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity deadline) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				
 				deadTomb();
 			}
 		});
@@ -201,7 +394,7 @@ public class MapleGame extends GameApplication {
 	
 	public void deadTomb() {
 		tomb = getGameWorld().spawn("tomb");
-		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 0));
+		tomb.setPosition(new Point2D(player.getX(), 200));
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
 			@Override
@@ -226,49 +419,40 @@ public class MapleGame extends GameApplication {
 		}
 	}
 
-	protected void type() {
-		TextField ip = new TextField();
-		ip.setPromptText("IP");
-		TextField port = new TextField();
-		port.setPromptText("port");
-		ip.setFont(Font.font(15));
-		port.setFont(Font.font(15));
-		
-		Button ok = getUIFactoryService().newButton("OK");
-        ok.setOnAction(e -> {
-        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
-        		ip.clear();
-        		port.clear();
-        	}
-        	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(vbox2);
-        	}
-        });
-        
-        Button back = getUIFactoryService().newButton("BACK");
-        back.setOnAction(e -> {
-        	getGameScene().removeUINode(vbox2);
-        	getGameScene().addUINode(vbox1);
-        });
-        
-        vbox2 = new VBox(10);
-        //vbox2.setBackground();
-        vbox2.setTranslateX(getAppWidth()/2 - 100);
-        vbox2.setTranslateY(400);
-        vbox2.getChildren().addAll(
-                ip, port, ok, back
-        );
-        
-        getGameScene().addUINode(vbox2);
+	
+	// interfaces of updating networking information
+	public void setScore(int score, int clientNum) {
+		this.score[clientNum] = score;
 	}
 	
-	protected void remove() {
-		getGameScene().removeUINode(vbox1);
-		type();
+	private void setPlayer(Entity player, PlayerComponent component) {
+		player.getComponent(PlayerComponent.class).physics = component.physics;
+		player.getComponent(PlayerComponent.class).isJump = component.isJump;
+		player.getComponent(PlayerComponent.class).isDead = component.isDead;
+		player.getComponent(PlayerComponent.class).isWin = component.isWin;
+		player.getComponent(PlayerComponent.class).texture = component.texture;
 	}
+	
+	public void setYeti(PlayerComponent component) {
+		setPlayer(yeti, component);
+	}
+	
+	public void setSlime(PlayerComponent component) {
+		setPlayer(slime, component);
+	}
+	
+	public void setPig(PlayerComponent component) {
+		setPlayer(pig, component);
+	}
+	
+	public void setMushroom(PlayerComponent component) {
+		setPlayer(mushroom, component);
+	}
+	
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);

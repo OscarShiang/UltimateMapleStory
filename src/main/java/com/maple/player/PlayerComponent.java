@@ -13,18 +13,18 @@ import com.maple.game.*;
 import com.maple.item.*;
 
 public class PlayerComponent extends Component {
-	private PhysicsComponent physics;
-	private boolean isJump;
-	private boolean isDead;
-	private boolean isWin;
+	public PhysicsComponent physics;
+	public boolean isJump;
+	public boolean isDead;
+	public boolean isWin;
 	
-	private AnimatedTexture texture;
+	public AnimatedTexture texture;
 	private AnimationChannel idle, walk, jump;
 	
 	// default
 	public PlayerComponent() {
 		isJump = false;
-		isDead = false;
+		isDead = true;
 		isWin = false;
 		
 		Image image = image("sprites/mushroom_sprite (Custom).png");
@@ -49,7 +49,7 @@ public class PlayerComponent extends Component {
 			break;
 		case YETI:
 			image = image("sprites/yeti_idle_sprite (Custom).png");
-			Image walk_image = image("sprites/yeti_walk_sprite.gif (Custom).png");
+			Image walk_image = image("sprites/yeti_walk_sprite (Custom).png");
 			idle = new AnimationChannel(image, 7, 80, 80, Duration.seconds(1), 0, 5);
 			walk = new AnimationChannel(walk_image, 4, 96, 80, Duration.seconds(0.6), 0, 3);
 			jump = new AnimationChannel(image, 7, 80, 80, Duration.seconds(1), 6, 6);
@@ -112,6 +112,8 @@ public class PlayerComponent extends Component {
 			getEntity().setScaleX(1);
 			physics.setVelocityX(-200);
 		}
+		else
+			physics.setVelocityX(0);
 	}
 	
 	public void right() {
@@ -119,6 +121,8 @@ public class PlayerComponent extends Component {
 			getEntity().setScaleX(-1);
 			physics.setVelocityX(200);
 		}
+		else
+			physics.setVelocityX(0);
 	}
 	
 	public void jump() {
@@ -129,8 +133,11 @@ public class PlayerComponent extends Component {
 		isJump = true;
 	}
 	
+	public void start() {
+		isDead = false;
+	}
+	
 	public void dead() {
-		physics.setVelocityX(0);
 		isDead = true;
 	}
 	
