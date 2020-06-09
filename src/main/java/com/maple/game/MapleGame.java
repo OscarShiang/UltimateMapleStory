@@ -10,6 +10,9 @@ import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,6 +30,9 @@ import javafx.scene.text.Text;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
+import com.maple.item.ItemType;
+import com.maple.mouse.Mouse;
+import com.maple.player.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -46,6 +52,9 @@ public class MapleGame extends GameApplication {
 	
 	private Entity destination;
 	private Entity tomb;
+	private String IPaddress, Port;
+	public boolean isChoose = false;
+	public int item = 0;
 	private Entity balloon;
 	
 	// current progress
@@ -189,6 +198,8 @@ public class MapleGame extends GameApplication {
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 1;
         });
         redballoon.setTranslateX(150);
         redballoon.setTranslateY(150);
@@ -197,6 +208,8 @@ public class MapleGame extends GameApplication {
         hole.setOnAction(e-> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 2;
         });
         hole.setTranslateX(300);
         hole.setTranslateY(150);
@@ -205,6 +218,8 @@ public class MapleGame extends GameApplication {
         surprise.setOnAction(e-> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 3;
         });
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
@@ -253,20 +268,15 @@ public class MapleGame extends GameApplication {
 	
 	@Override
 	protected void initGame() {
-		getGameWorld().addEntityFactory(new MapleFactory());
+		getGameWorld().addEntityFactory(new MapleFactory(this));
 		spawn("background");
 		setLevelFromMap("map1.tmx");
-		
 		tomb = null;
 		
 		
 		destination = null;
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
-		
-		balloon = null;
-		balloon = getGameWorld().spawn("balloon");
-		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
 		
 		player = null;
 		player = getGameWorld().spawn("player");
@@ -305,7 +315,6 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity deadline) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				
 				deadTomb();
 			}
 		});
