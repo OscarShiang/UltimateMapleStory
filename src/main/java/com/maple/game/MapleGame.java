@@ -80,7 +80,12 @@ public class MapleGame extends GameApplication {
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(hostBox);
         	
-        	server = new Server(this);
+        	try {
+				server = new Server(this);
+			} catch (IOException e1) {
+				System.out.println("[SERVER] can not create a server");
+				e1.printStackTrace();
+			}
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
@@ -165,6 +170,7 @@ public class MapleGame extends GameApplication {
         host_back.setOnAction(e -> {
         	getGameScene().removeUINode(hostBox);
         	getGameScene().addUINode(menuBox);
+        	
         	server = null;
         });
         
@@ -220,6 +226,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
@@ -227,6 +235,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).right();
 			}
 		}, KeyCode.D);
@@ -234,6 +244,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).jump();
 			}
 		}, KeyCode.W);

@@ -26,6 +26,8 @@ public class Client implements Runnable {
 		this.port = port;
 		
 		socket = new Socket(ip, port);
+		
+		System.out.println("[CLIENT] connention accepted");
 	}
 	
 	@Override
