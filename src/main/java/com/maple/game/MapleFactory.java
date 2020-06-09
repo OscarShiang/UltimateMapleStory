@@ -85,6 +85,7 @@ public class MapleFactory implements EntityFactory {
                 .with(new PlayerComponent())
                 .build();
 	}
+
 	
 	@Spawns("slime")
 	public Entity newSlime(SpawnData data) {
@@ -193,31 +194,39 @@ public class MapleFactory implements EntityFactory {
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
-	
-	
-	
-	@Spawns("surprise")
-	public Entity newSurprise(SpawnData data) {
+
+	@Spawns("teleport1")
+	public Entity newTeleport1(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
-				.type(MapleType.DEADLINE)
+				.type(MapleType.TELEPORT1)
 				.with(physics)
 				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.teleport1))
+				.bbox(new HitBox(BoundingShape.box(47, 80)))
+				.build();
+	}
+	
+	@Spawns("surprise")
+	public Entity newSurprise(SpawnData data) {
+		
+		return entityBuilder()
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
+				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
-				.bbox(new HitBox(BoundingShape.box(71, 113)))
+				.bbox(new HitBox(BoundingShape.box(255, 119)))
 				.build();
 	}
 	
 	@Spawns("hole")
 	public Entity newHole(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
-				.type(MapleType.COIN)
-				.with(physics)
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
