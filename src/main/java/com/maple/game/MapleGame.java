@@ -6,6 +6,7 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
@@ -25,6 +26,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
@@ -32,17 +34,35 @@ import com.maple.item.ItemType;
 import com.maple.mouse.Mouse;
 import com.maple.player.*;
 
-
 import static com.almasb.fxgl.dsl.FXGL.*;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import com.maple.item.ItemType;
+import com.maple.player.*;
+import com.maple.networking.*;
 
 public class MapleGame extends GameApplication {
 	
-	private Entity player;
+	private PlayerType playerType;
+	private Entity player; // main player (No COPY)
+	private Entity yeti, mushroom, slime, pig;
+	
 	private Entity destination;
 	private Entity tomb;
 	private String IPaddress, Port;
 	public boolean isChoose = false;
 	public int item = 0;
+	private Entity balloon;
+	
+	// current progress
+	private MapleStage stage;
+	
+	boolean isHost, isClient;
+	
+	private int[] score;
 	
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -50,20 +70,33 @@ public class MapleGame extends GameApplication {
 		settings.setTitle("MapleStory");
 		settings.setWidth(1600);
 		settings.setHeight(900);
+		
+		score = new int[4];
 	}
 	
-	VBox vbox1, vbox2;
+	// network instances
+	private Server server;
+	private Client client;
+	
+	VBox menuBox, hostBox, clientBox;
 	Pane pane;
 	
 	protected void initUI() {
+		// setting up menuBox
 		Button create = getUIFactoryService().newButton("CREATE");
         create.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(hostBox);
+        	
+        	server = new Server(this);
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(clientBox);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -71,15 +104,90 @@ public class MapleGame extends GameApplication {
         	System.exit(0);
         });
         
-        vbox1 = new VBox(10);
-        vbox1.setTranslateX(getAppWidth()/2 - 100);
-        vbox1.setTranslateY(400);
-        vbox1.getChildren().addAll(
+        menuBox = new VBox(10);
+        menuBox.setTranslateX(getAppWidth()/2 - 100);
+        menuBox.setTranslateY(400);
+        menuBox.getChildren().addAll(
                 create, join, quit
         );
         
-        //getGameScene().addUINode(vbox1);
+        // setting up clientBox
+        TextField ip = new TextField();
+		ip.setPromptText("IP");
+		TextField port = new TextField();
+		port.setPromptText("port");
+		
+		ip.setFont(Font.font(15));
+		port.setFont(Font.font(15));
+		
+		Button ok = getUIFactoryService().newButton("OK");
+        ok.setOnAction(e -> {
+        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
+        		ip.clear();
+        		port.clear();
+        	}
+        	else {
+        		boolean fail = false;
+        		
+        		try {
+					client = new Client(this, ip.getText(), Integer.parseInt(port.getText(), 10));
+				} catch (NumberFormatException | IOException e1) {
+					getDialogService().showMessageBox("Connection failed");
+					e1.printStackTrace();
+					fail = true;
+				}
+        		
+        		if (!fail)
+        			getGameScene().removeUINode(clientBox);
+        	}
+        });
+        
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(clientBox);
+        	getGameScene().addUINode(menuBox);
+        });
+        
+        clientBox = new VBox(10);
+        clientBox.setTranslateX(getAppWidth()/2 - 100);
+        clientBox.setTranslateY(400);
+        clientBox.getChildren().addAll(
+                ip, port, ok, back
+        );
+        
+        // setting up hostBox
+        InetAddress ip_addr = null;
+		try {
+			ip_addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e1) { e1.printStackTrace(); }
+        
+        Text host_ip = new Text();
+        Text host_port = new Text();
+        
+        host_ip.setFont(Font.font(30));
+        host_port.setFont(Font.font(30));
+        
+        host_ip.setText(ip_addr.getHostAddress());
+        host_port.setText(Server.DEFAULT_PORT.toString());
+        
+        Button host_back = getUIFactoryService().newButton("BACK");
+        host_back.setOnAction(e -> {
+        	getGameScene().removeUINode(hostBox);
+        	getGameScene().addUINode(menuBox);
+        	server = null;
+        });
+        
+        hostBox = new VBox(10);
+        hostBox.setTranslateX(getAppWidth()/2 - 100);
+        hostBox.setTranslateY(400);
+        hostBox.getChildren().addAll(
+                host_ip, host_port, host_back
+        );
+        
+        // initial show up
+        getGameScene().addUINode(menuBox);
 
+        /* testing for connect
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
@@ -119,6 +227,7 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
         getGameScene().addUINodes(pane);
+        */
 	}
 	
 	@Override
@@ -230,48 +339,39 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
-	protected void type() {
-		TextField ip = new TextField();
-		ip.setPromptText("IP");
-		TextField port = new TextField();
-		port.setPromptText("port");
-		ip.setFont(Font.font(15));
-		port.setFont(Font.font(15));
-		
-		Button ok = getUIFactoryService().newButton("OK");
-        ok.setOnAction(e -> {
-        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
-        		ip.clear();
-        		port.clear();
-        	}
-        	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(vbox2);
-        	}
-        });
-        
-        Button back = getUIFactoryService().newButton("BACK");
-        back.setOnAction(e -> {
-        	getGameScene().removeUINode(vbox2);
-        	getGameScene().addUINode(vbox1);
-        });
-        
-        vbox2 = new VBox(10);
-        vbox2.setTranslateX(getAppWidth()/2 - 100);
-        vbox2.setTranslateY(400);
-        vbox2.getChildren().addAll(
-                ip, port, ok, back
-        );
-        
-        getGameScene().addUINode(vbox2);
+	// interfaces of updating networking information
+	public void setScore(int score, int clientNum) {
+		this.score[clientNum] = score;
 	}
 	
-	protected void remove() {
-		getGameScene().removeUINode(vbox1);
-		type();
+	private void setPlayer(Entity player, PlayerComponent component) {
+		player.getComponent(PlayerComponent.class).physics = component.physics;
+		player.getComponent(PlayerComponent.class).isJump = component.isJump;
+		player.getComponent(PlayerComponent.class).isDead = component.isDead;
+		player.getComponent(PlayerComponent.class).isWin = component.isWin;
+		player.getComponent(PlayerComponent.class).texture = component.texture;
 	}
+	
+	public void setYeti(PlayerComponent component) {
+		setPlayer(yeti, component);
+	}
+	
+	public void setSlime(PlayerComponent component) {
+		setPlayer(slime, component);
+	}
+	
+	public void setPig(PlayerComponent component) {
+		setPlayer(pig, component);
+	}
+	
+	public void setMushroom(PlayerComponent component) {
+		setPlayer(mushroom, component);
+	}
+	
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);
