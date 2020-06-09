@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 
 import com.maple.game.MapleGame;
+import com.maple.game.MapleStage;
+import com.maple.player.PlayerComponent;
 import com.maple.player.PlayerType;
 
 public class Client implements Runnable {
@@ -24,15 +26,27 @@ public class Client implements Runnable {
 		this.game = game;
 		this.ip = ip;
 		this.port = port;
-		
-		socket = new Socket(ip, port);
-		
-		System.out.println("[CLIENT] connention accepted");
+	}
+	
+	public void sendClientData() {
+		System.out.println("Send out data");
+		try {
+			buf.writeObject(new ClientPacket(game.getScores(), game.getPlayer().getComponent(PlayerComponent.class), game.getPlayerType()));
+		} catch (IOException e) {
+			System.out.println("[CLIENT] can not send files");
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void run() {
 		try {
+			System.out.println("[CLIENT] try to make connection");
+			socket = new Socket(ip, port);
+			System.out.println("[CLIENT] connention accepted");
+			
+			game.selectCharacter();
+			
 			input = new ObjectInputStream(socket.getInputStream());
 			buf = new ObjectOutputStream(socket.getOutputStream());
 			
@@ -64,6 +78,9 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			System.out.println("[CLIENT] Packet error");
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("[CLIENT] connection error");
 			e.printStackTrace();
 		}
 	}
