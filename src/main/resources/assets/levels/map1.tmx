@@ -838,9 +838,9 @@
   <object id="31" type="platform" x="810" y="195" width="112" height="15"/>
   <object id="32" type="platform" x="837" y="180" width="65" height="15"/>
   <object id="33" type="platform" x="857" y="165" width="25" height="15"/>
-  <object id="34" type="deadline" x="1" y="796" width="1598" height="3"/>
-  <object id="35" type="wall" x="1" y="1" width="2" height="796"/>
-  <object id="36" type="wall" x="4" y="0" width="1596" height="3"/>
-  <object id="37" type="wall" x="1597" y="4" width="3" height="792"/>
+  <object id="34" type="deadline" x="0" y="799" width="1599" height="1"/>
+  <object id="35" type="wall" x="0" y="0" width="1" height="800"/>
+  <object id="36" type="wall" x="0" y="0" width="1600" height="1"/>
+  <object id="37" type="wall" x="1599" y="0" width="1" height="796"/>
  </objectgroup>
 </map>
