@@ -82,6 +82,7 @@ public class MapleGame extends GameApplication {
         mushroom.setPrefSize(100, 100);
         mushroom.setTranslateX(150);
         mushroom.setTranslateY(150);
+//        mushroom.setStyle("-fx-background-color: transparent;"); // transparent background color
         
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
