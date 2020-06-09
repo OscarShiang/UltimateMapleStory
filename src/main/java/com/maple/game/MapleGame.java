@@ -6,6 +6,7 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
@@ -33,11 +34,17 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class MapleGame extends GameApplication {
 	
-	private Entity player;
+	private Entity player; // main player (No COPY)
+	private Entity yeti, mushroom, slime, pig;
+	
 	private Entity destination;
 	private Entity tomb;
 	private Entity balloon;
+	
+	// GUI input
 	private String IPaddress, Port;
+	
+	private int[] score;
 	
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -45,6 +52,8 @@ public class MapleGame extends GameApplication {
 		settings.setTitle("MapleStory");
 		settings.setWidth(1600);
 		settings.setHeight(900);
+		
+		score = new int[4];
 	}
 	
 	VBox vbox1, vbox2;
@@ -250,6 +259,37 @@ public class MapleGame extends GameApplication {
 		getGameScene().removeUINode(vbox1);
 		type();
 	}
+	
+	// interfaces of updating networking information
+	public void setScore(int score, int clientNum) {
+		this.score[clientNum] = score;
+	}
+	
+	private void setPlayer(Entity player, PlayerComponent component) {
+		player.getComponent(PlayerComponent.class).physics = component.physics;
+		player.getComponent(PlayerComponent.class).isJump = component.isJump;
+		player.getComponent(PlayerComponent.class).isDead = component.isDead;
+		player.getComponent(PlayerComponent.class).isWin = component.isWin;
+		player.getComponent(PlayerComponent.class).texture = component.texture;
+	}
+	
+	public void setYeti(PlayerComponent component) {
+		setPlayer(yeti, component);
+	}
+	
+	public void setSlime(PlayerComponent component) {
+		setPlayer(slime, component);
+	}
+	
+	public void setPig(PlayerComponent component) {
+		setPlayer(pig, component);
+	}
+	
+	public void setMushroom(PlayerComponent component) {
+		setPlayer(mushroom, component);
+	}
+	
+	
 	
 	public static void main(String[] args) {
 		launch(args);

@@ -3,14 +3,19 @@ package com.maple.networking;
 import java.io.*;
 import java.net.*;
 
+import com.maple.game.MapleGame;
+
 public class Server implements Runnable {
+	
+	private MapleGame game;
 	private ServerSocket socket;
 	private int connects;
 	
 	public final int DEFAULT_PORT = 8084;
 	
-	public Server() {
+	public Server(MapleGame game) {
 		connects = 0;
+		this.game = game;
 	}
 	
 	public void host() {

@@ -13,12 +13,12 @@ import com.maple.game.*;
 import com.maple.item.*;
 
 public class PlayerComponent extends Component {
-	private PhysicsComponent physics;
-	private boolean isJump;
-	private boolean isDead;
-	private boolean isWin;
+	public PhysicsComponent physics;
+	public boolean isJump;
+	public boolean isDead;
+	public boolean isWin;
 	
-	private AnimatedTexture texture;
+	public AnimatedTexture texture;
 	private AnimationChannel idle, walk, jump;
 	
 	// default
