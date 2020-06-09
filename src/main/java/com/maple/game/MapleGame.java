@@ -75,20 +75,38 @@ public class MapleGame extends GameApplication {
         
         //getGameScene().addUINode(vbox1);
 
-        Button mushroom = new Button("", new ImageView(image("sprites/mushroom_sprite (Custom).png")));
-        mushroom.setOnAction(e -> {
-        	
+        Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
+        redballoon.setOnAction(e -> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
         });
-        mushroom.setPrefSize(100, 100);
-        mushroom.setTranslateX(150);
-        mushroom.setTranslateY(150);
+        redballoon.setTranslateX(150);
+        redballoon.setTranslateY(150);
+        
+        Button hole = new Button("", new ImageView(image("item/hole.png")));
+        hole.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        });
+        hole.setTranslateX(300);
+        hole.setTranslateY(150);
+        
+        Button surprise = new Button("", new ImageView(image("item/surprise.png")));
+        surprise.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        });
+        surprise.setTranslateX(600);
+        surprise.setTranslateY(150);
         
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
         pane.setTranslateX(getAppWidth()/2 - 520);
         pane.setTranslateY(getAppHeight()/2 - 350);
         pane.setPrefSize(1040, 700);
-        pane.getChildren().addAll(mushroom);
+        pane.getChildren().addAll(redballoon);
+        pane.getChildren().addAll(hole);
+        pane.getChildren().addAll(surprise);
         getGameScene().addUINodes(pane);
 	}
 	
