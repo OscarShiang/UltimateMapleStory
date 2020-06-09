@@ -6,10 +6,14 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.physics.PhysicsComponent;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,11 +27,22 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
+import javafx.scene.text.Text;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
+import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.maple.item.ItemType;
+import com.maple.mouse.Mouse;
+import com.maple.player.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.maple.item.ItemType;
 import com.maple.player.*;
@@ -41,14 +56,19 @@ public class MapleGame extends GameApplication {
 	
 	private Entity destination;
 	private Entity tomb;
-	private Entity balloon;
-	
-	// GUI input
+
+	private Entity teleport1;
+	private boolean isGenTeleport;
+
 	private String IPaddress, Port;
+	public boolean isChoose = false;
+	public int item = 0;
+	public Entity balloon;
+    public Entity hole;
+    public Entity surprise;
 	
-	// networking instances
-	Server server;
-	Client client;
+	// current progress
+	private MapleStage stage;
 	
 	boolean isHost, isClient;
 	
@@ -64,18 +84,37 @@ public class MapleGame extends GameApplication {
 		score = new int[4];
 	}
 	
+
 	VBox vbox1, vbox2;
 	Pane pane, rank;
+
+	// network instances
+	private Server server;
+	private Client client;
+	
+	VBox menuBox, hostBox, clientBox;
 	
 	protected void initUI() {
+		// setting up menuBox
 		Button create = getUIFactoryService().newButton("CREATE");
         create.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(hostBox);
+        	
+        	try {
+				server = new Server(this);
+			} catch (IOException e1) {
+				System.out.println("[SERVER] can not create a server");
+				e1.printStackTrace();
+			}
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
         join.setOnAction(e -> {
-        	remove();
+        	stage = MapleStage.WAIT;
+        	getGameScene().removeUINode(menuBox);
+        	getGameScene().addUINode(clientBox);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -83,19 +122,97 @@ public class MapleGame extends GameApplication {
         	System.exit(0);
         });
         
-        vbox1 = new VBox(10);
-        vbox1.setTranslateX(getAppWidth()/2 - 100);
-        vbox1.setTranslateY(400);
-        vbox1.getChildren().addAll(
+        menuBox = new VBox(10);
+        menuBox.setTranslateX(getAppWidth()/2 - 100);
+        menuBox.setTranslateY(400);
+        menuBox.getChildren().addAll(
                 create, join, quit
         );
         
-        //getGameScene().addUINode(vbox1);
+        // setting up clientBox
+        TextField ip = new TextField();
+		ip.setPromptText("IP");
+		TextField port = new TextField();
+		port.setPromptText("port");
+		
+		ip.setFont(Font.font(15));
+		port.setFont(Font.font(15));
+		
+		Button ok = getUIFactoryService().newButton("OK");
+        ok.setOnAction(e -> {
+        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
+        		ip.clear();
+        		port.clear();
+        	}
+        	else {
+        		boolean fail = false;
+        		
+        		try {
+					client = new Client(this, ip.getText(), Integer.parseInt(port.getText(), 10));
+				} catch (NumberFormatException | IOException e1) {
+					getDialogService().showMessageBox("Connection failed");
+					e1.printStackTrace();
+					fail = true;
+				}
+        		
+        		if (!fail)
+        			getGameScene().removeUINode(clientBox);
+        	}
+        });
+        
+        Button back = getUIFactoryService().newButton("BACK");
+        back.setOnAction(e -> {
+        	getGameScene().removeUINode(clientBox);
+        	getGameScene().addUINode(menuBox);
+        });
+        
+        clientBox = new VBox(10);
+        clientBox.setTranslateX(getAppWidth()/2 - 100);
+        clientBox.setTranslateY(400);
+        clientBox.getChildren().addAll(
+                ip, port, ok, back
+        );
+        
+        // setting up hostBox
+        InetAddress ip_addr = null;
+		try {
+			ip_addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e1) { e1.printStackTrace(); }
+        
+        Text host_ip = new Text();
+        Text host_port = new Text();
+        
+        host_ip.setFont(Font.font(30));
+        host_port.setFont(Font.font(30));
+        
+        host_ip.setText(ip_addr.getHostAddress());
+        host_port.setText(Server.DEFAULT_PORT.toString());
+        
+        Button host_back = getUIFactoryService().newButton("BACK");
+        host_back.setOnAction(e -> {
+        	getGameScene().removeUINode(hostBox);
+        	getGameScene().addUINode(menuBox);
+        	
+        	server = null;
+        });
+        
+        hostBox = new VBox(10);
+        hostBox.setTranslateX(getAppWidth()/2 - 100);
+        hostBox.setTranslateY(400);
+        hostBox.getChildren().addAll(
+                host_ip, host_port, host_back
+        );
+        
+        // initial show up
+//        getGameScene().addUINode(menuBox);
 
+        
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 1;
         });
         redballoon.setTranslateX(150);
         redballoon.setTranslateY(150);
@@ -104,6 +221,8 @@ public class MapleGame extends GameApplication {
         hole.setOnAction(e-> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 2;
         });
         hole.setTranslateX(300);
         hole.setTranslateY(150);
@@ -112,6 +231,8 @@ public class MapleGame extends GameApplication {
         surprise.setOnAction(e-> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 3;
         });
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
@@ -139,6 +260,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
@@ -146,6 +269,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).right();
 			}
 		}, KeyCode.D);
@@ -153,6 +278,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump") {
 			@Override
 			protected void onAction() {
+				if (stage == MapleStage.PLAY)
+					return;
 				player.getComponent(PlayerComponent.class).jump();
 			}
 		}, KeyCode.W);
@@ -160,23 +287,27 @@ public class MapleGame extends GameApplication {
 	
 	@Override
 	protected void initGame() {
-		getGameWorld().addEntityFactory(new MapleFactory());
+		getGameWorld().addEntityFactory(new MapleFactory(this));
 		spawn("background");
 		setLevelFromMap("map1.tmx");
-		
 		tomb = null;
-		
 		
 		destination = null;
 		destination = getGameWorld().spawn("redflag");
-		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
+		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1500, 367));
 		
-		balloon = null;
+		/*balloon = null;
 		balloon = getGameWorld().spawn("balloon");
 		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
+		*/
+		isGenTeleport = false;
+		teleport1 = null;
+		teleport1 = getGameWorld().spawn("teleport1");
+		//teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 450));
+		
 		
 		player = null;
-		player = getGameWorld().spawn("player");
+		player = getGameWorld().spawn("player", 250, 400);
 		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
 		
 		Viewport viewport = getGameScene().getViewport();
@@ -195,6 +326,27 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
+				player.setVisible(false);
+				player.removeComponent(PhysicsComponent.class);
+				deadTomb();
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity hole) {
+				player.setOpacity(0);
+				player.getComponent(PlayerComponent.class).dead();
+
+				deadTomb();
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity player, Entity surprise) {
+				player.setOpacity(0);
+				player.getComponent(PlayerComponent.class).dead();
 
 				deadTomb();
 			}
@@ -212,7 +364,6 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity deadline) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				
 				deadTomb();
 			}
 		});
@@ -235,11 +386,25 @@ public class MapleGame extends GameApplication {
 				getDialogService().showMessageBox("You died...");
 			}
 		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
+			public void onCollisionBegin(Entity tomb, Entity platform) {
+				getDialogService().showMessageBox("You died...");
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
+			public void onCollisionBegin(Entity player, Entity teleport1) {
+			
+				//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+				
+			}
+		});
 	}
 	
 	public void deadTomb() {
 		tomb = getGameWorld().spawn("tomb");
-		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 200));
+		tomb.setPosition(new Point2D(player.getX(), 200));
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
 			@Override
@@ -249,48 +414,21 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
-	protected void type() {
-		TextField ip = new TextField();
-		ip.setPromptText("IP");
-		TextField port = new TextField();
-		port.setPromptText("port");
-		ip.setFont(Font.font(15));
-		port.setFont(Font.font(15));
-		
-		Button ok = getUIFactoryService().newButton("OK");
-        ok.setOnAction(e -> {
-        	if(ip.getText().isEmpty() || port.getText().isEmpty()) {
-        		ip.clear();
-        		port.clear();
-        	}
-        	else {
-        		IPaddress = ip.getText();
-        		Port = port.getText();
-        		System.out.println(ip.getText());
-        		getGameScene().removeUINode(vbox2);
-        	}
-        });
-        
-        Button back = getUIFactoryService().newButton("BACK");
-        back.setOnAction(e -> {
-        	getGameScene().removeUINode(vbox2);
-        	getGameScene().addUINode(vbox1);
-        });
-        
-        vbox2 = new VBox(10);
-        vbox2.setTranslateX(getAppWidth()/2 - 100);
-        vbox2.setTranslateY(400);
-        vbox2.getChildren().addAll(
-                ip, port, ok, back
-        );
-        
-        getGameScene().addUINode(vbox2);
+	protected void onUpdate() {
+		if(!isGenTeleport) {
+			teleport1 = null;
+			teleport1 = getGameWorld().spawn("teleport1");
+			teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 450));
+			isGenTeleport = true;
+			Duration.seconds(2);
+		}
+		else if(isGenTeleport) {
+			teleport1.removeFromWorld();
+			isGenTeleport = false;
+			Duration.seconds(2);
+		}
 	}
-	
-	protected void remove() {
-		getGameScene().removeUINode(vbox1);
-		type();
-	}
+
 	
 	// interfaces of updating networking information
 	public void setScore(int score, int clientNum) {

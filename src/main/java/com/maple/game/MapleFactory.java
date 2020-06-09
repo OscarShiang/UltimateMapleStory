@@ -26,11 +26,19 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 
 public class MapleFactory implements EntityFactory {
+	private MapleGame game;
+	
+	
+	public MapleFactory(MapleGame game) {
+		this.game = game;
+	}
+	
 	@Spawns("background")
 	public Entity newBackground(SpawnData data) {
 		return entityBuilder()
 				.view(new ScrollingBackgroundView(texture("background/forest.png")))
                 .zIndex(-1)
+                .with(new GroundComponent(game))
                 .with(new IrremovableComponent())
 				.build();
 	}
@@ -77,6 +85,7 @@ public class MapleFactory implements EntityFactory {
                 .with(new PlayerComponent())
                 .build();
 	}
+
 	
 	@Spawns("slime")
 	public Entity newSlime(SpawnData data) {
@@ -182,6 +191,44 @@ public class MapleFactory implements EntityFactory {
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.balloon))
+				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.build();
+	}
+
+	@Spawns("teleport1")
+	public Entity newTeleport1(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.TELEPORT1)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.teleport1))
+				.bbox(new HitBox(BoundingShape.box(47, 80)))
+				.build();
+	}
+	
+	@Spawns("surprise")
+	public Entity newSurprise(SpawnData data) {
+		
+		return entityBuilder()
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.surprise))
+				.bbox(new HitBox(BoundingShape.box(255, 119)))
+				.build();
+	}
+	
+	@Spawns("hole")
+	public Entity newHole(SpawnData data) {
+		
+		return entityBuilder()
+				.type(MapleType.TRAP)
+				.with(new PhysicsComponent())
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
