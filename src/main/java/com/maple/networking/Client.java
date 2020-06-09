@@ -3,19 +3,25 @@ package com.maple.networking;
 import java.io.*;
 import java.net.*;
 
+import com.maple.game.MapleGame;
+import com.maple.player.PlayerType;
+
 public class Client implements Runnable {
 
 	private String ip;
 	private int port;
+	
+	MapleGame game;
 	
 	private Socket socket;
 	
 	private ObjectInputStream input;
 	private ObjectOutputStream buf;
 	
-	private ServerPacket serverPacket;
+	private ServerPacket packet;
 	
-	public Client(String ip, int port) {
+	public Client(MapleGame game, String ip, int port) {
+		this.game = game;
 		this.ip = ip;
 		this.port = port;
 	}
@@ -28,7 +34,22 @@ public class Client implements Runnable {
 			buf = new ObjectOutputStream(socket.getOutputStream());
 			
 			while (!Thread.interrupted()) {
-				serverPacket = (ServerPacket)input.readObject();
+				packet = (ServerPacket)input.readObject();
+				
+				// reading player settings
+				if (game.getPlayerType() != PlayerType.PIG)
+					game.setPig(packet.pig);
+				if (game.getPlayerType() != PlayerType.YETI)
+					game.setYeti(packet.yeti);
+				if (game.getPlayerType() != PlayerType.MUSHROOM)
+					game.setMushroom(packet.mushroom);
+				if (game.getPlayerType() != PlayerType.SLIME)
+					game.setSlime(packet.slime);
+				
+				// reading score and stage
+				for (int i = 0; i < 4; i++) {
+					game.setScore(packet.score[i], i);
+				}
 			}
 			
 			System.out.println("[CLIENT] shutdown");

@@ -6,12 +6,13 @@ import java.net.*;
 import com.maple.game.MapleGame;
 
 public class Server implements Runnable {
+	public final int DEFAULT_PORT = 8084;
 	
 	private MapleGame game;
-	private ServerSocket socket;
+	private ServerSocket server;
 	private int connects;
 	
-	public final int DEFAULT_PORT = 8084;
+	private ObjectOutputStream[] clients;
 	
 	public Server(MapleGame game) {
 		connects = 0;
@@ -20,10 +21,14 @@ public class Server implements Runnable {
 	
 	public void host() {
 		try {
-			socket = new ServerSocket(DEFAULT_PORT);
-
-			while (connects <= 3) {
+			server = new ServerSocket(DEFAULT_PORT);
+			while (connects < 4) {
+				Socket socket = server.accept();
+				ServerWorker worker = new ServerWorker(game, socket, connects);
+				worker.run();
 				
+				clients[connects] = worker.getReader();
+				connects++;
 			}
 		} catch (IOException e) {
 			System.out.println("[SERVER] connection break...");
@@ -31,8 +36,15 @@ public class Server implements Runnable {
 		}
 	}
 	
-	public void updateAll() {
-		
+	public void updateAll(ServerPacket packet) {
+		for(ObjectOutputStream client : clients) {
+			try {
+				client.writeObject(packet);
+			} catch (IOException e) {
+				System.out.println("[SERVER] can not send server packets");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

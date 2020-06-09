@@ -26,14 +26,16 @@ import javafx.scene.text.Font;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
-import com.maple.item.ItemType;
-import com.maple.player.*;
-
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+import com.maple.item.ItemType;
+import com.maple.player.*;
+import com.maple.networking.*;
+
 public class MapleGame extends GameApplication {
 	
+	private PlayerType playerType;
 	private Entity player; // main player (No COPY)
 	private Entity yeti, mushroom, slime, pig;
 	
@@ -43,6 +45,12 @@ public class MapleGame extends GameApplication {
 	
 	// GUI input
 	private String IPaddress, Port;
+	
+	// networking instances
+	Server server;
+	Client client;
+	
+	boolean isHost, isClient;
 	
 	private int[] score;
 	
@@ -306,6 +314,9 @@ public class MapleGame extends GameApplication {
 		setPlayer(mushroom, component);
 	}
 	
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
 	
 	
 	public static void main(String[] args) {

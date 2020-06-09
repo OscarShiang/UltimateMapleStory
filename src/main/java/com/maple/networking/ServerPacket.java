@@ -12,13 +12,14 @@ public class ServerPacket implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private int score, stage;
-	private PlayerComponent yeti, mushroom, pig, slime;
+	public int stage;
+	public int[] score;
+	public PlayerComponent yeti, mushroom, pig, slime;
 	
 	/**
 	 * Save the game progress of player position, game stage, score
 	 */
-	public ServerPacket(int score, PlayerComponent yeti, PlayerComponent mushroom, PlayerComponent pig, PlayerComponent slime) {
+	public ServerPacket(int[] score, PlayerComponent yeti, PlayerComponent mushroom, PlayerComponent pig, PlayerComponent slime) {
 		this.score = score;
 		this.yeti = yeti;
 		this.mushroom = mushroom;

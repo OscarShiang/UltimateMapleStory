@@ -65,7 +65,7 @@ public class ServerWorker implements Runnable {
 				}
 			}
 			
-			System.out.println("[SERVER] worker: shudown");
+			System.out.println("[SERVER] worker: shutdown");
 			
 			socket.close();
 			input.close();
@@ -75,5 +75,9 @@ public class ServerWorker implements Runnable {
 			System.out.println("[SERVER] woker: connection failed");
 			e.printStackTrace();
 		}
+	}
+	
+	public ObjectOutputStream getReader() {
+		return buf;
 	}
 }
