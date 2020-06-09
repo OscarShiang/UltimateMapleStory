@@ -209,8 +209,6 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
-	
-	
 	@Spawns("surprise")
 	public Entity newSurprise(SpawnData data) {
 		
