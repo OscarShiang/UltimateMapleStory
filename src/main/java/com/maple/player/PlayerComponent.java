@@ -24,7 +24,7 @@ public class PlayerComponent extends Component {
 	// default
 	public PlayerComponent() {
 		isJump = false;
-		isDead = false;
+		isDead = true;
 		isWin = false;
 		
 		Image image = image("sprites/mushroom_sprite (Custom).png");
@@ -112,6 +112,8 @@ public class PlayerComponent extends Component {
 			getEntity().setScaleX(1);
 			physics.setVelocityX(-200);
 		}
+		else
+			physics.setVelocityX(0);
 	}
 	
 	public void right() {
@@ -119,6 +121,8 @@ public class PlayerComponent extends Component {
 			getEntity().setScaleX(-1);
 			physics.setVelocityX(200);
 		}
+		else
+			physics.setVelocityX(0);
 	}
 	
 	public void jump() {
@@ -129,8 +133,11 @@ public class PlayerComponent extends Component {
 		isJump = true;
 	}
 	
+	public void start() {
+		isDead = false;
+	}
+	
 	public void dead() {
-		physics.setVelocityX(0);
 		isDead = true;
 	}
 	
