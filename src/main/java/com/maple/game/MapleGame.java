@@ -147,6 +147,8 @@ public class MapleGame extends GameApplication {
         rank.setTranslateY(getAppHeight() / 2 - 250);
         rank.setPrefSize(700, 500);
         
+
+        
         int i = 1;
 
         red  = new Texture(image("item/red.png"));
@@ -188,6 +190,7 @@ public class MapleGame extends GameApplication {
         		chooseItem = 2;
         		
         		//getGameScene().addUINode(rank);
+        		rank.getChildren().addAll(crown);
         		
         	}
         });
@@ -218,7 +221,7 @@ public class MapleGame extends GameApplication {
         		chooseItem = 2;
         		
         		//getGameScene().addUINode(rank);
-        		
+        		rank.getChildren().addAll(crown);
         	}
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
@@ -249,7 +252,7 @@ public class MapleGame extends GameApplication {
         		chooseItem = 2;
         		
         		//getGameScene().addUINode(rank);
-        		
+        		rank.getChildren().addAll(crown);
         	}
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
@@ -277,7 +280,7 @@ public class MapleGame extends GameApplication {
         		chooseItem = 2;
         	
         		//getGameScene().addUINode(rank);
-        		
+        		rank.getChildren().addAll(crown);
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -384,8 +387,15 @@ public class MapleGame extends GameApplication {
 
         rank.getChildren().addAll(scoreText);
 
+        
+        crown.setVisible(false);
+        crown.setTranslateX(120);
+        crown.setTranslateY(130);
+        //crown.setTranslateY(215);
+
+        
         //getGameScene().addUINode(rank);
-//        getGameScene().addUINode(rank);
+        //getGameScene().addUINode(rank);
     
         
 	}
@@ -612,6 +622,9 @@ public class MapleGame extends GameApplication {
 		stage = MapleStage.RESULT;
 		
 		if (score[0] >= 3 || score[1] >= 3) {
+			if(score[1] >= 3)
+				crown.setTranslateY(215);
+			crown.setVisible(true);
 			return;
 		}
 		
