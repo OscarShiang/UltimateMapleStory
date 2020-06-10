@@ -92,14 +92,28 @@ public class MapleGame extends GameApplication {
     Texture green;
     Texture blue;    
     Texture orange;
-
     Texture red_icon;
     Texture green_icon;
     Texture blue_icon;           
     Texture orange_icon;
-	
+    
+    Texture[] rank_red = new Texture[4];
+    Texture[] rank_orange = new Texture[4];
+    Texture[] rank_green = new Texture[4];
+    Texture[] rank_blue = new Texture[4];
+    Texture crown;
+    
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
+		
+		for(int j = 0; j < 4; j++) {
+			rank_red[j] = new Texture(image("rank/rank_red" + j + ".png"));
+			rank_orange[j] = new Texture(image("rank/rank_orange" + j + ".png"));
+			rank_green[j] = new Texture(image("rank/rank_green" + j + ".png"));
+			rank_blue[j] = new Texture(image("rank/rank_blue" + j + ".png"));
+		}
+		crown = new Texture(image("item/crown.png"));
+		
 		
 		Texture title = FXGL.getAssetLoader().loadTexture("item/title.png");
 		title.setScaleX(0.5);
