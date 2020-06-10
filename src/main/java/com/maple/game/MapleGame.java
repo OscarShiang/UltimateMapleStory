@@ -405,7 +405,7 @@ public class MapleGame extends GameApplication {
 
         rank.getChildren().addAll(scoreText);
 
-        getGameScene().addUINode(rank);
+//        getGameScene().addUINode(rank);
     
         
 	}
@@ -622,12 +622,18 @@ public class MapleGame extends GameApplication {
 		}
 		
 
-		getGameWorld().removeEntity(tomb);
-		tomb = null;
+		if (tomb != null) {
+			getGameWorld().removeEntity(tomb);
+			tomb = null;
+		}
 		
 		addPoint();
 		getGameScene().addUINode(rank);
 		stage = MapleStage.RESULT;
+		
+		if (score[0] >= 3 || score[1] >= 3) {
+			return;
+		}
 		
 		runOnce(() ->{
 			getGameScene().removeUINode(rank);
