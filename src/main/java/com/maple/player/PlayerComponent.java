@@ -35,9 +35,9 @@ public class PlayerComponent extends Component {
 		
 		Image image = image("sprites/mushroom_sprite (Custom).png");
 		
-		idle = new AnimationChannel(image, 5, 100, 100, Duration.seconds(1), 0, 1);
-		walk = new AnimationChannel(image, 5, 100, 100, Duration.seconds(0.6), 2, 4);
-		jump = new AnimationChannel(image, 5, 100, 100, Duration.seconds(1), 3, 3);
+		idle = new AnimationChannel(image, 5, 80, 80, Duration.seconds(1), 0, 1);
+		walk = new AnimationChannel(image, 5, 80, 80, Duration.seconds(0.6), 2, 4);
+		jump = new AnimationChannel(image, 5, 80, 80, Duration.seconds(1), 3, 3);
 		
 		texture = new AnimatedTexture(idle);
 		

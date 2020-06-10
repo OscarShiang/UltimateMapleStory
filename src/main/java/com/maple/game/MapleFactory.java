@@ -13,6 +13,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyDef;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 
+
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -63,12 +64,14 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
-	private Entity newPlayer(PlayerType type) {
+	private Entity newPlayer(SpawnData data, PlayerType type) {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.DYNAMIC);
 		
+		
         return entityBuilder()
                 .type(MapleType.PLAYER)
+                .from(data)
                 .with(physics)
                 .bbox(new HitBox(BoundingShape.box(80, 80)))
                 .with(new CollidableComponent(true))
@@ -83,8 +86,9 @@ public class MapleFactory implements EntityFactory {
 		
         return entityBuilder()
                 .type(MapleType.PLAYER)
+                .from(data)
                 .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
+                .bbox(new HitBox(BoundingShape.box(80, 80)))
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
                 .build();
@@ -93,22 +97,22 @@ public class MapleFactory implements EntityFactory {
 	
 	@Spawns("slime")
 	public Entity newSlime(SpawnData data) {
-		return newPlayer(PlayerType.SLIME);
+		return newPlayer(data, PlayerType.SLIME);
 	}
 	
 	@Spawns("yeti")
 	public Entity newYeti(SpawnData data) {
-		return newPlayer(PlayerType.YETI);
+		return newPlayer(data, PlayerType.YETI);
 	}
 	
 	@Spawns("mushroom")
 	public Entity newMush(SpawnData data) {
-		return newPlayer(PlayerType.MUSHROOM);
+		return newPlayer(data, PlayerType.MUSHROOM);
 	}
 	
 	@Spawns("pig")
 	public Entity newPig(SpawnData data) {
-		return newPlayer(PlayerType.PIG);
+		return newPlayer(data, PlayerType.PIG);
 	}
 	
 	@Spawns("redflag")
@@ -118,6 +122,7 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.ITEM)
+				.from(data)
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.redflag))
@@ -131,6 +136,7 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.TOMB)
+				.from(data)
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.tomb))
@@ -145,6 +151,7 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.PLATFORM)
+				.from(data)
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.balloon))
@@ -154,15 +161,12 @@ public class MapleFactory implements EntityFactory {
 
 	@Spawns("teleport1")
 	public Entity newTeleport1(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
-		
 		return entityBuilder()
 				.type(MapleType.TELEPORT1)
-				.with(physics)
+				.from(data)
+				.bbox(new HitBox(BoundingShape.box(47, 80)))
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.teleport1))
-				.bbox(new HitBox(BoundingShape.box(47, 80)))
 				.build();
 	}
 	
@@ -170,6 +174,7 @@ public class MapleFactory implements EntityFactory {
 	public Entity newDeadline(SpawnData data) {
 		return entityBuilder()
 				.type(MapleType.DEADLINE)
+				.from(data)
 				.with(new PhysicsComponent())
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
 				.with(new CollidableComponent(true))
@@ -180,6 +185,7 @@ public class MapleFactory implements EntityFactory {
 	public Entity newCoin(SpawnData data) {
 		return entityBuilder()
 				.type(MapleType.COIN)
+				.from(data)
 				.with(new PhysicsComponent())
 				.with(new ItemComponent(ItemType.coin))
 				.with(new CollidableComponent(true))
@@ -192,6 +198,7 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.TRAP)
+				.from(data)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
@@ -204,10 +211,11 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.TRAP)
+				.from(data)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.bbox(new HitBox(BoundingShape.box(25, 50)))
 				.build();
 	}
 	
@@ -216,6 +224,7 @@ public class MapleFactory implements EntityFactory {
 		
 		return entityBuilder()
 				.type(MapleType.PLATFORM)
+				.from(data)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.brick))
