@@ -414,7 +414,6 @@ public class MapleGame extends GameApplication {
 
 		//isGenTeleport = false;
 		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		
 	}
 	
 	@Override
@@ -434,6 +433,7 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
 				deadTomb(player);
+				playerDead(player);
 			}
 		});
 		
@@ -442,7 +442,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-
+				playerDead(player);
 				deadTomb(player);
 			}
 		});
@@ -452,7 +452,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity surprise) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-
+				playerDead(player);
 				deadTomb(player);
 			}
 		});
@@ -466,7 +466,9 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLAYER) {
 			@Override
-			public void onCollisionBegin(Entity p1, Entity p2) { }
+			public void onCollisionBegin(Entity p1, Entity p2) { 
+				
+			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
@@ -475,30 +477,18 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
+				playerDead(player);
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
+				playerWin(player);
 				getDialogService().showMessageBox("Finish!");
+				
 			}
 		});
-		
-		
-		/*getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
-			public void onCollisionBegin(Entity tomb, Entity player) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});*/
-		
-		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
-			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
-				tmpPlayer.setPosition(new Point2D(100, 100));
-				//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
-				//teleport();
-			}
-		});*/
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
@@ -508,16 +498,13 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
-	/*public void teleport() {
-		teleportPos();
+	public void playerDead(Entity player) {
+		
 	}
 	
-	public void teleportPos() {
-		if (player != null) {
-			//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
-			player.setZ(Integer.MAX_VALUE);
-		}
-	}*/
+	public void playerWin(Entity player) {
+		
+	}
 	
 	public void deadTomb(Entity player) {
 		if (!realDead) {
