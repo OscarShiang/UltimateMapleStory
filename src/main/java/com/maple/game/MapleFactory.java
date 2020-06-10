@@ -13,6 +13,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyDef;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 
+
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -67,6 +68,7 @@ public class MapleFactory implements EntityFactory {
 	public Entity newPlayer(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.DYNAMIC);
+		
 		
         return entityBuilder()
                 .type(MapleType.PLAYER)
@@ -234,5 +236,26 @@ public class MapleFactory implements EntityFactory {
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
+	
+	@Spawns("tmpPlayer")
+    public Entity newTmpPlayer(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
+        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
+
+        // this avoids player sticking to walls
+        physics.setFixtureDef(new FixtureDef().friction(0.0f));
+
+        return entityBuilder()
+                .type(MapleType.TMPPLAYER)
+                .from(data)
+                .bbox(new HitBox(new Point2D(5,5), BoundingShape.circle(5)))
+                .bbox(new HitBox(new Point2D(10,25), BoundingShape.box(10, 17)))
+                .with(physics)
+                .with(new CollidableComponent(true))
+                .with(new IrremovableComponent())
+                .with(new PlayerComponent())
+                .build();
+    }
 	
 }

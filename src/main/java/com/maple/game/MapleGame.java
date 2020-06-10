@@ -38,7 +38,6 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.maple.item.ItemType;
 import com.maple.mouse.Mouse;
-import com.maple.player.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -46,7 +45,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.maple.item.ItemType;
 import com.maple.player.*;
 import com.maple.networking.*;
 
@@ -54,7 +52,8 @@ public class MapleGame extends GameApplication {
 	
 	private PlayerType playerType;
 	private Entity player; // main player (No COPY)
-
+	//private Entity tmpPlayer;
+	
 	public Entity yeti, mushroom, slime, pig;
 	
 	private Entity destination;
@@ -265,6 +264,7 @@ public class MapleGame extends GameApplication {
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
         	player.getComponent(PlayerComponent.class).start();
+        	//tmpPlayer.getComponent(PlayerComponent.class).start();
         	isChoose = true;
         	item = 1;
         });
@@ -335,6 +335,7 @@ public class MapleGame extends GameApplication {
 				if (stage == MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).left();
+				//tmpPlayer.getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
 		
@@ -344,6 +345,7 @@ public class MapleGame extends GameApplication {
 				if (stage == MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).right();
+				//tmpPlayer.getComponent(PlayerComponent.class).right();
 			}
 		}, KeyCode.D);
 		
@@ -353,6 +355,7 @@ public class MapleGame extends GameApplication {
 				if (stage == MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).jump();
+				//tmpPlayer.getComponent(PlayerComponent.class).jump();
 			}
 		}, KeyCode.W);
 	}
@@ -423,6 +426,9 @@ public class MapleGame extends GameApplication {
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));
 		
+		//tmpPlayer = null;
+		//tmpPlayer = getGameWorld().spawn("tmpPlayer", 400, 400);
+		//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
 		
 		player = null;
 		player = getGameWorld().spawn("player", 250, 400);
@@ -510,13 +516,13 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
-			public void onCollisionBegin(Entity player, Entity teleport1) {
-				player.setPosition(new Point2D(100, 100));
-				//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
+			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
+				tmpPlayer.setPosition(new Point2D(100, 100));
+				//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
 				//teleport();
 			}
-		});
+		});*/
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.BOMB, MapleType.TRAP) {
 			@Override
