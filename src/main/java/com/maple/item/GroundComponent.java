@@ -64,7 +64,7 @@ public class GroundComponent extends Component {
     			game.hole.removeFromWorld();	
     		}
     		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
-    			game.surprise.removeFromWorld();	
+    			game.surprise.removeFromWorld();
     		}
     		if(game.brick.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
     			game.brick.removeFromWorld();	
