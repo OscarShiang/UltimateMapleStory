@@ -309,7 +309,7 @@ public class MapleGame extends GameApplication {
         scoreMushroom.setFont(Font.font(25));
         Text scoreYeti = new Text("0");
         scoreYeti.setTranslateX(640);
-        scoreYeti.setTranslateY(215);
+        scoreYeti.setTranslateY(295);
         scoreYeti.setFont(Font.font(25));
         Text scoreSlime = new Text("0");
         scoreSlime.setTranslateX(640);
