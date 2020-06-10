@@ -401,20 +401,7 @@ public class MapleGame extends GameApplication {
 		/*isGenTeleport = false;
 		teleport1 = null;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
-		
-//		player = null;
-//		player = getGameWorld().spawn("player", 600, 10);
-//		Viewport viewport = getGameScene().getViewport();
-//
-//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-//
-//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-//        viewport.setLazy(true);
-
-		//isGenTeleport = false;
-		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/		
 	}
 	
 	@Override
