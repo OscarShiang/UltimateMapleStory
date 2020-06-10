@@ -38,22 +38,22 @@ public class GroundComponent extends Component {
     }
 
     public void trigger() {
-    	if(game.isChoose == true && game.item == 1) {
+    	if(game.chooseItem > 0 && game.item == 1) {
 	    	game.balloon = null;
 			game.balloon = getGameWorld().spawn("balloon");
 			game.balloon.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
-    	else if(game.isChoose == true && game.item == 2) {
+    	else if(game.chooseItem > 0 && game.item == 2) {
 	    	game.hole = null;
 			game.hole = getGameWorld().spawn("hole");
 			game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
-    	else if(game.isChoose == true && game.item == 3) {
+    	else if(game.chooseItem > 0 && game.item == 3) {
 	    	game.surprise = null;
 			game.surprise = getGameWorld().spawn("surprise");
 			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
-    	else if(game.isChoose == true && game.item == 4) {
+    	else if(game.chooseItem > 0 && game.item == 4) {
     		if(game.balloon.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
     			game.balloon.removeFromWorld();	
     		}
@@ -67,12 +67,12 @@ public class GroundComponent extends Component {
     			game.brick.removeFromWorld();	
     		}
     	}
-    	else if(game.isChoose == true && game.item == 5) {
+    	else if(game.chooseItem > 0 && game.item == 5) {
 	    	game.brick = null;
 			game.brick = getGameWorld().spawn("brick");
 			game.brick.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
-		game.isChoose = false;
-        
+    	
+    	game.placeItem();
     }
 }

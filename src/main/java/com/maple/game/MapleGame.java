@@ -35,7 +35,7 @@ public class MapleGame extends GameApplication {
 	private Entity teleport1;
 	private boolean isGenTeleport;
 	
-	public boolean isChoose = false;
+	public int chooseItem = 0;
 	public int item = 0;
 	public Entity balloon;
     public Entity hole;
@@ -60,6 +60,7 @@ public class MapleGame extends GameApplication {
 			score[i] = 0;
 		
 		chosenPlayer = 0;
+		chooseItem = 0;
 	}
 	
 
@@ -67,7 +68,7 @@ public class MapleGame extends GameApplication {
 	
 	VBox menuBox, selectBox;
 	
-	private int chosenPlayer = 0;
+	private int chosenPlayer;
 	
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
@@ -96,9 +97,10 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
-        		stage = MapleStage.PLAY;
+        		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
+        		chooseItem = 2;
         	}
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
@@ -110,6 +112,7 @@ public class MapleGame extends GameApplication {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
+        		chooseItem = 2;
         	}
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
@@ -121,6 +124,7 @@ public class MapleGame extends GameApplication {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
+        		chooseItem = 2;
         	}
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
@@ -132,6 +136,7 @@ public class MapleGame extends GameApplication {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
+        		chooseItem = 2;
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -159,7 +164,7 @@ public class MapleGame extends GameApplication {
         redballoon.setStyle("-fx-background-color: transparent;");
         redballoon.setOnAction(e -> {
         	pane.setVisible(false);
-        	isChoose = true;
+        	chosenPlayer--;
         	item = 1;
         });
         redballoon.setTranslateX(150);
@@ -169,7 +174,7 @@ public class MapleGame extends GameApplication {
         hole.setStyle("-fx-background-color: transparent;");
         hole.setOnAction(e-> {
         	pane.setVisible(false);
-        	isChoose = true;
+        	chooseItem--;
         	item = 2;
         });
         hole.setTranslateX(300);
@@ -179,7 +184,7 @@ public class MapleGame extends GameApplication {
         surprise.setStyle("-fx-background-color: transparent;");
         surprise.setOnAction(e-> {
         	pane.setVisible(false);
-        	isChoose = true;
+        	chooseItem--;
         	item = 3;
         });
         surprise.setTranslateX(600);
@@ -188,7 +193,7 @@ public class MapleGame extends GameApplication {
         Button bomb = new Button("", new ImageView(image("item/bomb.png")));
         bomb.setOnAction(e-> {
         	pane.setVisible(false);
-        	isChoose = true;
+        	chooseItem--;
         	item = 4;
         });
         bomb.setTranslateX(150);
@@ -197,7 +202,7 @@ public class MapleGame extends GameApplication {
         Button brick = new Button("", new ImageView(image("item/brick.png")));
         brick.setOnAction(e-> {
         	pane.setVisible(false);
-        	isChoose = true;
+        	chooseItem--;
         	item = 5;
         });
         brick.setTranslateX(300);
@@ -302,6 +307,14 @@ public class MapleGame extends GameApplication {
 				player[1].getComponent(PlayerComponent.class).jump();
 			}
 		}, KeyCode.UP);
+	}
+	
+	public void placeItem() {
+		if (chooseItem == 0)
+			stage = MapleStage.PLAY;
+		else {
+			pane.setVisible(true);
+		}
 	}
 	
 	public void startGame() {
