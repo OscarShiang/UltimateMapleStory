@@ -51,6 +51,7 @@ public class MapleGame extends GameApplication {
 	
 	private int[] score;
 	private String[] choosePlayer;	
+	private Text[] scoreText;
 	
 	public boolean canPlace;
 	
@@ -303,7 +304,7 @@ public class MapleGame extends GameApplication {
         
 
         
-        Text scoreMushroom = new Text("0");
+        /*Text scoreMushroom = new Text("0");
         scoreMushroom.setTranslateX(640);
         scoreMushroom.setTranslateY(215);
         scoreMushroom.setFont(Font.font(25));
@@ -319,7 +320,18 @@ public class MapleGame extends GameApplication {
         scorePig.setTranslateX(640);
         scorePig.setTranslateY(215);
         scorePig.setFont(Font.font(25));
-        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);       
+        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);*/    
+        
+        scoreText = new Text[2];
+        
+        for(int j = 0; j < 2; j++) {
+            scoreText[j] = new Text("0");
+        	scoreText[j].setTranslateX(640);
+            scoreText[j].setTranslateY(215 + 80 * j);
+            scoreText[j].setFont(Font.font(25));
+        }
+
+        rank.getChildren().addAll(scoreText);       
 
         //getGameScene().addUINode(rank);
     
@@ -526,6 +538,14 @@ public class MapleGame extends GameApplication {
 		}
 	}
 
+	
+	public void addPoint() {
+		for(int j = 0; j < 2; j++) {
+			scoreText[j].setText(Integer.toString(score[j]));
+		}
+	}
+	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
