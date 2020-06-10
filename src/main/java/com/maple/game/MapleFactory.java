@@ -185,7 +185,6 @@ public class MapleFactory implements EntityFactory {
 		return entityBuilder()
 				.type(MapleType.DEADLINE)
 				.from(data)
-				.with(new PhysicsComponent())
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
 				.with(new CollidableComponent(true))
 				.build();
@@ -208,7 +207,6 @@ public class MapleFactory implements EntityFactory {
 		return entityBuilder()
 				.type(MapleType.TRAP)
 				.from(data)
-				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
 				.bbox(new HitBox(new Point2D(30,15), BoundingShape.box(200, 90)))
@@ -221,7 +219,6 @@ public class MapleFactory implements EntityFactory {
 		return entityBuilder()
 				.type(MapleType.TRAP)
 				.from(data)
-				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(new Point2D(25, 25),BoundingShape.box(50, 50)))

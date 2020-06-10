@@ -525,12 +525,12 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLAYER) {
+		/*getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLAYER) {
 			@Override
 			public void onCollisionBegin(Entity p1, Entity p2) { 
 				
 			}
-		});
+		});*/
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
 			@Override
@@ -565,14 +565,20 @@ public class MapleGame extends GameApplication {
 	public void nextRound() {
 		playerFinish = 0;
 		
-		for (int i = 0; i < 2; i++) {
-			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));	
-			player[i].setOpacity(1);
-		}
-		
 		if (tomb != null) {
 			getGameWorld().removeEntity(tomb);
 		}
+		
+
+		//player[0].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+		for (int i = 0; i < 2; i++) {
+			System.out.println("a\n");			
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));	
+			player[i].setOpacity(1);
+			System.out.println("b\n");
+		}
+		
+		
 		
 		getGameScene().addUINode(rank);
 		stage = MapleStage.RESULT;
@@ -598,6 +604,7 @@ public class MapleGame extends GameApplication {
 			for (int i = 0; i < 2; i++) {
 				player[i].getComponent(PlayerComponent.class).restore();
 			}
+			
 		}, Duration.seconds(3));
 	}
 	
@@ -617,8 +624,7 @@ public class MapleGame extends GameApplication {
 	
 	public void deadTomb(Entity player) {
 		if (!realDead) {
-			tomb = getGameWorld().spawn("tomb");
-			tomb.setPosition(new Point2D(player.getX(), 0));
+			tomb = getGameWorld().spawn("tomb", player.getX(), 0);
 			realDead = true;
 		}
 	}

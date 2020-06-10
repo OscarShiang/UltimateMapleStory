@@ -48,13 +48,13 @@ public class GroundComponent extends Component {
     	}
     	else if(game.chooseItem > 0 && game.item == 2) {
 	    	game.hole = null;
-			game.hole = getGameWorld().spawn("hole");
-			game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+			game.hole = getGameWorld().spawn("hole", input.getMousePositionWorld());
+			//game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.chooseItem > 0 && game.item == 3) {
 	    	game.surprise = null;
-			game.surprise = getGameWorld().spawn("surprise");
-			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+			game.surprise = getGameWorld().spawn("surprise", input.getMousePositionWorld());
+//			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.chooseItem > 0 && game.item == 4) {
     		if(game.balloon.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
