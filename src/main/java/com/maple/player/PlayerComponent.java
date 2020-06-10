@@ -28,7 +28,7 @@ public class PlayerComponent extends Component {
 	private AnimationChannel idle, walk, jump;
 	
 	public PlayerInfo info;
-	
+
 	// default
 	public PlayerComponent() {
 		isJump = false;

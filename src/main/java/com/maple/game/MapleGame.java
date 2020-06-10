@@ -171,13 +171,13 @@ public class MapleGame extends GameApplication {
             //green.setTranslateY(195 + 80 * chosenPlayer);
             for(int j = 0; j < 4; j++) {
             	rank_green[j].setTranslateY(178 + 80 * chosenPlayer);
-       		 	rank_green[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	rank_green[j].setTranslateX(red.getWidth()/2);
        		 	if(j == 0)
        		 		rank_green[j].setVisible(true);
        		 	else 
        		 		rank_green[j].setVisible(false);
             }
-        	rank.getChildren().addAll( green_icon, green);
+        	rank.getChildren().addAll(rank_green);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_yeti.setDisable(true);
@@ -201,13 +201,13 @@ public class MapleGame extends GameApplication {
             //orange.setTranslateY(194 + 80 * chosenPlayer);
             for(int j = 0; j < 4; j++) {
             	rank_orange[j].setTranslateY(178 + 80 * chosenPlayer);
-       		 	rank_orange[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	rank_orange[j].setTranslateX(red.getWidth()/2);
        		 	if(j == 0)
        		 		rank_orange[j].setVisible(true);
        		 	else 
        		 		rank_orange[j].setVisible(false);
             }
-        	rank.getChildren().addAll( orange_icon, orange);
+        	rank.getChildren().addAll(rank_orange);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_pig.setDisable(true);
@@ -232,13 +232,13 @@ public class MapleGame extends GameApplication {
             //blue.setTranslateY(192 + 80 * chosenPlayer);
             for(int j = 0; j < 4; j++) {
             	rank_blue[j].setTranslateY(178 + 80 * chosenPlayer);
-       		 	rank_blue[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	rank_blue[j].setTranslateX( red.getWidth()/2);
        		 	if(j == 0)
        		 		rank_blue[j].setVisible(true);
        		 	else 
        		 		rank_blue[j].setVisible(false);
             }
-    		rank.getChildren().addAll( blue_icon, blue);
+    		rank.getChildren().addAll(rank_blue);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_slime.setDisable(true);
@@ -259,14 +259,14 @@ public class MapleGame extends GameApplication {
         	//red.setScaleX(10);
             for(int j = 0; j < 4; j++) {
             	rank_red[j].setTranslateY(178 + 80 * chosenPlayer);
-       		 	rank_red[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	rank_red[j].setTranslateX(red.getWidth()/2);
        		 	if(j == 0)
        		 		rank_red[j].setVisible(true);
        		 	else 
        		 		rank_red[j].setVisible(false);
             }
 	     	//red.setTranslateY(192 + 80 * chosenPlayer);
-	   		rank.getChildren().addAll(rank_red[0]);
+	   		rank.getChildren().addAll(rank_red);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_mushroom.setDisable(true);
@@ -370,27 +370,6 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(bomb_button);
         pane.getChildren().addAll(brick_button);
 //        getGameScene().addUINodes(pane);
-        
-
-        
-        /*Text scoreMushroom = new Text("0");
-        scoreMushroom.setTranslateX(640);
-        scoreMushroom.setTranslateY(215);
-        scoreMushroom.setFont(Font.font(25));
-        Text scoreYeti = new Text("0");
-        scoreYeti.setTranslateX(640);
-        scoreYeti.setTranslateY(295);
-        scoreYeti.setFont(Font.font(25));
-        Text scoreSlime = new Text("0");
-        scoreSlime.setTranslateX(640);
-        scoreSlime.setTranslateY(215);
-        scoreSlime.setFont(Font.font(25));
-        Text scorePig = new Text("0");
-        scorePig.setTranslateX(640);
-        scorePig.setTranslateY(215);
-        scorePig.setFont(Font.font(25));
-        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);*/    
-        
 
         scoreText = new Text[2];
         //scoreText[0] = new Text("10");
@@ -398,14 +377,14 @@ public class MapleGame extends GameApplication {
 
         for(int j = 0; j < 2; j++) {
             scoreText[j] = new Text("0");
-        	scoreText[j].setTranslateX(640);
+        	scoreText[j].setTranslateX(660);
             scoreText[j].setTranslateY(215 + 80 * j);
             scoreText[j].setFont(Font.font(25));
         }
 
         rank.getChildren().addAll(scoreText);
 
-        getGameScene().addUINode(rank);
+        //getGameScene().addUINode(rank);
     
         
 	}
@@ -621,9 +600,10 @@ public class MapleGame extends GameApplication {
 			System.out.println("b\n");
 		}
 		
-
-		getGameWorld().removeEntity(tomb);
-		tomb = null;
+		if (tomb != null) {
+			getGameWorld().removeEntity(tomb);
+			tomb = null;
+		}
 		
 		addPoint();
 		getGameScene().addUINode(rank);
@@ -683,30 +663,26 @@ public class MapleGame extends GameApplication {
 		for(int j = 0; j < 2; j++) {
 			scoreText[j].setText(Integer.toString(score[j]));
 			
-			/*if(score[j] > 0) {
+			if(score[j] != 0) {
 				switch(choosePlayer[j]) {
-				case "yeti" :
-					green.setVisible(true);
-					green.setScaleX(score[j]);
-					green.setTranslateX(108 + 12 * score[j] + green.getWidth()/2);
+				case "yeti":
+					rank_green[score[j]].setVisible(true);
+					rank_green[score[j] - 1].setVisible(false);
 					break;
-				case "pig" :
-					orange.setVisible(true);
-					orange.setScaleX(score[j]);
-					orange.setTranslateX(108 + 12 * score[j] + orange.getWidth()/2);
+				case "slime":
+					rank_blue[score[j]].setVisible(true);
+					rank_blue[score[j] - 1].setVisible(false);
 					break;
-				case "mushroom" :
-					red.setVisible(true);
-					red.setScaleX(score[j]);
-		   		 	red.setTranslateX(108 + 12 * score[j] + red.getWidth()/2);
+				case "mushroom":
+					rank_red[score[j]].setVisible(true);
+					rank_red[score[j] - 1].setVisible(false);
 					break;
-				case "slime" :
-					blue.setVisible(true);
-					blue.setScaleX(score[j]);
-					blue.setTranslateX(108 + 12 * score[j] + blue.getWidth()/2);
+				case "pig":
+					rank_orange[score[j]].setVisible(true);
+					rank_orange[score[j] - 1].setVisible(false);
 					break;
 				}
-			}*/
+			}
 		}
 	}
 	
