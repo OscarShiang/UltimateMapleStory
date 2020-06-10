@@ -58,15 +58,28 @@ public class GroundComponent extends Component {
     	}
     	else if(game.chooseItem > 0 && game.item == 4) {
     		if(game.balloon.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
-    			game.balloon.removeFromWorld();	
+    			if (game.balloon == null) {
+        			game.chooseItem++;
+        		} else 
+        			game.balloon.removeFromWorld();	
     		}
     		else if(game.hole.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
-    			game.hole.removeFromWorld();	
+    			if (game.hole == null) {
+        			game.chooseItem++;
+        		} else 
+        			game.hole.removeFromWorld();	
     		}
     		else if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
-    			game.surprise.removeFromWorld();
+    			if (game.surprise == null) {
+        			game.chooseItem++;
+        		} else 
+        			game.surprise.removeFromWorld();
     		}
     		else if(game.brick.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
+    			if (game.brick == null) {
+        			game.chooseItem++;
+        		} else 
+        			game.brick.removeFromWorld();
     			game.brick.removeFromWorld();	
     		}
     	}

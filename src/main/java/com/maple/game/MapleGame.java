@@ -363,7 +363,7 @@ public class MapleGame extends GameApplication {
             scoreText[j].setFont(Font.font(25));
         }
 
-        //rank.getChildren().addAll(scoreText);       
+        rank.getChildren().addAll(scoreText);
 
         //getGameScene().addUINode(rank);
     
@@ -575,6 +575,7 @@ public class MapleGame extends GameApplication {
 			tomb = null;
 		}
 		
+		addPoint();
 		getGameScene().addUINode(rank);
 		stage = MapleStage.RESULT;
 		
