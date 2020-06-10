@@ -3,6 +3,7 @@ package com.maple.networking;
 import java.io.*;
 
 import com.maple.player.PlayerComponent;
+import com.maple.player.PlayerInfo;
 
 public class ServerPacket implements Serializable {
 
@@ -14,12 +15,12 @@ public class ServerPacket implements Serializable {
 	
 	public int stage;
 	public int[] score;
-	public PlayerComponent yeti, mushroom, pig, slime;
+	public PlayerInfo yeti, mushroom, pig, slime;
 	
 	/**
 	 * Save the game progress of player position, game stage, score
 	 */
-	public ServerPacket(int[] score, PlayerComponent yeti, PlayerComponent mushroom, PlayerComponent pig, PlayerComponent slime) {
+	public ServerPacket(int[] score, PlayerInfo yeti, PlayerInfo mushroom, PlayerInfo pig, PlayerInfo slime) {
 		this.score = score;
 		this.yeti = yeti;
 		this.mushroom = mushroom;
@@ -31,19 +32,19 @@ public class ServerPacket implements Serializable {
 		this.stage = stage;
 	}
 	
-	public void setYeti(PlayerComponent yeti) {
+	public void setYeti(PlayerInfo yeti) {
 		this.yeti = yeti;
 	}
 	
-	public void setMushroom(PlayerComponent mushroom) {
+	public void setMushroom(PlayerInfo mushroom) {
 		this.mushroom = mushroom;
 	}
 	
-	public void setPig(PlayerComponent pig) {
+	public void setPig(PlayerInfo pig) {
 		this.pig = pig;
 	}
 	
-	public void setSlime(PlayerComponent slime) {
+	public void setSlime(PlayerInfo slime) {
 		this.slime = slime;
 	}
 }
