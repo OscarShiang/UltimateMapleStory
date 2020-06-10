@@ -129,6 +129,21 @@ public class MapleFactory implements EntityFactory {
 				.bbox(new HitBox(BoundingShape.box(84, 100)))
 				.build();
 	}
+	
+	@Spawns("teleport2")
+	public Entity newTeleport2(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.STATIC);
+		
+		return entityBuilder()
+				.type(MapleType.ITEM)
+				.from(data)
+				.with(new CollidableComponent(false))
+				.with(new ItemComponent(ItemType.teleport2))
+				.bbox(new HitBox(BoundingShape.box(47, 80)))
+				.build();
+	}
+	
 	@Spawns("tomb")
 	public Entity newTomb(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
@@ -202,7 +217,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
-				.bbox(new HitBox(BoundingShape.box(200, 100)))
+				.bbox(new HitBox(new Point2D(30,15), BoundingShape.box(200, 90)))
 				.build();
 	}
 	
@@ -215,7 +230,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
-				.bbox(new HitBox(BoundingShape.box(25, 50)))
+				.bbox(new HitBox(new Point2D(25, 25),BoundingShape.box(50, 50)))
 				.build();
 	}
 	
