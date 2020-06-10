@@ -3,9 +3,11 @@ package com.maple.game;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.texture.Texture;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -80,11 +82,20 @@ public class MapleGame extends GameApplication {
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
+		var title = FXGL.getAssetLoader().loadTexture("item/title.png");
+		title.setScaleX(0.5);
+		title.setScaleY(0.5);
+		title.setX(100);
+		title.setY(50);
+		getGameScene().addUINode(title);
+		
+		
 		// setting up menuBox
 		Button start = getUIFactoryService().newButton("START");
 		start.setOnAction(e -> {
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(selectBox);
+        	getGameScene().removeUINode(title);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -92,9 +103,9 @@ public class MapleGame extends GameApplication {
         
         menuBox = new VBox(10);
         menuBox.setTranslateX(getAppWidth()/2 - 100);
-        menuBox.setTranslateY(400);
+        menuBox.setTranslateY(500);
         menuBox.getChildren().addAll(
-                start, quit
+        		start, quit
         );
         
         // setting up select box
@@ -150,7 +161,7 @@ public class MapleGame extends GameApplication {
         select_back.setOnAction(e -> {
         	getGameScene().removeUINode(selectBox);
         	getGameScene().addUINode(menuBox);
-        	
+        	getGameScene().addUINode(title);
         	chosenPlayer = 0;
         	for (int i = 0; i < PLAYER_NUM; i++) {
         		player[i] = null;
@@ -245,11 +256,6 @@ public class MapleGame extends GameApplication {
         scoreMushroom.setTranslateX(640);
         scoreMushroom.setTranslateY(215);
         
-        /* need to be modified
-
-        Text scoreMushroom = new Text((Integer.toString(score[0])));
-        scoreMushroom.setTranslateX(550);
-        scoreMushroom.setTranslateY(125);
         scoreMushroom.setFont(Font.font(25));
         Text scoreYeti = new Text("0");
         scoreYeti.setTranslateX(640);
@@ -290,10 +296,9 @@ public class MapleGame extends GameApplication {
         blue_icon.setTranslateY(178);        
         Texture orange_icon  = new Texture(image("item/rank_orange.png"));
         orange_icon.setTranslateY(178);
-        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig, /*red_icon, red, green_icon, green, blue_icon, blue, orange_icon, orange);
-        getGameScene().addUINode(rank);
-        
-        */
+        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig, red_icon, red, green_icon, green, blue_icon, blue, orange_icon, orange);
+        //getGameScene().addUINode(rank);
+    
         
 	}
 	
@@ -384,6 +389,27 @@ public class MapleGame extends GameApplication {
 		destination = null;
 		destination = getGameWorld().spawn("redflag", new Point2D(1500, 367));
 
+		/*balloon = null;
+		balloon = getGameWorld().spawn("balloon");
+		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
+		*/
+		/*isGenTeleport = false;
+		teleport1 = null;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
+		
+//		player = null;
+//		player = getGameWorld().spawn("player", 600, 10);
+//		Viewport viewport = getGameScene().getViewport();
+//
+//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
+//
+//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+//        viewport.setLazy(true);
+
+		//isGenTeleport = false;
+		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		
 		isGenTeleport = false;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
