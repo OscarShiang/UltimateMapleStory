@@ -52,6 +52,8 @@ public class MapleGame extends GameApplication {
 	private int[] score;
 	private int[] choosePlayer;
 	
+	public boolean canPlace;
+	
 	@Override
 	protected void initSettings(GameSettings settings) {
 		settings.setTitle("Ultimate MapleStory");
@@ -82,7 +84,7 @@ public class MapleGame extends GameApplication {
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
-		var title = FXGL.getAssetLoader().loadTexture("item/title.png");
+		Texture title = FXGL.getAssetLoader().loadTexture("item/title.png");
 		title.setScaleX(0.5);
 		title.setScaleY(0.5);
 		title.setX(100);
@@ -114,7 +116,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -126,7 +127,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -138,7 +138,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -150,7 +149,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -181,8 +179,8 @@ public class MapleGame extends GameApplication {
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setStyle("-fx-background-color: transparent;");
         redballoon.setOnAction(e -> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chosenPlayer--;
         	item = 1;
         	redballoon.setVisible(false);
         });
@@ -192,8 +190,8 @@ public class MapleGame extends GameApplication {
         Button hole = new Button("", new ImageView(image("item/hole.png")));
         hole.setStyle("-fx-background-color: transparent;");
         hole.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 2;
         	hole.setVisible(false);
         });
@@ -203,8 +201,8 @@ public class MapleGame extends GameApplication {
         Button surprise = new Button("", new ImageView(image("item/surprise.png")));
         surprise.setStyle("-fx-background-color: transparent;");
         surprise.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 3;
         	surprise.setVisible(false);
         });
@@ -213,8 +211,8 @@ public class MapleGame extends GameApplication {
         
         Button bomb = new Button("", new ImageView(image("item/bomb.png")));
         bomb.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 4;
         	bomb.setVisible(false);
         });
@@ -223,8 +221,8 @@ public class MapleGame extends GameApplication {
         
         Button brick = new Button("", new ImageView(image("item/brick.png")));
         brick.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 5;
         	brick.setVisible(false);
         });
@@ -361,7 +359,9 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void placeItem() {
-		if (chooseItem <= 1)
+		canPlace = false;
+		
+		if (chooseItem <= 0)
 			stage = MapleStage.PLAY;
 		else {
 			pane.setVisible(true);
