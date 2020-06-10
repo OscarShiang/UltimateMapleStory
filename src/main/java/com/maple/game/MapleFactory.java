@@ -217,7 +217,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.surprise))
-				.bbox(new HitBox(BoundingShape.box(255, 119)))
+				.bbox(new HitBox(BoundingShape.box(200, 100)))
 				.build();
 	}
 	
@@ -225,11 +225,12 @@ public class MapleFactory implements EntityFactory {
 	public Entity newHole(SpawnData data) {
 		
 		return entityBuilder()
-				.type(MapleType.TRAP)
+				.type(MapleType.BOMB)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
+	
 }

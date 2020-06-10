@@ -516,6 +516,13 @@ public class MapleGame extends GameApplication {
 				
 			}
 		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.BOMB, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity hole, Entity surprise) {
+				surprise.removeFromWorld();
+			}
+		});
 	}
 	
 	public void deadTomb() {
