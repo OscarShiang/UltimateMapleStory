@@ -53,17 +53,17 @@ public class GroundComponent  extends Component {
 			game.surprise = getGameWorld().spawn("surprise");
 			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
-    	/* bomb setting
-    	 * else if(game.isChoose ==  false) {
+    	else if(game.isChoose == true && game.item == 4) {
     		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
-    			game.surprise.removeFromWorld();
-    			
+    			game.surprise.removeFromWorld();	
     		}
-    		System.out.println(input.getMousePositionWorld());
-	    	game.hole = null;
-			game.hole = getGameWorld().spawn("hole");
-			game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
-    	}*/
+    		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.balloon.removeFromWorld();	
+    		}
+    		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.hole.removeFromWorld();	
+    		}
+    	}
 		game.isChoose = false;
         
     }
