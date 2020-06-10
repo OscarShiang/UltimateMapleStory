@@ -163,10 +163,10 @@ public class MapleGame extends GameApplication {
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
-//        		getGameScene().addUINodes(pane);
+        		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-//        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -188,7 +188,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-//        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -211,7 +211,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-//        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -233,7 +233,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-//        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -256,7 +256,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
-         getGameScene().addUINode(menuBox);
+        getGameScene().addUINode(menuBox);
         
         redballoon_button = new Button("", new ImageView(image("item/balloon.png")));
         redballoon_button.setStyle("-fx-background-color: transparent;");
