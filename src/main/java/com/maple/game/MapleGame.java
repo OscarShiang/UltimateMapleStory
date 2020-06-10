@@ -92,14 +92,28 @@ public class MapleGame extends GameApplication {
     Texture green;
     Texture blue;    
     Texture orange;
-
     Texture red_icon;
     Texture green_icon;
     Texture blue_icon;           
     Texture orange_icon;
-	
+    
+    Texture[] rank_red = new Texture[4];
+    Texture[] rank_orange = new Texture[4];
+    Texture[] rank_green = new Texture[4];
+    Texture[] rank_blue = new Texture[4];
+    Texture crown;
+    
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
+		
+		for(int j = 0; j < 4; j++) {
+			rank_red[j] = new Texture(image("rank/rank_red" + j + ".png"));
+			rank_orange[j] = new Texture(image("rank/rank_orange" + j + ".png"));
+			rank_green[j] = new Texture(image("rank/rank_green" + j + ".png"));
+			rank_blue[j] = new Texture(image("rank/rank_blue" + j + ".png"));
+		}
+		crown = new Texture(image("item/crown.png"));
+		
 		
 		Texture title = FXGL.getAssetLoader().loadTexture("item/title.png");
 		title.setScaleX(0.5);
@@ -232,12 +246,9 @@ public class MapleGame extends GameApplication {
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
-        		
-
+        	
         		//getGameScene().addUINode(rank);
         		
-
-        		//getGameScene().addUINode(rank);	
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -363,7 +374,7 @@ public class MapleGame extends GameApplication {
             scoreText[j].setFont(Font.font(25));
         }
 
-        //rank.getChildren().addAll(scoreText);       
+        rank.getChildren().addAll(scoreText);
 
         //getGameScene().addUINode(rank);
     
@@ -573,13 +584,19 @@ public class MapleGame extends GameApplication {
 		//player[0].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
 		for (int i = 0; i < 2; i++) {
 			System.out.println("a\n");			
-			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));	
+
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
 			player[i].setOpacity(1);
 			System.out.println("b\n");
 		}
 		
+
+		if (tomb != null) {
+			getGameWorld().removeEntity(tomb);
+			tomb = null;
+		}
 		
-		
+		addPoint();
 		getGameScene().addUINode(rank);
 		stage = MapleStage.RESULT;
 		
@@ -625,6 +642,9 @@ public class MapleGame extends GameApplication {
 	public void deadTomb(Entity player) {
 		if (!realDead) {
 			tomb = getGameWorld().spawn("tomb", player.getX(), 0);
+
+			if (tomb != null)
+				return;
 			realDead = true;
 		}
 	}
