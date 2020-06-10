@@ -2,8 +2,6 @@ package com.maple.player;
 
 import java.io.Serializable;
 
-import com.almasb.fxgl.physics.PhysicsComponent;
-
 public class PlayerInfo implements Serializable {
 
 	/**
@@ -11,8 +9,10 @@ public class PlayerInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public int x, y, scale;
+	public double x, y, scale;
 
+	public PlayerInfo() { }
+	
 	/**
 	 * Package all information needed
 	 * @param x x position of player
