@@ -25,6 +25,8 @@ public class PlayerComponent extends Component {
 	public AnimatedTexture texture;
 	private AnimationChannel idle, walk, jump;
 	
+	public PlayerInfo info;
+	
 	// default
 	public PlayerComponent() {
 		isJump = false;
@@ -38,6 +40,8 @@ public class PlayerComponent extends Component {
 		jump = new AnimationChannel(image, 5, 80, 80, Duration.seconds(1), 3, 3);
 		
 		texture = new AnimatedTexture(idle);
+		
+		physics = entity.getComponent(PhysicsComponent.class);
 	}
 	
 	// custom
@@ -78,8 +82,10 @@ public class PlayerComponent extends Component {
     @Override
     public void onAdded() {
 //        entity.getTransformComponent().setScaleOrigin(new Point2D(0.2, 0.2));
-        entity.getViewComponent().addChild(texture);
+    	entity.getViewComponent().addChild(texture);
         texture.loop();
+        
+        info = new PlayerInfo();
 
         physics.onGroundProperty().addListener((obs, old, isOnGround) -> {
             if (isOnGround) {
@@ -105,6 +111,10 @@ public class PlayerComponent extends Component {
                 texture.loopAnimationChannel(idle);
             }
         }
+    	
+    	info.x = entity.getX();
+    	info.y = entity.getY();
+    	info.scale = entity.getScaleX();
     }
 	
     public boolean isMoving() {
@@ -154,6 +164,4 @@ public class PlayerComponent extends Component {
 	public void recover() {
 		isJump = false;
 	}
-	
-	
 }

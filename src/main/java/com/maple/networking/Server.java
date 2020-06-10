@@ -58,10 +58,10 @@ public class Server implements Runnable {
 				clients[i].writeObject(
 						new ServerPacket(
 							game.getScores(),
-							game.yeti.getComponent(PlayerComponent.class),
-							game.mushroom.getComponent(PlayerComponent.class),
-							game.pig.getComponent(PlayerComponent.class),
-							game.slime.getComponent(PlayerComponent.class)
+							game.yeti.getComponent(PlayerComponent.class).info,
+							game.mushroom.getComponent(PlayerComponent.class).info,
+							game.pig.getComponent(PlayerComponent.class).info,
+							game.slime.getComponent(PlayerComponent.class).info
 						)
 				);
 			} catch (IOException e) {

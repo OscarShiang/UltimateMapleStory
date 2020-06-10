@@ -233,5 +233,16 @@ public class MapleFactory implements EntityFactory {
                 .with(new PlayerComponent())
                 .build();
     }*/
+	@Spawns("hole")
+	public Entity newBrick(SpawnData data) {
+		
+		return entityBuilder()
+				.type(MapleType.PLATFORM)
+				.with(new PhysicsComponent())
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.brick))
+				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.build();
+	}
 	
 }

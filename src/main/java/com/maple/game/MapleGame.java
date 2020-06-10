@@ -228,6 +228,7 @@ public class MapleGame extends GameApplication {
         	
         	initPlayers();
         	player = yeti;
+        	playerType = PlayerType.YETI;
         	startGame();
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
@@ -236,6 +237,7 @@ public class MapleGame extends GameApplication {
         	
         	initPlayers();
         	player = pig;
+        	playerType = PlayerType.PIG;
         	startGame();
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
@@ -245,9 +247,19 @@ public class MapleGame extends GameApplication {
         	
         	initPlayers();
         	player = slime;
+        	playerType = PlayerType.SLIME;
         	startGame();
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
+        select_mushroom.setOnAction(e -> {
+        	getGameScene().removeUINode(selectBox);
+        	stage = MapleStage.PLAY;
+        	
+        	initPlayers();
+        	player = mushroom;
+        	playerType = PlayerType.MUSHROOM;
+        	startGame();
+        });
         
         selectBox = new VBox(10);
         selectBox.setTranslateX(getAppWidth()/2 - 100);
@@ -257,6 +269,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
+        // getGameScene().addUINode(menuBox);
         // getGameScene().addUINode(menuBox);
 
         
@@ -291,6 +304,26 @@ public class MapleGame extends GameApplication {
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
         
+        Button bomb = new Button("", new ImageView(image("item/bomb.png")));
+        bomb.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 4;
+        });
+        bomb.setTranslateX(150);
+        bomb.setTranslateY(400);
+        
+        Button brick = new Button("", new ImageView(image("item/brick.png")));
+        brick.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 5;
+        });
+        brick.setTranslateX(300);
+        brick.setTranslateY(400);
+        
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
         pane.setTranslateX(getAppWidth()/2 - 520);
@@ -299,6 +332,8 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
+        pane.getChildren().addAll(bomb);
+        pane.getChildren().addAll(brick);
         getGameScene().addUINodes(pane);
         
         rank = new Pane();
@@ -372,6 +407,8 @@ public class MapleGame extends GameApplication {
 		
 		mushroom = getGameWorld().spawn("mushroom");
 		mushroom.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+		
+		System.out.println("Initialize players");
 	}
 	
 	public void selectCharacter() {
@@ -531,10 +568,12 @@ public class MapleGame extends GameApplication {
 			}
 		});*/
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.BOMB, MapleType.TRAP) {
-			@Override
-			public void onCollisionBegin(Entity hole, Entity surprise) {
-				surprise.removeFromWorld();
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
+			public void onCollisionBegin(Entity player, Entity teleport1) {
+				if(player != null) {
+					player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				}
+				//teleport();
 			}
 		});
 	}
@@ -583,32 +622,24 @@ public class MapleGame extends GameApplication {
 		return this.score;
 	}
 	
-	private void setPlayer(Entity player, PlayerComponent component) {
-		player.getComponent(PlayerComponent.class).physics = component.physics;
-		player.getComponent(PlayerComponent.class).isJump = component.isJump;
-		player.getComponent(PlayerComponent.class).isDead = component.isDead;
-		player.getComponent(PlayerComponent.class).isWin = component.isWin;
-		player.getComponent(PlayerComponent.class).texture = component.texture;
-	}
-	
 	public Entity getPlayer() {
 		return player;
 	}
 	
-	public void setYeti(PlayerComponent component) {
-		setPlayer(yeti, component);
+	public void setYeti(PlayerInfo info) {
+		yeti.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
 	}
 	
-	public void setSlime(PlayerComponent component) {
-		setPlayer(slime, component);
+	public void setSlime(PlayerInfo info) {
+		slime.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
 	}
 	
-	public void setPig(PlayerComponent component) {
-		setPlayer(pig, component);
+	public void setPig(PlayerInfo info) {
+		pig.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
 	}
 	
-	public void setMushroom(PlayerComponent component) {
-		setPlayer(mushroom, component);
+	public void setMushroom(PlayerInfo info) {
+		mushroom.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
 	}
 	
 	public PlayerType getPlayerType() {

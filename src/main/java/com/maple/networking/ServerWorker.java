@@ -42,51 +42,47 @@ public class ServerWorker implements Runnable {
 	public void run() {
 
 		System.out.println("[SERVER] receive connection");
+		while (!Thread.interrupted() && !stop) {
+
+			try {
+				ClientPacket clientIn = (ClientPacket)clientInput.readObject();
+				
+				// setting player entity
+				switch(clientIn.type) {
+				case YETI:
+					game.setYeti(clientIn.player);
+					break;
+				case SLIME:
+					game.setSlime(clientIn.player);
+					break;
+				case PIG:
+					game.setPig(clientIn.player);
+					break;
+				case MUSHROOM:
+					game.setMushroom(clientIn.player);
+					break;
+				}
+				
+				scores = clientIn.score;
+				
+				// setting up score
+				game.setScore(scores[clientNum], clientNum);
+			}
+			catch (Exception e) {
+				System.out.println("[SERVER] worker: object read failed");
+				e.printStackTrace();
+			}
+		}
+		System.out.println("[SERVER] worker: shutdown");
 		
 		try {
-			System.out.println("[SERVER] receive connection");
-			
-			while (!Thread.interrupted() && !stop) {
-				
-					ClientPacket clientIn = (ClientPacket)clientInput.readObject();
-					
-					// setting player entity
-					switch(clientIn.type) {
-					case YETI:
-						game.setYeti(clientIn.player);
-						break;
-					case SLIME:
-						game.setSlime(clientIn.player);
-						break;
-					case PIG:
-						game.setPig(clientIn.player);
-						break;
-					case MUSHROOM:
-						game.setMushroom(clientIn.player);
-						break;
-					}
-					
-					scores = clientIn.score;
-					
-					// setting up score
-					game.setScore(scores[clientNum], clientNum);
-					
-				
-			}
-			
-			System.out.println("[SERVER] worker: shutdown");
-			
 			socket.close();
 			clientInput.close();
 			buf.close();
-		} catch (IllegalStateException e) {
-			System.out.println("Test");
-			e.printStackTrace();
-
-		} catch (Exception e) {
-			System.out.println("[SERVER] worker: object read failed");
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public ObjectOutputStream getReader() {
