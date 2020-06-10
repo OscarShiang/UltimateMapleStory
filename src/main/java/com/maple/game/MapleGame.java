@@ -6,6 +6,7 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.texture.Texture;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -240,13 +241,6 @@ public class MapleGame extends GameApplication {
         Text scoreMushroom = new Text("0");
         scoreMushroom.setTranslateX(640);
         scoreMushroom.setTranslateY(215);
-        
-        /* need to be modified
-
-        Text scoreMushroom = new Text((Integer.toString(score[0])));
-        scoreMushroom.setTranslateX(550);
-        scoreMushroom.setTranslateY(125);
->>>>>>> 27d605d6c5923d4f540758f2843f483924915e39
         scoreMushroom.setFont(Font.font(25));
         Text scoreYeti = new Text("0");
         scoreYeti.setTranslateX(640);
@@ -287,10 +281,9 @@ public class MapleGame extends GameApplication {
         blue_icon.setTranslateY(178);        
         Texture orange_icon  = new Texture(image("item/rank_orange.png"));
         orange_icon.setTranslateY(178);
-        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig, /*red_icon, red, green_icon, green, blue_icon, blue, orange_icon, orange);
-        getGameScene().addUINode(rank);
-        
-        */
+        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig, red_icon, red, green_icon, green, blue_icon, blue, orange_icon, orange);
+        //getGameScene().addUINode(rank);
+    
         
 	}
 	
@@ -399,8 +392,8 @@ public class MapleGame extends GameApplication {
 //		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
 //        viewport.setLazy(true);
 
-		isGenTeleport = false;
-		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		//isGenTeleport = false;
+		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
 	
 	@Override
