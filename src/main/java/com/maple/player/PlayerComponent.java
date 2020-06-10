@@ -161,6 +161,11 @@ public class PlayerComponent extends Component {
 		isWin = true;
 	}
 	
+	public void restore() {
+		isDead = true;
+		isWin = false;
+	}
+	
 	public void recover() {
 		isJump = false;
 	}

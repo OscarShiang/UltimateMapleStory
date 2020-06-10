@@ -36,7 +36,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity teleport1;
 	private Entity teleport2;
-	private boolean isGenTeleport;
 	
 	public int chooseItem = 0;
 	public int item = 0;
@@ -52,6 +51,8 @@ public class MapleGame extends GameApplication {
 	
 	private int[] score;
 	private String[] choosePlayer;	
+	
+	public boolean canPlace;
 	
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -142,7 +143,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -163,7 +163,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -184,7 +183,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -205,7 +203,6 @@ public class MapleGame extends GameApplication {
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
-        		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
@@ -239,8 +236,8 @@ public class MapleGame extends GameApplication {
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setStyle("-fx-background-color: transparent;");
         redballoon.setOnAction(e -> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chosenPlayer--;
         	item = 1;
         	redballoon.setVisible(false);
         });
@@ -250,8 +247,8 @@ public class MapleGame extends GameApplication {
         Button hole = new Button("", new ImageView(image("item/hole.png")));
         hole.setStyle("-fx-background-color: transparent;");
         hole.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 2;
         	hole.setVisible(false);
         });
@@ -261,8 +258,8 @@ public class MapleGame extends GameApplication {
         Button surprise = new Button("", new ImageView(image("item/surprise.png")));
         surprise.setStyle("-fx-background-color: transparent;");
         surprise.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 3;
         	surprise.setVisible(false);
         });
@@ -271,8 +268,8 @@ public class MapleGame extends GameApplication {
         
         Button bomb = new Button("", new ImageView(image("item/bomb.png")));
         bomb.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 4;
         	bomb.setVisible(false);
         });
@@ -281,8 +278,8 @@ public class MapleGame extends GameApplication {
         
         Button brick = new Button("", new ImageView(image("item/brick.png")));
         brick.setOnAction(e-> {
+        	canPlace = true;
         	pane.setVisible(false);
-        	chooseItem--;
         	item = 5;
         	brick.setVisible(false);
         });
@@ -388,7 +385,9 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void placeItem() {
-		if (chooseItem <= 1)
+		canPlace = false;
+		
+		if (chooseItem <= 0)
 			stage = MapleStage.PLAY;
 		else {
 			pane.setVisible(true);
@@ -428,20 +427,8 @@ public class MapleGame extends GameApplication {
 		/*isGenTeleport = false;
 		teleport1 = null;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
-		
-//		player = null;
-//		player = getGameWorld().spawn("player", 600, 10);
-//		Viewport viewport = getGameScene().getViewport();
-//
-//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-//
-//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-//        viewport.setLazy(true);
+		 */
 
-		//isGenTeleport = false;
-		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		
 	}
 	
 	@Override
@@ -461,6 +448,7 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
 				deadTomb(player);
+				playerDead(player);
 			}
 		});
 		
@@ -469,7 +457,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-
+				playerDead(player);
 				deadTomb(player);
 			}
 		});
@@ -479,7 +467,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity surprise) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-
+				playerDead(player);
 				deadTomb(player);
 			}
 		});
@@ -493,7 +481,9 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLAYER) {
 			@Override
-			public void onCollisionBegin(Entity p1, Entity p2) { }
+			public void onCollisionBegin(Entity p1, Entity p2) { 
+				
+			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
@@ -502,30 +492,18 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
+				playerDead(player);
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
+				playerWin(player);
 				getDialogService().showMessageBox("Finish!");
+				
 			}
 		});
-		
-		
-		/*getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
-			public void onCollisionBegin(Entity tomb, Entity player) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});*/
-		
-		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
-			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
-				tmpPlayer.setPosition(new Point2D(100, 100));
-				//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
-				//teleport();
-			}
-		});*/
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
@@ -535,16 +513,13 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
-	/*public void teleport() {
-		teleportPos();
+	public void playerDead(Entity player) {
+		
 	}
 	
-	public void teleportPos() {
-		if (player != null) {
-			//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
-			player.setZ(Integer.MAX_VALUE);
-		}
-	}*/
+	public void playerWin(Entity player) {
+		
+	}
 	
 	public void deadTomb(Entity player) {
 		if (!realDead) {
