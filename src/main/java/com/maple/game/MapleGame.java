@@ -151,7 +151,7 @@ public class MapleGame extends GameApplication {
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "yeti";
-            //green.setVisible(false);
+            green.setVisible(false);
         	//green.setScaleX(10);
             green_icon.setTranslateY(178 + 80 * chosenPlayer);
             //green.setTranslateX(108 + 10 * score[0] + green.getWidth()/2);
@@ -173,7 +173,7 @@ public class MapleGame extends GameApplication {
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "pig";
-            //orange.setVisible(false);
+            orange.setVisible(false);
         	//orange.setScaleX(20);
         	orange_icon.setTranslateY(178 + 80 * chosenPlayer);
             //orange.setTranslateX(107 + 15 * score[1] + orange.getWidth()/2);
@@ -195,7 +195,7 @@ public class MapleGame extends GameApplication {
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "slime";
-            //blue.setVisible(false); 
+            blue.setVisible(false); 
         	//blue.setScaleX(20);
             blue.setVisible(false); 
             blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
@@ -218,7 +218,7 @@ public class MapleGame extends GameApplication {
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "mushroom";
-            //red.setVisible(false);
+            red.setVisible(false);
         	//red.setScaleX(10);
             red_icon.setTranslateY(178 + 80 * chosenPlayer);
    		 	//red.setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
@@ -274,7 +274,7 @@ public class MapleGame extends GameApplication {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 2;
-        	hole.setVisible(false);
+        	hole_button.setVisible(false);
         });
         hole_button.setTranslateX(300);
         hole_button.setTranslateY(150);
