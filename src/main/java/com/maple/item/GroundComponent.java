@@ -10,6 +10,7 @@ import com.maple.game.MapleGame;
 
 import javafx.scene.input.MouseEvent;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
@@ -49,10 +50,20 @@ public class GroundComponent  extends Component {
     	}
     	else if(game.isChoose == true && game.item == 3) {
 	    	game.surprise = null;
-	    	System.out.println("fuck");
 			game.surprise = getGameWorld().spawn("surprise");
 			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
-    	}   
+    	}
+    	/* bomb setting
+    	 * else if(game.isChoose ==  false) {
+    		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.surprise.removeFromWorld();
+    			
+    		}
+    		System.out.println(input.getMousePositionWorld());
+	    	game.hole = null;
+			game.hole = getGameWorld().spawn("hole");
+			game.hole.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+    	}*/
 		game.isChoose = false;
         
     }

@@ -142,6 +142,7 @@ public class PlayerComponent extends Component {
 	}
 	
 	public void dead() {
+		physics.setVelocityX(0);
 		isDead = true;
 	}
 	

@@ -59,10 +59,11 @@ public class MapleGame extends GameApplication {
 	
 	private Entity destination;
 	private Entity tomb;
-
+	private boolean realDead;
+	
 	private Entity teleport1;
 	private boolean isGenTeleport;
-
+	
 	private String IPaddress, Port;
 	public boolean isChoose = false;
 	public int item = 0;
@@ -422,6 +423,7 @@ public class MapleGame extends GameApplication {
 		spawn("background");
 		setLevelFromMap("map1.tmx");
 		tomb = null;
+		realDead = false;
 		
 		destination = null;
 		destination = getGameWorld().spawn("redflag");
@@ -435,8 +437,8 @@ public class MapleGame extends GameApplication {
 		*/
 		isGenTeleport = false;
 		teleport1 = null;
-		teleport1 = getGameWorld().spawn("teleport1");
-		//teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 450));
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));
 		
 		
 //		player = null;
@@ -459,8 +461,6 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
-				player.setVisible(false);
-				player.removeComponent(PhysicsComponent.class);
 				deadTomb();
 			}
 		});
@@ -491,6 +491,7 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).recover();
 			}
 		});
+		
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
 			@Override
@@ -528,27 +529,40 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
-			
-				//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
-				
+				player.setPosition(new Point2D(100, 100));
+				//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				//teleport();
+			}
+		});
+		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.BOMB, MapleType.TRAP) {
+			@Override
+			public void onCollisionBegin(Entity hole, Entity surprise) {
+				surprise.removeFromWorld();
 			}
 		});
 	}
+	
+	/*public void teleport() {
+		teleportPos();
+	}
+	
+	public void teleportPos() {
+		if (player != null) {
+			//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+			player.setZ(Integer.MAX_VALUE);
+		}
+	}*/
 	
 	public void deadTomb() {
-		tomb = getGameWorld().spawn("tomb");
-		tomb.setPosition(new Point2D(player.getX(), 200));
-		tomb.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(player.getX(), 0));
-		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
-			@Override
-			public void onCollisionBegin(Entity player, Entity balloon) {
-				player.getComponent(PlayerComponent.class).recover();
-			}
-		});
+		if (!realDead) {
+			tomb = getGameWorld().spawn("tomb");
+			tomb.setPosition(new Point2D(player.getX(), 0));
+			realDead = true;
+		}
 	}
 	
-	protected void onUpdate() {
+	/*protected void onUpdate() {
 		if(!isGenTeleport) {
 			teleport1 = null;
 			teleport1 = getGameWorld().spawn("teleport1");
@@ -561,7 +575,7 @@ public class MapleGame extends GameApplication {
 			isGenTeleport = false;
 			Duration.seconds(2);
 		}
-	}
+	}*/
 
 	
 	// interfaces of updating networking information

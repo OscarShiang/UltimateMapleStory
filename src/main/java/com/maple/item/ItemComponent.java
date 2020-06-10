@@ -47,12 +47,12 @@ public class ItemComponent extends Component {
 				idle = new AnimationChannel(image, 1, 47, 78, Duration.seconds(1), 0, 0);
 				break;
 			case hole:
-				image = image("item/hole.png");
-				idle = new AnimationChannel(image, 1, 105, 105, Duration.seconds(1), 0, 0);
+				image = image("item/hole_sprite.png");
+				idle = new AnimationChannel(image, 4, 105, 105, Duration.seconds(0.4), 0, 3);
 				break;
 			case surprise:
-				image = image("item/surprise.png");
-				idle = new AnimationChannel(image, 1, 255, 119, Duration.seconds(1), 0, 0);
+				image = image("item/prianha_sprite.png");
+				idle = new AnimationChannel(image, 12, 255, 119, Duration.seconds(2), 0, 11);
 				break;
 		}
 		
