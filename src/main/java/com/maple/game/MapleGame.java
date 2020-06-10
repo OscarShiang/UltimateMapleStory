@@ -29,7 +29,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity[] player;
 
-	
 	private Entity destination;
 	private Entity tomb;
 	private boolean realDead;
@@ -72,6 +71,8 @@ public class MapleGame extends GameApplication {
 		
 		chosenPlayer = 0;
 		chooseItem = 0;
+		
+		playerFinish = 0;
 	}
 	
 
@@ -422,7 +423,7 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
 				deadTomb(player);
-				playerDead(player);
+				playerDead();
 			}
 		});
 		
@@ -431,7 +432,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead(player);
+				playerDead();
 				deadTomb(player);
 			}
 		});
@@ -441,7 +442,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity surprise) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead(player);
+				playerDead();
 				deadTomb(player);
 			}
 		});
@@ -466,14 +467,14 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
-				playerDead(player);
+				playerDead();
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
-				playerWin(player);
+				playerWin();
 				getDialogService().showMessageBox("Finish!");
 				
 			}
@@ -487,12 +488,30 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
-	public void playerDead(Entity player) {
+	private int playerFinish;
+	
+	public void nextRound() {
+		playerFinish = 0;
 		
+		for (int i = 0; i < 2; i++) {
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+        	player[i].setZ(Integer.MAX_VALUE);
+			player[i].getComponent(PlayerComponent.class).restore();
+		}
+		
+		setLevelFromMap("map1.tmx");
 	}
 	
-	public void playerWin(Entity player) {
-		
+	public void playerDead() {
+		if (++playerFinish >= 2) {
+			nextRound();
+		}
+	}
+	
+	public void playerWin() {
+		if (++playerFinish >= 2) {
+			nextRound();
+		}
 	}
 	
 	public void deadTomb(Entity player) {
