@@ -18,12 +18,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import com.maple.player.*;
 import com.maple.item.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+import com.almasb.fxgl.dsl.components.LiftComponent;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 
 public class MapleFactory implements EntityFactory {
@@ -144,12 +146,16 @@ public class MapleFactory implements EntityFactory {
 	
 	@Spawns("teleport2")
 	public Entity newTeleport2(SpawnData data) {
+		LiftComponent lift = new LiftComponent();
+        lift.setGoingUp(true);
+        lift.yAxisDistanceDuration(20, Duration.seconds(2.5));
 		
 		return entityBuilder()
 				.type(MapleType.ITEM)
 				.from(data)
 				.with(new CollidableComponent(false))
 				.with(new ItemComponent(ItemType.teleport2))
+				.with(lift)
 				.bbox(new HitBox(BoundingShape.box(47, 80)))
 				.build();
 	}
@@ -159,23 +165,33 @@ public class MapleFactory implements EntityFactory {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.STATIC);
 		
+		LiftComponent lift = new LiftComponent();
+        lift.setGoingUp(true);
+        lift.yAxisDistanceDuration(20, Duration.seconds(1));
+		
 		return entityBuilder()
 				.type(MapleType.PLATFORM)
 				.from(data)
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.balloon))
+				.with(lift)
 				.bbox(new HitBox(BoundingShape.box(70, 140)))
 				.build();
 	}
 
 	@Spawns("teleport1")
 	public Entity newTeleport1(SpawnData data) {
+		LiftComponent lift = new LiftComponent();
+        lift.setGoingUp(true);
+        lift.yAxisDistanceDuration(20, Duration.seconds(2.5));
+		
 		return entityBuilder()
 				.type(MapleType.TELEPORT1)
 				.from(data)
 				.bbox(new HitBox(BoundingShape.box(47, 80)))
 				.with(new CollidableComponent(true))
+				.with(lift)
 				.with(new ItemComponent(ItemType.teleport1))
 				.build();
 	}
@@ -193,11 +209,16 @@ public class MapleFactory implements EntityFactory {
 	
 	@Spawns("coin")
 	public Entity newCoin(SpawnData data) {
+		LiftComponent lift = new LiftComponent();
+        lift.setGoingUp(true);
+        lift.yAxisDistanceDuration(6, Duration.seconds(1));
+		
 		return entityBuilder()
 				.type(MapleType.COIN)
 				.from(data)
 				.bbox(new HitBox(BoundingShape.box(25, 25)))
 				.with(new ItemComponent(ItemType.coin))
+				.with(lift)
 				.with(new CollidableComponent(true))
 				.build();
 	}
