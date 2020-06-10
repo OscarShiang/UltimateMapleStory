@@ -663,6 +663,7 @@ public class MapleGame extends GameApplication {
 
 		if (++playerFinish >= 2) {
 			nextRound();
+			return;
 		}
 		score[player.getComponent(PlayerComponent.class).playerNum]++;
 	}
