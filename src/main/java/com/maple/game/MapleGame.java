@@ -95,6 +95,7 @@ public class MapleGame extends GameApplication {
 		start.setOnAction(e -> {
         	getGameScene().removeUINode(menuBox);
         	getGameScene().addUINode(selectBox);
+        	getGameScene().removeUINode(title);
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
@@ -156,7 +157,7 @@ public class MapleGame extends GameApplication {
         select_back.setOnAction(e -> {
         	getGameScene().removeUINode(selectBox);
         	getGameScene().addUINode(menuBox);
-        	
+        	getGameScene().addUINode(title);
         	chosenPlayer = 0;
         	for (int i = 0; i < PLAYER_NUM; i++) {
         		player[i] = null;
