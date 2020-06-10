@@ -369,7 +369,7 @@ public class MapleGame extends GameApplication {
 		realDead = false;
 		
 		destination = null;
-		destination = getGameWorld().spawn("redflag", new Point2D(1435, 413));
+		destination = getGameWorld().spawn("redflag", new Point2D(1500, 367));
 
 		/*balloon = null;
 		balloon = getGameWorld().spawn("balloon");
