@@ -35,7 +35,7 @@ public class MapleGame extends GameApplication {
 	private boolean realDead;
 	
 	private Entity teleport1;
-	private boolean isGenTeleport;
+	private Entity teleport2;
 	
 	public int chooseItem = 0;
 	public int item = 0;
@@ -66,7 +66,6 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < 2; i++)
 			choosePlayer[i] = 0;
 		
-		System.setProperty("java.net.preferIPv4Stack", "true");
 		player = new Entity[PLAYER_NUM];
 		
 		chosenPlayer = 0;
@@ -83,7 +82,7 @@ public class MapleGame extends GameApplication {
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
-		var title = FXGL.getAssetLoader().loadTexture("item/title.png");
+		Texture title = FXGL.getAssetLoader().loadTexture("item/title.png");
 		title.setScaleX(0.5);
 		title.setScaleY(0.5);
 		title.setX(100);
@@ -113,6 +112,7 @@ public class MapleGame extends GameApplication {
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
+        	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -124,6 +124,7 @@ public class MapleGame extends GameApplication {
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("pig");
+        	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -135,6 +136,7 @@ public class MapleGame extends GameApplication {
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("slime");
+        	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -146,6 +148,7 @@ public class MapleGame extends GameApplication {
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
+        	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -181,6 +184,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chosenPlayer--;
         	item = 1;
+        	redballoon.setVisible(false);
         });
         redballoon.setTranslateX(150);
         redballoon.setTranslateY(150);
@@ -191,6 +195,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 2;
+        	hole.setVisible(false);
         });
         hole.setTranslateX(300);
         hole.setTranslateY(150);
@@ -201,6 +206,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 3;
+        	surprise.setVisible(false);
         });
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
@@ -210,6 +216,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 4;
+        	bomb.setVisible(false);
         });
         bomb.setTranslateX(150);
         bomb.setTranslateY(400);
@@ -219,6 +226,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 5;
+        	brick.setVisible(false);
         });
         brick.setTranslateX(300);
         brick.setTranslateY(400);
@@ -381,6 +389,11 @@ public class MapleGame extends GameApplication {
 		destination = null;
 		destination = getGameWorld().spawn("redflag", new Point2D(1500, 367));
 
+		teleport1 = null;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(1039, 307));
+		
+		teleport2 = null;
+		teleport2 = getGameWorld().spawn("teleport2", new Point2D(360, 627));
 		/*balloon = null;
 		balloon = getGameWorld().spawn("balloon");
 		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
@@ -402,8 +415,6 @@ public class MapleGame extends GameApplication {
 		//isGenTeleport = false;
 		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 		
-		isGenTeleport = false;
-		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
 	
 	@Override
@@ -474,23 +485,12 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLATFORM) {
-			public void onCollisionBegin(Entity tomb, Entity platform) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.DEADLINE) {
-			public void onCollisionBegin(Entity tomb, Entity deadline) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});
-		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
+		/*getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
 			public void onCollisionBegin(Entity tomb, Entity player) {
 				getDialogService().showMessageBox("You died...");
 			}
-		});
+		});*/
 		
 		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
@@ -502,7 +502,7 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
-				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
 				//teleport();
 			}
 		});
