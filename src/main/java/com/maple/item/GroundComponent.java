@@ -54,7 +54,7 @@ public class GroundComponent extends Component {
     	else if(game.chooseItem > 0 && game.item == 3) {
 	    	game.surprise = null;
 			game.surprise = getGameWorld().spawn("surprise", input.getMousePositionWorld());
-//			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
+			//game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.chooseItem > 0 && game.item == 4) {
     		if(game.balloon.isWithin(new Rectangle2D(input.getMouseXWorld()-100, input.getMouseYWorld()-100, 200, 200))) {
