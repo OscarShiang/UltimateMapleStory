@@ -3,6 +3,7 @@ package com.maple.game;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -61,7 +62,7 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < PLAYER_NUM; i++)
 			score[i] = 0;
 		
-		choosePlayer = new int[2];
+		choosePlayer = new int[PLAYER_NUM];
 		for(int i = 0; i < 2; i++)
 			choosePlayer[i] = 0;
 		
@@ -82,6 +83,14 @@ public class MapleGame extends GameApplication {
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
+		var title = FXGL.getAssetLoader().loadTexture("item/title.png");
+		title.setScaleX(0.5);
+		title.setScaleY(0.5);
+		title.setX(100);
+		title.setY(50);
+		getGameScene().addUINode(title);
+		
+		
 		// setting up menuBox
 		Button start = getUIFactoryService().newButton("START");
 		start.setOnAction(e -> {
@@ -94,15 +103,14 @@ public class MapleGame extends GameApplication {
         
         menuBox = new VBox(10);
         menuBox.setTranslateX(getAppWidth()/2 - 100);
-        menuBox.setTranslateY(400);
+        menuBox.setTranslateY(500);
         menuBox.getChildren().addAll(
-                start, quit
+        		start, quit
         );
         
         // setting up select box
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -114,7 +122,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -126,7 +133,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -138,7 +144,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -241,6 +246,7 @@ public class MapleGame extends GameApplication {
         Text scoreMushroom = new Text("0");
         scoreMushroom.setTranslateX(640);
         scoreMushroom.setTranslateY(215);
+        
         scoreMushroom.setFont(Font.font(25));
         Text scoreYeti = new Text("0");
         scoreYeti.setTranslateX(640);
@@ -292,7 +298,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;		
 				player[0].getComponent(PlayerComponent.class).left();
 			}
@@ -301,7 +307,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).right();
 			}
@@ -310,7 +316,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).jump();
 			}
@@ -346,7 +352,7 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void placeItem() {
-		if (chooseItem == 0)
+		if (chooseItem <= 1)
 			stage = MapleStage.PLAY;
 		else {
 			pane.setVisible(true);
@@ -394,6 +400,9 @@ public class MapleGame extends GameApplication {
 
 		//isGenTeleport = false;
 		//teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		
+		isGenTeleport = false;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
 	
 	@Override
