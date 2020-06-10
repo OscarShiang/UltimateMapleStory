@@ -306,7 +306,7 @@ public class MapleGame extends GameApplication {
         
         scoreText = new Text[2];
         for(int j = 0; j < 2; j++) {
-            scoreText[j].setText("0");
+            scoreText[j] = new Text("0");
         	scoreText[j].setTranslateX(640);
             scoreText[j].setTranslateY(215 + 80 * j);
             scoreText[j].setFont(Font.font(25));
