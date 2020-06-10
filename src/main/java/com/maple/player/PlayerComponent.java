@@ -67,7 +67,7 @@ public class PlayerComponent extends Component {
 		case PIG:
 			image = image("sprites/pig_sprite (Custom).png");
 			idle = new AnimationChannel(image, 8, 80, 80, Duration.seconds(1), 0, 3);
-			walk = new AnimationChannel(image, 8, 80, 80, Duration.seconds(0.4), 5, 7);
+			walk = new AnimationChannel(image, 8, 80, 80, Duration.seconds(0.6), 5, 7);
 			jump = new AnimationChannel(image, 8, 80, 80, Duration.seconds(1), 4, 4);
 			break;
 		case SLIME:

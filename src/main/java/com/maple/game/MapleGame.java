@@ -44,6 +44,7 @@ public class MapleGame extends GameApplication {
     public Entity surprise;
     public Entity brick;
     
+    
     private final int PLAYER_NUM = 2;
 	
 	// current progress
@@ -592,9 +593,13 @@ public class MapleGame extends GameApplication {
 		});
 	}
 	
+	private int playerFinishDead;
+	private int playerFinishWin;
 	private int playerFinish;
 	
 	public void nextRound() {
+		playerFinishDead = 0;
+		playerFinishWin = 0;
 		playerFinish = 0;
 		
 		if (tomb != null) {
@@ -654,14 +659,22 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void playerDead() {
-		if (++playerFinish >= 2) {
+		playerFinishDead++;
+		playerFinish++;
+		if (playerFinishDead >= 2 || (playerFinishDead + playerFinishWin) >= 2) {
 			nextRound();
 		}
 	}
 	
 	public void playerWin(Entity player) {
-
-		if (++playerFinish >= 2) {
+		playerFinishWin++;
+		playerFinish++;
+		if (playerFinishWin >= 2) {
+			nextRound();
+			return;
+		}
+		else if ((playerFinishWin + playerFinishDead) >= 2 && playerFinish == 2) {
+			score[player.getComponent(PlayerComponent.class).playerNum]++;
 			nextRound();
 			return;
 		}
