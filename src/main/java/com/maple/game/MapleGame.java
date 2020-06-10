@@ -60,7 +60,7 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < PLAYER_NUM; i++)
 			score[i] = 0;
 		
-		choosePlayer = new int[2];
+		choosePlayer = new int[PLAYER_NUM];
 		for(int i = 0; i < 2; i++)
 			choosePlayer[i] = 0;
 		
@@ -101,7 +101,6 @@ public class MapleGame extends GameApplication {
         // setting up select box
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -113,7 +112,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -125,7 +123,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -137,7 +134,6 @@ public class MapleGame extends GameApplication {
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
-        	System.out.println(chosenPlayer);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
@@ -352,7 +348,7 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void placeItem() {
-		if (chooseItem == 0)
+		if (chooseItem <= 1)
 			stage = MapleStage.PLAY;
 		else {
 			pane.setVisible(true);
@@ -379,24 +375,6 @@ public class MapleGame extends GameApplication {
 		
 		destination = null;
 		destination = getGameWorld().spawn("redflag", new Point2D(1500, 367));
-
-		/*balloon = null;
-		balloon = getGameWorld().spawn("balloon");
-		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
-		*/
-		/*isGenTeleport = false;
-		teleport1 = null;
-		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
-		
-//		player = null;
-//		player = getGameWorld().spawn("player", 600, 10);
-//		Viewport viewport = getGameScene().getViewport();
-//
-//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-//
-//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-//        viewport.setLazy(true);
 
 		isGenTeleport = false;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
