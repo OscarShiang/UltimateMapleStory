@@ -146,10 +146,10 @@ public class MapleGame extends GameApplication {
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
-//        		getGameScene().addUINodes(pane);
+        		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		getGameScene().addUINode(rank);
+//        		getGameScene().addUINode(rank);
         		
         	}
         });
@@ -169,7 +169,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -189,7 +189,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -209,7 +209,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		getGameScene().addUINode(rank);
+        		//getGameScene().addUINode(rank);
         		
         	}
         });
@@ -331,7 +331,7 @@ public class MapleGame extends GameApplication {
             scoreText[j].setFont(Font.font(25));
         }
 
-        rank.getChildren().addAll(scoreText);       
+        //rank.getChildren().addAll(scoreText);       
 
         //getGameScene().addUINode(rank);
     
@@ -510,8 +510,8 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
-				player.getComponent(PlayerComponent.class).win();
-				playerWin(player);
+				//player.getComponent(PlayerComponent.class).win();
+				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(140, 300));
 			}
 		});
 		
@@ -527,6 +527,7 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void playerWin(Entity player) {
+		player.getComponent(PlayerComponent.class).restore();
 		
 	}
 	
