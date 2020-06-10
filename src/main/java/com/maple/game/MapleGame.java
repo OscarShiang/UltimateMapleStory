@@ -167,7 +167,7 @@ public class MapleGame extends GameApplication {
 					client = new Client(this, ip.getText(), Integer.parseInt(port.getText()));
 					Thread thr = new Thread(client);
 					thr.start();
-				} catch (NumberFormatException | IOException e1) {
+				} catch (NumberFormatException e1) {
 					getDialogService().showMessageBox("Connection failed");
 					e1.printStackTrace();
 					fail = true;
@@ -299,7 +299,7 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
-        //getGameScene().addUINodes(pane);
+        getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank.png"), null, null, null, null)));
@@ -323,7 +323,7 @@ public class MapleGame extends GameApplication {
         scorePig.setTranslateY(395);
         scorePig.setFont(Font.font(25));
         rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);
-        getGameScene().addUINode(rank);
+        //getGameScene().addUINode(rank);
         
 	}
 	
@@ -421,10 +421,10 @@ public class MapleGame extends GameApplication {
 		balloon = getGameWorld().spawn("balloon");
 		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
 		*/
-		isGenTeleport = false;
+		/*isGenTeleport = false;
 		teleport1 = null;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
 		
 		//tmpPlayer = null;
 		//tmpPlayer = getGameWorld().spawn("tmpPlayer", 400, 400);
@@ -437,9 +437,16 @@ public class MapleGame extends GameApplication {
 
 		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
 
-		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+		
+		//viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         viewport.setLazy(true);
 	}
+	
+	@Override
+	protected void onPreInit() {
+        getSettings().setGlobalMusicVolume(0.5);
+        loopBGM("maplestory.wav");
+    }
 	
 	@Override
 	protected void initPhysics() {

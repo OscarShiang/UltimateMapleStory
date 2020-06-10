@@ -86,7 +86,7 @@ public class MapleFactory implements EntityFactory {
         return entityBuilder()
                 .type(MapleType.PLAYER)
                 .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
+                .bbox(new HitBox(BoundingShape.box(80, 80)))
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
                 .build();
@@ -205,15 +205,15 @@ public class MapleFactory implements EntityFactory {
 	public Entity newHole(SpawnData data) {
 		
 		return entityBuilder()
-				.type(MapleType.BOMB)
+				.type(MapleType.TRAP)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.bbox(new HitBox(BoundingShape.box(25, 50)))
 				.build();
 	}
 	
-	@Spawns("tmpPlayer")
+	/*@Spawns("tmpPlayer")
     public Entity newTmpPlayer(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
@@ -232,6 +232,6 @@ public class MapleFactory implements EntityFactory {
                 .with(new IrremovableComponent())
                 .with(new PlayerComponent())
                 .build();
-    }
+    }*/
 	
 }
