@@ -246,7 +246,6 @@ public class MapleGame extends GameApplication {
         Text scoreMushroom = new Text((Integer.toString(score[0])));
         scoreMushroom.setTranslateX(550);
         scoreMushroom.setTranslateY(125);
->>>>>>> 27d605d6c5923d4f540758f2843f483924915e39
         scoreMushroom.setFont(Font.font(25));
         Text scoreYeti = new Text("0");
         scoreYeti.setTranslateX(640);
@@ -299,7 +298,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;		
 				player[0].getComponent(PlayerComponent.class).left();
 			}
@@ -308,7 +307,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).right();
 			}
@@ -317,7 +316,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump_P1") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).jump();
 			}
