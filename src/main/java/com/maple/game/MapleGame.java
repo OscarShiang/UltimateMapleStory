@@ -233,8 +233,11 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
+
         		//getGameScene().addUINode(rank);
         		
+
+        		//getGameScene().addUINode(rank);	
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -275,7 +278,7 @@ public class MapleGame extends GameApplication {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 2;
-        	hole.setVisible(false);
+        	hole_button.setVisible(false);
         });
         hole_button.setTranslateX(300);
         hole_button.setTranslateY(150);
@@ -292,6 +295,7 @@ public class MapleGame extends GameApplication {
         surprise_button.setTranslateY(150);
         
         bomb_button = new Button("", new ImageView(image("item/bomb.png")));
+        bomb_button.setStyle("-fx-background-color: transparent;");
         bomb_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
@@ -302,6 +306,7 @@ public class MapleGame extends GameApplication {
         bomb_button.setTranslateY(400);
         
         brick_button = new Button("", new ImageView(image("item/brick.png")));
+        brick_button.setStyle("-fx-background-color: transparent;");
         brick_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
@@ -326,9 +331,31 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(brick_button);
 //        getGameScene().addUINodes(pane);
         
+
+        
+        /*Text scoreMushroom = new Text("0");
+        scoreMushroom.setTranslateX(640);
+        scoreMushroom.setTranslateY(215);
+        scoreMushroom.setFont(Font.font(25));
+        Text scoreYeti = new Text("0");
+        scoreYeti.setTranslateX(640);
+        scoreYeti.setTranslateY(295);
+        scoreYeti.setFont(Font.font(25));
+        Text scoreSlime = new Text("0");
+        scoreSlime.setTranslateX(640);
+        scoreSlime.setTranslateY(215);
+        scoreSlime.setFont(Font.font(25));
+        Text scorePig = new Text("0");
+        scorePig.setTranslateX(640);
+        scorePig.setTranslateY(215);
+        scorePig.setFont(Font.font(25));
+        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig);*/    
+        
+
         scoreText = new Text[2];
         //scoreText[0] = new Text("10");
         //scoreText[1] = new Text("20");
+
         for(int j = 0; j < 2; j++) {
             scoreText[j] = new Text("0");
         	scoreText[j].setTranslateX(640);
@@ -336,7 +363,7 @@ public class MapleGame extends GameApplication {
             scoreText[j].setFont(Font.font(25));
         }
 
-        rank.getChildren().addAll(scoreText);       
+        //rank.getChildren().addAll(scoreText);       
 
         //getGameScene().addUINode(rank);
     
@@ -481,16 +508,16 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
-			@Override
-			public void onCollisionBegin(Entity player, Entity surprise) {
-				player.setOpacity(0);
-				player.getComponent(PlayerComponent.class).dead();
-				playerDead();
-				deadTomb(player);
-			}
-		});
-		
+//		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
+//			@Override
+//			public void onCollisionBegin(Entity player, Entity surprise) {
+//				player.setOpacity(0);
+//				player.getComponent(PlayerComponent.class).dead();
+//				playerDead();
+//				deadTomb(player);
+//			}
+//		});
+//		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLATFORM) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity platform) {
@@ -539,8 +566,7 @@ public class MapleGame extends GameApplication {
 		playerFinish = 0;
 		
 		for (int i = 0; i < 2; i++) {
-			player[i].getComponent(PlayerComponent.class).restore();
-			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));	
 			player[i].setOpacity(1);
 		}
 		
@@ -563,7 +589,15 @@ public class MapleGame extends GameApplication {
 	        surprise_button.setVisible(true);
 	        hole_button.setVisible(true);
 			
+	        addPoint();
+	        realDead = false;
+	        
 			chooseItem = 2;
+			
+			// unfreeze players
+			for (int i = 0; i < 2; i++) {
+				player[i].getComponent(PlayerComponent.class).restore();
+			}
 		}, Duration.seconds(3));
 	}
 	
@@ -574,6 +608,8 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void playerWin(Entity player) {
+		player.getComponent(PlayerComponent.class).restore();
+
 		if (++playerFinish >= 2) {
 			nextRound();
 		}
