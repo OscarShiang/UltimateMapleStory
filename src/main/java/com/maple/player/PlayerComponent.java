@@ -22,6 +22,8 @@ public class PlayerComponent extends Component {
 	public boolean isDead;
 	public boolean isWin;
 	
+	public int playerNum;
+	
 	public AnimatedTexture texture;
 	private AnimationChannel idle, walk, jump;
 	
