@@ -27,7 +27,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity[] player;
 
-	public Entity yeti, mushroom, slime, pig;
 	
 	private Entity destination;
 	private Entity tomb;
@@ -41,6 +40,7 @@ public class MapleGame extends GameApplication {
 	public Entity balloon;
     public Entity hole;
     public Entity surprise;
+    public Entity brick;
     
     private final int PLAYER_NUM = 2;
 	
@@ -60,13 +60,13 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < PLAYER_NUM; i++)
 			score[i] = 0;
 		
-		
 		choosePlayer = new int[2];
 		for(int i = 0; i < 2; i++)
 			choosePlayer[i] = 0;
 		
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		player = new Entity[PLAYER_NUM];
+		
 		chosenPlayer = 0;
 		
 	}
@@ -79,6 +79,8 @@ public class MapleGame extends GameApplication {
 	private int chosenPlayer = 0;
 	
 	protected void initUI() {
+		player = new Entity[PLAYER_NUM];
+		
 		// setting up menuBox
 		Button start = getUIFactoryService().newButton("START");
 		start.setOnAction(e -> {
@@ -101,34 +103,46 @@ public class MapleGame extends GameApplication {
         // setting up select box
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
-        	player[++chosenPlayer] = getGameWorld().spawn("yeti");
-        	if (chosenPlayer > 1) {
+        	System.out.println(chosenPlayer);
+        	player[chosenPlayer] = getGameWorld().spawn("yeti");
+        	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
-        		stage = MapleStage.SELECT;
+        		stage = MapleStage.PLAY;
+        		getGameScene().removeUINode(selectBox);
+        		getGameScene().addUINodes(pane);
         	}
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
-        	player[++chosenPlayer] = getGameWorld().spawn("pig");
-        	if (chosenPlayer > 1) {
+        	System.out.println(chosenPlayer);
+        	player[chosenPlayer] = getGameWorld().spawn("pig");
+        	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
+        		getGameScene().removeUINode(selectBox);
+        		getGameScene().addUINodes(pane);
         	}
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
-        	player[++chosenPlayer] = getGameWorld().spawn("slime");
-        	if (chosenPlayer > 1) {
+        	System.out.println(chosenPlayer);
+        	player[chosenPlayer] = getGameWorld().spawn("slime");
+        	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
+        		getGameScene().removeUINode(selectBox);
+        		getGameScene().addUINodes(pane);
         	}
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
-        	player[++chosenPlayer] = getGameWorld().spawn("mushroom");
-        	if (chosenPlayer > 1) {
+        	System.out.println(chosenPlayer);
+        	player[chosenPlayer] = getGameWorld().spawn("mushroom");
+        	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
+        		getGameScene().removeUINode(selectBox);
+        		getGameScene().addUINodes(pane);
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -150,8 +164,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
-//         getGameScene().addUINode(menuBox);
-
+         getGameScene().addUINode(menuBox);
         
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setStyle("-fx-background-color: transparent;");
@@ -214,7 +227,7 @@ public class MapleGame extends GameApplication {
         
         pane.getChildren().addAll(bomb);
         pane.getChildren().addAll(brick);
-        getGameScene().addUINodes(pane);
+//        getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank_background.png"), null, null, null, null)));
@@ -284,9 +297,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
-					return;
-				
+				if (stage == MapleStage.PLAY)
+					return;		
 				player[0].getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
@@ -294,7 +306,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
+				if (stage == MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).right();
 			}
@@ -303,7 +315,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
+				if (stage == MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).jump();
 			}
@@ -318,7 +330,7 @@ public class MapleGame extends GameApplication {
 				player[1].getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.LEFT);
-		
+
 		getInput().addAction(new UserAction("right_P2") {
 			@Override
 			protected void onAction() {
@@ -357,20 +369,16 @@ public class MapleGame extends GameApplication {
 		realDead = false;
 		
 		destination = null;
-		destination = getGameWorld().spawn("redflag");
-		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
-        
-		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1500, 367));
-		
+		destination = getGameWorld().spawn("redflag", new Point2D(1435, 413));
+
 		/*balloon = null;
 		balloon = getGameWorld().spawn("balloon");
 		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
 		*/
-		isGenTeleport = false;
+		/*isGenTeleport = false;
 		teleport1 = null;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
-		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));
-		
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
 		
 //		player = null;
 //		player = getGameWorld().spawn("player", 600, 10);
@@ -380,11 +388,21 @@ public class MapleGame extends GameApplication {
 //
 //		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
 //        viewport.setLazy(true);
+
+		isGenTeleport = false;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
+	
+	@Override
+	protected void onPreInit() {
+        getSettings().setGlobalMusicVolume(0.5);
+        loopBGM("maplestory.wav");
+    }
 	
 	@Override
 	protected void initPhysics() {
 		getPhysicsWorld().setGravity(0, 800);
+		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.COIN) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity coin) {
@@ -422,6 +440,10 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
+		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.PLAYER) {
+			@Override
+			public void onCollisionBegin(Entity p1, Entity p2) { }
+		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
 			@Override
@@ -457,11 +479,17 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
+		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
+			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
+				tmpPlayer.setPosition(new Point2D(100, 100));
+				//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				//teleport();
+			}
+		});*/
+		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
-				if(player != null) {
-					player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
-				}
+				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
 				//teleport();
 			}
 		});

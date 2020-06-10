@@ -56,7 +56,7 @@ public class ItemComponent extends Component {
 				break;
 			case brick:
 				image = image("item/brick.png");
-				idle = new AnimationChannel(image, 1, 110, 36, Duration.seconds(1), 0, 0);
+				idle = new AnimationChannel(image, 1, 110, 66, Duration.seconds(1), 0, 0);
 				break;
 		}
 		
