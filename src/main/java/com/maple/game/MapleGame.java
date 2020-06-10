@@ -101,6 +101,7 @@ public class MapleGame extends GameApplication {
     Texture[] rank_orange = new Texture[4];
     Texture[] rank_green = new Texture[4];
     Texture[] rank_blue = new Texture[4];
+    Texture crown;
     
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
@@ -111,7 +112,7 @@ public class MapleGame extends GameApplication {
 			rank_green[j] = new Texture(image("rank/rank_green" + j + ".png"));
 			rank_blue[j] = new Texture(image("rank/rank_blue" + j + ".png"));
 		}
-		
+		crown = new Texture(image("item/crown.png"));
 		
 		
 		Texture title = FXGL.getAssetLoader().loadTexture("item/title.png");
