@@ -275,7 +275,7 @@ public class MapleGame extends GameApplication {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 2;
-        	hole.setVisible(false);
+        	hole_button.setVisible(false);
         });
         hole_button.setTranslateX(300);
         hole_button.setTranslateY(150);
