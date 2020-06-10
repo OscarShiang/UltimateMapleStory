@@ -102,7 +102,7 @@ public class MapleFactory implements EntityFactory {
 				.with(physics)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.tomb))
-				.bbox(new HitBox(BoundingShape.box(94, 43)))
+				.bbox(new HitBox(new Point2D(10, 5), BoundingShape.box(74, 38)))
 				.build();
 	}
 
@@ -245,6 +245,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new ItemComponent(ItemType.hole))
 				.with(lift)
 				.bbox(new HitBox(new Point2D(25, 25),BoundingShape.box(50, 50)))
+				.bbox(new HitBox(BoundingShape.circle(15)))
 				.build();
 	}
 	
