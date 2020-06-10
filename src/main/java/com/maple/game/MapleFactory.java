@@ -63,15 +63,6 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
-	@Spawns("deadline")
-	public Entity newDeadline(SpawnData data) {
-		return entityBuilder()
-				.type(MapleType.DEADLINE)
-				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-				.with(new CollidableComponent(true))
-				.build();
-	}
-	
 	@Spawns("player")
 	public Entity newPlayer(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
@@ -83,6 +74,7 @@ public class MapleFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(100, 100)))
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
+                .with(new IrremovableComponent())
                 .build();
 	}
 
@@ -143,17 +135,6 @@ public class MapleFactory implements EntityFactory {
                 .build();
 	}
 	
-
-	@Spawns("coin")
-	public Entity newCoin(SpawnData data) {
-		return entityBuilder()
-				.type(MapleType.COIN)
-				.with(new ItemComponent(ItemType.coin))
-				.with(new CollidableComponent(true))
-				.bbox(new HitBox(BoundingShape.box(30, 30)))
-				.build();
-	}
-	
 	@Spawns("redflag")
 	public Entity newRedFlag(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
@@ -206,6 +187,27 @@ public class MapleFactory implements EntityFactory {
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.teleport1))
 				.bbox(new HitBox(BoundingShape.box(47, 80)))
+				.build();
+	}
+	
+	@Spawns("deadline")
+	public Entity newDeadline(SpawnData data) {
+		return entityBuilder()
+				.type(MapleType.DEADLINE)
+				.with(new PhysicsComponent())
+				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+				.with(new CollidableComponent(true))
+				.build();
+	}
+	
+	@Spawns("coin")
+	public Entity newCoin(SpawnData data) {
+		return entityBuilder()
+				.type(MapleType.COIN)
+				.with(new PhysicsComponent())
+				.with(new ItemComponent(ItemType.coin))
+				.with(new CollidableComponent(true))
+				.bbox(new HitBox(BoundingShape.box(25, 25)))
 				.build();
 	}
 	

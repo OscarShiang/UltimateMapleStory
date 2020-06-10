@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="right-down" width="1600" height="800" tilewidth="1" tileheight="1" infinite="0" nextlayerid="3" nextobjectid="38">
+<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="right-down" width="1600" height="800" tilewidth="1" tileheight="1" infinite="0" nextlayerid="3" nextobjectid="39">
  <tileset firstgid="1" name="PC Computer - MapleStory - Blue Toy Castle Tiles" tilewidth="1" tileheight="1" tilecount="344223" columns="671">
   <image source="PC Computer - MapleStory - Blue Toy Castle Tiles.png" width="671" height="513"/>
  </tileset>
@@ -842,5 +842,6 @@
   <object id="35" type="wall" x="0" y="0" width="1" height="800"/>
   <object id="36" type="wall" x="0" y="0" width="1600" height="1"/>
   <object id="37" type="wall" x="1599" y="0" width="1" height="796"/>
+  <object id="38" type="coin" x="635" y="579" width="25" height="25"/>
  </objectgroup>
 </map>
