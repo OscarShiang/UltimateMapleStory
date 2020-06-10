@@ -35,3 +35,5 @@ hiscore.dat
 
 # macOS #
 *.DS_Store
+
+*.wav
