@@ -93,6 +93,21 @@ public class MapleFactory implements EntityFactory {
                 .with(new PlayerComponent())
                 .build();
 	}
+	
+	@Spawns("tomb")
+	public Entity newTomb(SpawnData data) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.DYNAMIC);
+		
+		return entityBuilder()
+				.type(MapleType.TOMB)
+				.from(data)
+				.with(physics)
+				.with(new CollidableComponent(true))
+				.with(new ItemComponent(ItemType.tomb))
+				.bbox(new HitBox(BoundingShape.box(94, 43)))
+				.build();
+	}
 
 	
 	@Spawns("slime")
@@ -136,21 +151,6 @@ public class MapleFactory implements EntityFactory {
 				.with(new CollidableComponent(false))
 				.with(new ItemComponent(ItemType.teleport2))
 				.bbox(new HitBox(BoundingShape.box(47, 80)))
-				.build();
-	}
-	
-	@Spawns("tomb")
-	public Entity newTomb(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.DYNAMIC);
-		
-		return entityBuilder()
-				.type(MapleType.TOMB)
-				.from(data)
-				.with(physics)
-				.with(new CollidableComponent(true))
-				.with(new ItemComponent(ItemType.tomb))
-				.bbox(new HitBox(BoundingShape.box(94, 43)))
 				.build();
 	}
 	

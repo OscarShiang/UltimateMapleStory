@@ -500,8 +500,8 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead();
 				deadTomb(player);
+				playerDead();
 			}
 		});
 		
@@ -563,12 +563,13 @@ public class MapleGame extends GameApplication {
 		playerFinish = 0;
 		
 		for (int i = 0; i < 2; i++) {
-			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));	
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
 			player[i].setOpacity(1);
 		}
 		
 		if (tomb != null) {
 			getGameWorld().removeEntity(tomb);
+			tomb = null;
 		}
 		
 		getGameScene().addUINode(rank);
@@ -605,7 +606,6 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void playerWin(Entity player) {
-		player.getComponent(PlayerComponent.class).restore();
 
 		if (++playerFinish >= 2) {
 			nextRound();
@@ -615,6 +615,8 @@ public class MapleGame extends GameApplication {
 	
 	public void deadTomb(Entity player) {
 		if (!realDead) {
+			if (tomb != null)
+				return;
 			tomb = getGameWorld().spawn("tomb");
 			tomb.setPosition(new Point2D(player.getX(), 0));
 			realDead = true;
