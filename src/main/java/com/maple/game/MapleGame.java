@@ -232,12 +232,9 @@ public class MapleGame extends GameApplication {
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
-        		
-
+        	
         		//getGameScene().addUINode(rank);
         		
-
-        		//getGameScene().addUINode(rank);	
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
