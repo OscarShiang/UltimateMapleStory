@@ -36,7 +36,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity teleport1;
 	private Entity teleport2;
-	private boolean isGenTeleport;
 	
 	public int chooseItem = 0;
 	public int item = 0;
