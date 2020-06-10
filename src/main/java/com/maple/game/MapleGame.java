@@ -49,7 +49,8 @@ public class MapleGame extends GameApplication {
 	private MapleStage stage;
 	
 	private int[] score;
-	private int[] choosePlayer;
+	private String[] choosePlayer;	
+	private Text[] scoreText;
 	
 	public boolean canPlace;
 	
@@ -63,9 +64,10 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < PLAYER_NUM; i++)
 			score[i] = 0;
 		
-		choosePlayer = new int[PLAYER_NUM];
+		choosePlayer = new String[PLAYER_NUM];
 		for(int i = 0; i < 2; i++)
-			choosePlayer[i] = 0;
+			choosePlayer[i] = null;
+		
 		
 		player = new Entity[PLAYER_NUM];
 		
@@ -111,49 +113,108 @@ public class MapleGame extends GameApplication {
         		start, quit
         );
         
+        
+        rank = new Pane();
+        rank.setBackground(new Background(new BackgroundImage(image("background/rank_background.png"), null, null, null, null)));
+        rank.setTranslateX(getAppWidth() / 2 - 350);
+        rank.setTranslateY(getAppHeight() / 2 - 250);
+        rank.setPrefSize(700, 500);
+        
+        int i = 1;
+        Texture red  = new Texture(image("item/red.png"));
+        Texture green  = new Texture(image("item/green.png"));
+        Texture blue  = new Texture(image("item/blue.png"));    
+        Texture orange  = new Texture(image("item/orange.png"));
+ 
+        Texture red_icon  = new Texture(image("item/rank_red.png"));
+        Texture green_icon  = new Texture(image("item/rank_green.png"));
+        Texture blue_icon  = new Texture(image("item/rank_blue.png"));           
+        Texture orange_icon  = new Texture(image("item/rank_orange.png"));
+        
+        
+        
         // setting up select box
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
+        	choosePlayer[chosenPlayer] = "yeti";
+            green.setVisible(false);        
+            green_icon.setTranslateY(178 + 80 * chosenPlayer);
+            green.setTranslateX(108 + 12 * 1 + green.getWidth()/2);
+            green.setTranslateY(195 + 80 * 1 + 80 * chosenPlayer);
+    		rank.getChildren().addAll( green_icon, green);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
-        		getGameScene().addUINodes(pane);
+//        		getGameScene().addUINodes(pane);
         		chooseItem = 2;
+        		
+//        		getGameScene().addUINode(rank);
+        		
         	}
         });
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
+        	choosePlayer[chosenPlayer] = "pig";
+            orange.setVisible(false);
+            orange_icon.setTranslateY(178 + 80 * chosenPlayer);
+            orange.setTranslateX(107 + 12 * 1 + orange.getWidth()/2);
+            orange.setTranslateY(194 + 80 * 1 + 80 * chosenPlayer);
+    		rank.getChildren().addAll( orange_icon, orange);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
+        		
+//        		getGameScene().addUINode(rank);
+        		
         	}
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
+            blue.setVisible(false); 
+            blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
+            blue.setTranslateX(108 + 12 * 1 + blue.getWidth()/2);
+            blue.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
+    		rank.getChildren().addAll( blue_icon, blue);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
+        		
+//        		getGameScene().addUINode(rank);
+        		
         	}
         });
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
+        	choosePlayer[chosenPlayer] = "mushroom";
+            red.setVisible(false);
+            red_icon.setTranslateY(178 + 80 * chosenPlayer);
+   		 	red.setTranslateX(108 + 12 * 1 + red.getWidth()/2);
+	     	red.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
+	   		rank.getChildren().addAll( red_icon, red);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
+        		
+//        		getGameScene().addUINode(rank);
+        		
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -162,8 +223,8 @@ public class MapleGame extends GameApplication {
         	getGameScene().addUINode(menuBox);
         	getGameScene().addUINode(title);
         	chosenPlayer = 0;
-        	for (int i = 0; i < PLAYER_NUM; i++) {
-        		player[i] = null;
+        	for (int j = 0; j < PLAYER_NUM; j++) {
+        		player[j] = null;
         	}
         });
         
@@ -245,57 +306,18 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(brick);
 //        getGameScene().addUINodes(pane);
         
-        rank = new Pane();
-        rank.setBackground(new Background(new BackgroundImage(image("background/rank_background.png"), null, null, null, null)));
-        rank.setTranslateX(getAppWidth() / 2 - 350);
-        rank.setTranslateY(getAppHeight() / 2 - 250);
-        rank.setPrefSize(700, 500);
+
         
-        Text scoreMushroom = new Text("0");
-        scoreMushroom.setTranslateX(640);
-        scoreMushroom.setTranslateY(215);
-        
-        scoreMushroom.setFont(Font.font(25));
-        Text scoreYeti = new Text("0");
-        scoreYeti.setTranslateX(640);
-        scoreYeti.setTranslateY(215);
-        scoreYeti.setFont(Font.font(25));
-        Text scoreSlime = new Text("0");
-        scoreSlime.setTranslateX(640);
-        scoreSlime.setTranslateY(215);
-        scoreSlime.setFont(Font.font(25));
-        Text scorePig = new Text("0");
-        scorePig.setTranslateX(640);
-        scorePig.setTranslateY(215);
-        scorePig.setFont(Font.font(25));
-        
-        int i = 1;
-        Texture red  = new Texture(image("item/red.png"));
-        red.setScaleX(i);
-        red.setTranslateX(108 + 12 * i + red.getWidth()/2);
-        red.setTranslateY(192);
-        Texture green  = new Texture(image("item/green.png"));
-        green.setScaleX(i);
-        green.setTranslateX(108 + 12 * i + green.getWidth()/2);
-        green.setTranslateY(195);
-        Texture blue  = new Texture(image("item/blue.png"));
-        blue.setScaleX(i);
-        blue.setTranslateX(108 + 12 * i + blue.getWidth()/2);
-        blue.setTranslateY(192);        
-        Texture orange  = new Texture(image("item/orange.png"));
-        orange.setScaleX(i);
-        orange.setTranslateX(107 + 12 * i + orange.getWidth()/2);
-        orange.setTranslateY(194);
-        
-        Texture red_icon  = new Texture(image("item/rank_red.png"));
-        red_icon.setTranslateY(178);
-        Texture green_icon  = new Texture(image("item/rank_green.png"));
-        green_icon.setTranslateY(178);
-        Texture blue_icon  = new Texture(image("item/rank_blue.png"));
-        blue_icon.setTranslateY(178);        
-        Texture orange_icon  = new Texture(image("item/rank_orange.png"));
-        orange_icon.setTranslateY(178);
-        rank.getChildren().addAll(scoreMushroom, scoreYeti, scoreSlime, scorePig, red_icon, red, green_icon, green, blue_icon, blue, orange_icon, orange);
+        scoreText = new Text[2];
+        for(int j = 0; j < 2; j++) {
+            scoreText[j] = new Text("0");
+        	scoreText[j].setTranslateX(640);
+            scoreText[j].setTranslateY(215 + 80 * j);
+            scoreText[j].setFont(Font.font(25));
+        }
+
+        rank.getChildren().addAll(scoreText);       
+
         //getGameScene().addUINode(rank);
     
         
@@ -474,16 +496,13 @@ public class MapleGame extends GameApplication {
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
-				playerWin();
-				getDialogService().showMessageBox("Finish!");
-				
+				playerWin(player);
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
 				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
-				//teleport();
 			}
 		});
 	}
@@ -494,7 +513,7 @@ public class MapleGame extends GameApplication {
 		playerFinish = 0;
 		
 		for (int i = 0; i < 2; i++) {
-			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+//			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
         	player[i].setZ(Integer.MAX_VALUE);
 			player[i].getComponent(PlayerComponent.class).restore();
 		}
@@ -508,10 +527,11 @@ public class MapleGame extends GameApplication {
 		}
 	}
 	
-	public void playerWin() {
+	public void playerWin(Entity player) {
 		if (++playerFinish >= 2) {
 			nextRound();
 		}
+		score[player.getComponent(PlayerComponent.class).playerNum]++;
 	}
 	
 	public void deadTomb(Entity player) {
@@ -522,6 +542,13 @@ public class MapleGame extends GameApplication {
 		}
 	}
 
+	
+	public void addPoint() {
+		for(int j = 0; j < 2; j++) {
+			scoreText[j].setText(Integer.toString(score[j]));
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);
