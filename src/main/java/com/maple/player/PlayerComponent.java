@@ -40,8 +40,6 @@ public class PlayerComponent extends Component {
 		jump = new AnimationChannel(image, 5, 100, 100, Duration.seconds(1), 3, 3);
 		
 		texture = new AnimatedTexture(idle);
-		
-		physics = entity.getComponent(PhysicsComponent.class);
 	}
 	
 	// custom

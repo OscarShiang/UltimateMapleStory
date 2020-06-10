@@ -75,6 +75,9 @@ public class Client implements Runnable {
 				} catch (ClassNotFoundException e) {
 					System.out.println("[CLIENT] Packet error");
 					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("[CLIENT] connection error");
+					e.printStackTrace();
 				}
 			}
 			

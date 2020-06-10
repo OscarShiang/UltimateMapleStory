@@ -386,17 +386,10 @@ public class MapleGame extends GameApplication {
 	}
 	
 	private void initPlayers() {
-		yeti = getGameWorld().spawn("yeti");
-		yeti.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
-		
-		slime = getGameWorld().spawn("slime");
-		slime.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
-		
-		pig = getGameWorld().spawn("pig");
-		pig.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
-		
-		mushroom = getGameWorld().spawn("mushroom");
-		mushroom.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+		yeti = getGameWorld().spawn("yeti", new Point2D(250, 400));
+		slime = getGameWorld().spawn("slime", new Point2D(250, 400));
+		pig = getGameWorld().spawn("pig", new Point2D(250, 400));
+		mushroom = getGameWorld().spawn("mushroom", new Point2D(250, 400));
 		
 		System.out.println("Initialize players");
 	}
@@ -456,8 +449,7 @@ public class MapleGame extends GameApplication {
 		
 		
 //		player = null;
-//		player = getGameWorld().spawn("player", 250, 400);
-//		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+//		player = getGameWorld().spawn("player", 600, 10);
 //		Viewport viewport = getGameScene().getViewport();
 //
 //		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
@@ -606,19 +598,19 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void setYeti(PlayerInfo info) {
-		yeti.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
+		yeti.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(info.x, info.y));
 	}
 	
 	public void setSlime(PlayerInfo info) {
-		slime.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
+		slime.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(info.x, info.y));
 	}
 	
 	public void setPig(PlayerInfo info) {
-		pig.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
+		pig.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(info.x, info.y));
 	}
 	
 	public void setMushroom(PlayerInfo info) {
-		mushroom.getComponent(PlayerComponent.class).physics.overwritePosition(new Point2D(info.x, info.y));
+		mushroom.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(info.x, info.y));
 	}
 	
 	public PlayerType getPlayerType() {
