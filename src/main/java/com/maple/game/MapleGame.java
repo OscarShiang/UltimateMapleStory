@@ -3,6 +3,7 @@ package com.maple.game;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -81,6 +82,14 @@ public class MapleGame extends GameApplication {
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
+		var title = FXGL.getAssetLoader().loadTexture("item/title.png");
+		title.setScaleX(0.5);
+		title.setScaleY(0.5);
+		title.setX(100);
+		title.setY(50);
+		getGameScene().addUINode(title);
+		
+		
 		// setting up menuBox
 		Button start = getUIFactoryService().newButton("START");
 		start.setOnAction(e -> {
@@ -93,9 +102,9 @@ public class MapleGame extends GameApplication {
         
         menuBox = new VBox(10);
         menuBox.setTranslateX(getAppWidth()/2 - 100);
-        menuBox.setTranslateY(400);
+        menuBox.setTranslateY(500);
         menuBox.getChildren().addAll(
-                start, quit
+        		start, quit
         );
         
         // setting up select box
