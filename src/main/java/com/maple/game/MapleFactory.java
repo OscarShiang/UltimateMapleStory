@@ -64,11 +64,24 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
+	private Entity newPlayer(PlayerType type) {
+		PhysicsComponent physics = new PhysicsComponent();
+		physics.setBodyType(BodyType.DYNAMIC);
+		
+		
+        return entityBuilder()
+                .type(MapleType.PLAYER)
+                .with(physics)
+                .bbox(new HitBox(BoundingShape.box(80, 80)))
+                .with(new CollidableComponent(true))
+                .with(new PlayerComponent(type))
+                .build();
+	}
+	
 	@Spawns("player")
 	public Entity newPlayer(SpawnData data) {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.DYNAMIC);
-		
 		
         return entityBuilder()
                 .type(MapleType.PLAYER)
@@ -76,65 +89,28 @@ public class MapleFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(100, 100)))
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
-                .with(new IrremovableComponent())
                 .build();
 	}
 
 	
 	@Spawns("slime")
 	public Entity newSlime(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.DYNAMIC);
-		
-        return entityBuilder()
-                .type(MapleType.PLAYER)
-                .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
-                .with(new CollidableComponent(true))
-                .with(new PlayerComponent(PlayerType.SLIME))
-                .build();
+		return newPlayer(PlayerType.SLIME);
 	}
 	
 	@Spawns("yeti")
 	public Entity newYeti(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.DYNAMIC);
-		
-        return entityBuilder()
-                .type(MapleType.PLAYER)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
-                .with(physics)
-                .with(new CollidableComponent(true))
-                .with(new PlayerComponent(PlayerType.YETI))
-                .build();
+		return newPlayer(PlayerType.YETI);
 	}
 	
 	@Spawns("mushroom")
 	public Entity newMush(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.DYNAMIC);
-		
-        return entityBuilder()
-                .type(MapleType.PLAYER)
-                .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
-                .with(new CollidableComponent(true))
-                .with(new PlayerComponent(PlayerType.MUSHROOM))
-                .build();
+		return newPlayer(PlayerType.MUSHROOM);
 	}
 	
 	@Spawns("pig")
 	public Entity newPig(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.DYNAMIC);
-		
-        return entityBuilder()
-                .type(MapleType.PLAYER)
-                .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
-                .with(new CollidableComponent(true))
-                .with(new PlayerComponent(PlayerType.PIG))
-                .build();
+		return newPlayer(PlayerType.PIG);
 	}
 	
 	@Spawns("redflag")
