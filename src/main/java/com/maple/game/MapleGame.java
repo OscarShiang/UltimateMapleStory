@@ -64,7 +64,6 @@ public class MapleGame extends GameApplication {
 		for(int i = 0; i < 2; i++)
 			choosePlayer[i] = 0;
 		
-		System.setProperty("java.net.preferIPv4Stack", "true");
 		player = new Entity[PLAYER_NUM];
 		
 		chosenPlayer = 0;
@@ -102,6 +101,7 @@ public class MapleGame extends GameApplication {
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
+        	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -113,6 +113,7 @@ public class MapleGame extends GameApplication {
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("pig");
+        	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -124,6 +125,7 @@ public class MapleGame extends GameApplication {
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("slime");
+        	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -135,6 +137,7 @@ public class MapleGame extends GameApplication {
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
+        	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		getGameScene().removeUINode(selectBox);
         		stage = MapleStage.SELECT;
@@ -170,6 +173,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chosenPlayer--;
         	item = 1;
+        	redballoon.setVisible(false);
         });
         redballoon.setTranslateX(150);
         redballoon.setTranslateY(150);
@@ -180,6 +184,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 2;
+        	hole.setVisible(false);
         });
         hole.setTranslateX(300);
         hole.setTranslateY(150);
@@ -190,6 +195,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 3;
+        	surprise.setVisible(false);
         });
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
@@ -199,6 +205,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 4;
+        	bomb.setVisible(false);
         });
         bomb.setTranslateX(150);
         bomb.setTranslateY(400);
@@ -208,6 +215,7 @@ public class MapleGame extends GameApplication {
         	pane.setVisible(false);
         	chooseItem--;
         	item = 5;
+        	brick.setVisible(false);
         });
         brick.setTranslateX(300);
         brick.setTranslateY(400);
