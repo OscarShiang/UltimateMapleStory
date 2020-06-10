@@ -80,9 +80,7 @@ public class MapleGame extends GameApplication {
         });
         
 		Button quit = getUIFactoryService().newButton("QUIT");
-        quit.setOnAction(e -> {
-        	System.exit(0);
-        });
+        quit.setOnAction(e -> System.exit(0));
         
         menuBox = new VBox(10);
         menuBox.setTranslateX(getAppWidth()/2 - 100);

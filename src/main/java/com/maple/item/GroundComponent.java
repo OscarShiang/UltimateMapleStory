@@ -19,7 +19,7 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-public class GroundComponent  extends Component {
+public class GroundComponent extends Component {
 
     private ViewComponent view;
     private String currentTextureName = "lever0.png";
@@ -34,7 +34,7 @@ public class GroundComponent  extends Component {
     
     @Override
     public void onAdded() {
-    		view.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> trigger());
+    	view.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> trigger());
     }
 
     public void trigger() {
