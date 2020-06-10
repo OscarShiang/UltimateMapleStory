@@ -9,10 +9,14 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+
+import java.io.Serializable;
+
 import com.maple.game.*;
 import com.maple.item.*;
 
 public class PlayerComponent extends Component {
+	
 	public PhysicsComponent physics;
 	public boolean isJump;
 	public boolean isDead;
