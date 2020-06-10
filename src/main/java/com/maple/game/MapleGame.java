@@ -165,12 +165,20 @@ public class MapleGame extends GameApplication {
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "yeti";
-            green.setVisible(false);
+            //green.setVisible(false);
         	//green.setScaleX(10);
-            green_icon.setTranslateY(178 + 80 * chosenPlayer);
+            //green_icon.setTranslateY(178 + 80 * chosenPlayer);
             //green.setTranslateX(108 + 10 * score[0] + green.getWidth()/2);
             //green.setTranslateY(195 + 80 * chosenPlayer);
-    		rank.getChildren().addAll( green_icon, green);
+            for(int j = 0; j < 4; j++) {
+            	rank_green[j].setTranslateY(178 + 80 * chosenPlayer);
+       		 	rank_green[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	if(j == 0)
+       		 		rank_green[j].setVisible(true);
+       		 	else 
+       		 		rank_green[j].setVisible(false);
+            }
+        	rank.getChildren().addAll( green_icon, green);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_yeti.setDisable(true);
@@ -187,12 +195,20 @@ public class MapleGame extends GameApplication {
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "pig";
-            orange.setVisible(false);
+            //orange.setVisible(false);
         	//orange.setScaleX(20);
-        	orange_icon.setTranslateY(178 + 80 * chosenPlayer);
+        	//orange_icon.setTranslateY(178 + 80 * chosenPlayer);
             //orange.setTranslateX(107 + 15 * score[1] + orange.getWidth()/2);
             //orange.setTranslateY(194 + 80 * chosenPlayer);
-    		rank.getChildren().addAll( orange_icon, orange);
+            for(int j = 0; j < 4; j++) {
+            	rank_orange[j].setTranslateY(178 + 80 * chosenPlayer);
+       		 	rank_orange[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	if(j == 0)
+       		 		rank_orange[j].setVisible(true);
+       		 	else 
+       		 		rank_orange[j].setVisible(false);
+            }
+        	rank.getChildren().addAll( orange_icon, orange);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_pig.setDisable(true);
@@ -209,12 +225,20 @@ public class MapleGame extends GameApplication {
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "slime";
-            blue.setVisible(false); 
+            //blue.setVisible(false); 
         	//blue.setScaleX(20);
-            blue.setVisible(false); 
-            blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
+            //blue.setVisible(false); 
+            //blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
             //blue.setTranslateX(108 + 12 * 1 + 230 + blue.getWidth()/2);
             //blue.setTranslateY(192 + 80 * chosenPlayer);
+            for(int j = 0; j < 4; j++) {
+            	rank_blue[j].setTranslateY(178 + 80 * chosenPlayer);
+       		 	rank_blue[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	if(j == 0)
+       		 		rank_blue[j].setVisible(true);
+       		 	else 
+       		 		rank_blue[j].setVisible(false);
+            }
     		rank.getChildren().addAll( blue_icon, blue);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
@@ -232,12 +256,18 @@ public class MapleGame extends GameApplication {
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "mushroom";
-            red.setVisible(false);
+            //red.setVisible(false);
         	//red.setScaleX(10);
-            red_icon.setTranslateY(178 + 80 * chosenPlayer);
-   		 	//red.setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+            for(int j = 0; j < 4; j++) {
+            	rank_red[j].setTranslateY(178 + 80 * chosenPlayer);
+       		 	rank_red[j].setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+       		 	if(j == 0)
+       		 		rank_red[j].setVisible(true);
+       		 	else 
+       		 		rank_red[j].setVisible(false);
+            }
 	     	//red.setTranslateY(192 + 80 * chosenPlayer);
-	   		rank.getChildren().addAll( red_icon, red);
+	   		rank.getChildren().addAll(rank_red[0]);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_mushroom.setDisable(true);
@@ -376,7 +406,7 @@ public class MapleGame extends GameApplication {
 
         rank.getChildren().addAll(scoreText);
 
-        //getGameScene().addUINode(rank);
+        getGameScene().addUINode(rank);
     
         
 	}
