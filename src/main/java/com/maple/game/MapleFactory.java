@@ -9,15 +9,10 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.box2d.dynamics.BodyDef;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 
 
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import com.maple.player.*;
@@ -237,11 +232,18 @@ public class MapleFactory implements EntityFactory {
 	@Spawns("hole")
 	public Entity newHole(SpawnData data) {
 		
+		LiftComponent lift = new LiftComponent();
+        lift.setGoingUp(true);
+        lift.setGoingRight(true);
+        lift.yAxisDistanceDuration(5, Duration.seconds(0.7));
+        lift.xAxisDistanceDuration(5, Duration.seconds(0.3));
+		
 		return entityBuilder()
 				.type(MapleType.TRAP)
 				.from(data)
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
+				.with(lift)
 				.bbox(new HitBox(new Point2D(25, 25),BoundingShape.box(50, 50)))
 				.build();
 	}

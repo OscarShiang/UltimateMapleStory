@@ -8,7 +8,6 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.Texture;
-import com.almasb.fxgl.time.TimerAction;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -512,6 +511,8 @@ public class MapleGame extends GameApplication {
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TRAP) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity hole) {
+				if (player.getComponent(PlayerComponent.class).isDead)
+					return;
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
@@ -546,6 +547,8 @@ public class MapleGame extends GameApplication {
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.DEADLINE) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity deadline) {
+				if (player.getComponent(PlayerComponent.class).isDead)
+					return;
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
@@ -556,8 +559,6 @@ public class MapleGame extends GameApplication {
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
 			@Override
 			public void onCollisionBegin(Entity player, Entity redflag) {
-				if (player.getComponent(PlayerComponent.class).isDead)
-					return;
 				player.getComponent(PlayerComponent.class).win();
 				playerWin(player);
 			}
@@ -591,10 +592,8 @@ public class MapleGame extends GameApplication {
 		}
 		
 
-		if (tomb != null) {
-			getGameWorld().removeEntity(tomb);
-			tomb = null;
-		}
+		getGameWorld().removeEntity(tomb);
+		tomb = null;
 		
 		addPoint();
 		getGameScene().addUINode(rank);
