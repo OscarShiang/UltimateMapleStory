@@ -227,7 +227,7 @@ public class MapleFactory implements EntityFactory {
 	public Entity newHole(SpawnData data) {
 		
 		return entityBuilder()
-				.type(MapleType.BOMB)
+				.type(MapleType.TRAP)
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))

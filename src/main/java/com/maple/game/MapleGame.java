@@ -512,8 +512,9 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
-				player.setPosition(new Point2D(100, 100));
-				//player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				if(player != null) {
+					player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				}
 				//teleport();
 			}
 		});
