@@ -384,9 +384,10 @@ public class MapleGame extends GameApplication {
 	public void placeItem() {
 		canPlace = false;
 		
-		if (chooseItem <= 0)
+		if (chooseItem <= 0) {
 			stage = MapleStage.PLAY;
-		else {
+			playerFinish = 0;
+		} else {
 			pane.setVisible(true);
 		}
 	}
@@ -494,13 +495,17 @@ public class MapleGame extends GameApplication {
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
+			@Override
 			public void onCollisionBegin(Entity player, Entity redflag) {
+				if (player.getComponent(PlayerComponent.class).isDead)
+					return;
 				player.getComponent(PlayerComponent.class).win();
 				playerWin(player);
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
+			@Override
 			public void onCollisionBegin(Entity player, Entity teleport1) {
 				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
 			}
@@ -513,12 +518,11 @@ public class MapleGame extends GameApplication {
 		playerFinish = 0;
 		
 		for (int i = 0; i < 2; i++) {
-//			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
-        	player[i].setZ(Integer.MAX_VALUE);
 			player[i].getComponent(PlayerComponent.class).restore();
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+//			player[i].setPosition(new Point2D(50, 50));
+			
 		}
-		
-		setLevelFromMap("map1.tmx");
 	}
 	
 	public void playerDead() {
