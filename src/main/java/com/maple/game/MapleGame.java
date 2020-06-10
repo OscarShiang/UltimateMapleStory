@@ -499,8 +499,8 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead();
 				deadTomb(player);
+				playerDead();
 			}
 		});
 		
@@ -604,7 +604,6 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void playerWin(Entity player) {
-		player.getComponent(PlayerComponent.class).restore();
 
 		if (++playerFinish >= 2) {
 			nextRound();
