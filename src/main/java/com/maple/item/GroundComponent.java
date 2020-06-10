@@ -54,15 +54,23 @@ public class GroundComponent  extends Component {
 			game.surprise.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	else if(game.isChoose == true && game.item == 4) {
+    		if(game.balloon.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.balloon.removeFromWorld();	
+    		}
+    		if(game.hole.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.hole.removeFromWorld();	
+    		}
     		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
     			game.surprise.removeFromWorld();	
     		}
-    		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
-    			game.balloon.removeFromWorld();	
+    		if(game.brick.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
+    			game.brick.removeFromWorld();	
     		}
-    		if(game.surprise.isWithin(new Rectangle2D(input.getMouseXWorld()-10, input.getMouseYWorld()-10, 20, 20))) {
-    			game.hole.removeFromWorld();	
-    		}
+    	}
+    	else if(game.isChoose == true && game.item == 5) {
+	    	game.brick = null;
+			game.brick = getGameWorld().spawn("brick");
+			game.brick.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
 		game.isChoose = false;
         

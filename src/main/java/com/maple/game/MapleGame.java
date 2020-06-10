@@ -41,6 +41,7 @@ public class MapleGame extends GameApplication {
 	public Entity balloon;
     public Entity hole;
     public Entity surprise;
+    public Entity brick;
     
     private final int PLAYER_NUM = 2;
 	
@@ -178,7 +179,6 @@ public class MapleGame extends GameApplication {
         Button bomb = new Button("", new ImageView(image("item/bomb.png")));
         bomb.setOnAction(e-> {
         	pane.setVisible(false);
-        	player.getComponent(PlayerComponent.class).start();
         	isChoose = true;
         	item = 4;
         });
@@ -188,7 +188,6 @@ public class MapleGame extends GameApplication {
         Button brick = new Button("", new ImageView(image("item/brick.png")));
         brick.setOnAction(e-> {
         	pane.setVisible(false);
-        	player.getComponent(PlayerComponent.class).start();
         	isChoose = true;
         	item = 5;
         });

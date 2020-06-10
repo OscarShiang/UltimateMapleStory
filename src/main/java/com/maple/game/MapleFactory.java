@@ -211,7 +211,7 @@ public class MapleFactory implements EntityFactory {
 				.build();
 	}
 	
-	@Spawns("hole")
+	@Spawns("brick")
 	public Entity newBrick(SpawnData data) {
 		
 		return entityBuilder()
@@ -219,7 +219,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.brick))
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.bbox(new HitBox(BoundingShape.box(110, 66)))
 				.build();
 	}
 	
