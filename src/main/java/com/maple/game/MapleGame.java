@@ -29,7 +29,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity[] player;
 
-	
 	private Entity destination;
 	private Entity tomb;
 	private boolean realDead;
@@ -74,6 +73,8 @@ public class MapleGame extends GameApplication {
 		
 		chosenPlayer = 0;
 		chooseItem = 0;
+		
+		playerFinish = 0;
 	}
 	
 
@@ -142,6 +143,7 @@ public class MapleGame extends GameApplication {
             green.setTranslateY(195 + 80 * 1 + 80 * chosenPlayer);
     		rank.getChildren().addAll( green_icon, green);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_yeti.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
@@ -162,6 +164,7 @@ public class MapleGame extends GameApplication {
             orange.setTranslateY(194 + 80 * 1 + 80 * chosenPlayer);
     		rank.getChildren().addAll( orange_icon, orange);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_pig.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
@@ -169,19 +172,19 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		//getGameScene().addUINode(rank);
+//        		getGameScene().addUINode(rank);
         		
         	}
         });
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
-        	choosePlayer[chosenPlayer] = "slime";
             blue.setVisible(false); 
             blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
             blue.setTranslateX(108 + 12 * 1 + blue.getWidth()/2);
             blue.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
     		rank.getChildren().addAll( blue_icon, blue);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_slime.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
@@ -189,7 +192,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		//getGameScene().addUINode(rank);
+//        		getGameScene().addUINode(rank);
         		
         	}
         });
@@ -202,6 +205,7 @@ public class MapleGame extends GameApplication {
 	     	red.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
 	   		rank.getChildren().addAll( red_icon, red);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
+        	player[chosenPlayer].getComponent(PlayerComponent.class).playerNum = chosenPlayer;
         	select_mushroom.setDisable(true);
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
@@ -209,8 +213,7 @@ public class MapleGame extends GameApplication {
         		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
-        		//getGameScene().addUINode(rank);
-        		
+//        		getGameScene().addUINode(rank);	
         	}
         });
         Button select_back = getUIFactoryService().newButton("BACK");
@@ -399,9 +402,10 @@ public class MapleGame extends GameApplication {
 	public void placeItem() {
 		canPlace = false;
 		
-		if (chooseItem <= 0)
+		if (chooseItem <= 0) {
 			stage = MapleStage.PLAY;
-		else {
+			playerFinish = 0;
+		} else {
 			pane.setVisible(true);
 		}
 	}
@@ -460,7 +464,7 @@ public class MapleGame extends GameApplication {
 				player.getComponent(PlayerComponent.class).dead();
 				coin.removeFromWorld();
 				deadTomb(player);
-				playerDead(player);
+				playerDead();
 			}
 		});
 		
@@ -469,7 +473,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity hole) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead(player);
+				playerDead();
 				deadTomb(player);
 			}
 		});
@@ -479,7 +483,7 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity surprise) {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
-				playerDead(player);
+				playerDead();
 				deadTomb(player);
 			}
 		});
@@ -504,31 +508,53 @@ public class MapleGame extends GameApplication {
 				player.setOpacity(0);
 				player.getComponent(PlayerComponent.class).dead();
 				deadTomb(player);
-				playerDead(player);
+				playerDead();
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER,  MapleType.ITEM) {
+			@Override
 			public void onCollisionBegin(Entity player, Entity redflag) {
-				//player.getComponent(PlayerComponent.class).win();
-				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(140, 300));
+				if (player.getComponent(PlayerComponent.class).isDead)
+					return;
+				player.getComponent(PlayerComponent.class).win();
+				playerWin(player);
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
+			@Override
 			public void onCollisionBegin(Entity player, Entity teleport1) {
 				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
 			}
 		});
 	}
 	
-	public void playerDead(Entity player) {
+	private int playerFinish;
+	
+	public void nextRound() {
+		playerFinish = 0;
 		
+		for (int i = 0; i < 2; i++) {
+			player[i].getComponent(PlayerComponent.class).restore();
+			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
+//			player[i].setPosition(new Point2D(50, 50));		
+		}
+	}
+	
+	public void playerDead() {
+		if (++playerFinish >= 2) {
+			nextRound();
+		}
 	}
 	
 	public void playerWin(Entity player) {
 		player.getComponent(PlayerComponent.class).restore();
-		
+
+		if (++playerFinish >= 2) {
+			nextRound();
+		}
+		score[player.getComponent(PlayerComponent.class).playerNum]++;
 	}
 	
 	public void deadTomb(Entity player) {

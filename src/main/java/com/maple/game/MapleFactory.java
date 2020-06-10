@@ -117,23 +117,18 @@ public class MapleFactory implements EntityFactory {
 	
 	@Spawns("redflag")
 	public Entity newRedFlag(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
 				.type(MapleType.ITEM)
 				.from(data)
-				.with(physics)
-				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.redflag))
 				.bbox(new HitBox(BoundingShape.box(84, 100)))
+				.with(new CollidableComponent(true))
 				.build();
 	}
 	
 	@Spawns("teleport2")
 	public Entity newTeleport2(SpawnData data) {
-		PhysicsComponent physics = new PhysicsComponent();
-		physics.setBodyType(BodyType.STATIC);
 		
 		return entityBuilder()
 				.type(MapleType.ITEM)
