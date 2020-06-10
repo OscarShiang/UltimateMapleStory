@@ -32,7 +32,7 @@ public class PlayerComponent extends Component {
 	// default
 	public PlayerComponent() {
 		isJump = false;
-		isDead = true;
+		isDead = false;
 		isWin = false;
 		
 		Image image = image("sprites/mushroom_sprite (Custom).png");
@@ -164,7 +164,7 @@ public class PlayerComponent extends Component {
 	}
 	
 	public void restore() {
-		isDead = true;
+		isDead = false;
 		isWin = false;
 	}
 	

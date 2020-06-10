@@ -196,10 +196,9 @@ public class MapleFactory implements EntityFactory {
 		return entityBuilder()
 				.type(MapleType.COIN)
 				.from(data)
-				.with(new PhysicsComponent())
+				.bbox(new HitBox(BoundingShape.box(25, 25)))
 				.with(new ItemComponent(ItemType.coin))
 				.with(new CollidableComponent(true))
-				.bbox(new HitBox(BoundingShape.box(25, 25)))
 				.build();
 	}
 	
