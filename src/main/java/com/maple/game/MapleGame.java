@@ -33,6 +33,7 @@ public class MapleGame extends GameApplication {
 	private boolean realDead;
 	
 	private Entity teleport1;
+	private Entity teleport2;
 	private boolean isGenTeleport;
 	
 	public int chooseItem = 0;
@@ -376,8 +377,11 @@ public class MapleGame extends GameApplication {
 		destination = null;
 		destination = getGameWorld().spawn("redflag", new Point2D(1500, 367));
 
-		isGenTeleport = false;
-		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		teleport1 = null;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(1039, 307));
+		
+		teleport2 = null;
+		teleport2 = getGameWorld().spawn("teleport2", new Point2D(360, 627));
 	}
 	
 	@Override
@@ -448,23 +452,12 @@ public class MapleGame extends GameApplication {
 			}
 		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLATFORM) {
-			public void onCollisionBegin(Entity tomb, Entity platform) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});
 		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.DEADLINE) {
-			public void onCollisionBegin(Entity tomb, Entity deadline) {
-				getDialogService().showMessageBox("You died...");
-			}
-		});
-		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
+		/*getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TOMB, MapleType.PLAYER) {
 			public void onCollisionBegin(Entity tomb, Entity player) {
 				getDialogService().showMessageBox("You died...");
 			}
-		});
+		});*/
 		
 		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
@@ -476,7 +469,7 @@ public class MapleGame extends GameApplication {
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
-				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
 				//teleport();
 			}
 		});
