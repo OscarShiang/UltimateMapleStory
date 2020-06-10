@@ -8,6 +8,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.time.TimerAction;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -19,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import com.almasb.fxgl.entity.Entity;
 import com.maple.player.*;
@@ -81,6 +83,8 @@ public class MapleGame extends GameApplication {
 	Pane pane, rank;
 	
 	VBox menuBox, selectBox;
+	
+	private Button redballoon_button, brick_button, bomb_button, surprise_button, hole_button;
 	
 	private int chosenPlayer;
 	
@@ -238,72 +242,72 @@ public class MapleGame extends GameApplication {
         // initial show up
          getGameScene().addUINode(menuBox);
         
-        Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
-        redballoon.setStyle("-fx-background-color: transparent;");
-        redballoon.setOnAction(e -> {
+        redballoon_button = new Button("", new ImageView(image("item/balloon.png")));
+        redballoon_button.setStyle("-fx-background-color: transparent;");
+        redballoon_button.setOnAction(e -> {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 1;
-        	redballoon.setVisible(false);
+        	redballoon_button.setVisible(false);
         });
-        redballoon.setTranslateX(150);
-        redballoon.setTranslateY(150);
+        redballoon_button.setTranslateX(150);
+        redballoon_button.setTranslateY(150);
         
-        Button hole = new Button("", new ImageView(image("item/hole.png")));
-        hole.setStyle("-fx-background-color: transparent;");
-        hole.setOnAction(e-> {
+        hole_button = new Button("", new ImageView(image("item/hole.png")));
+        hole_button.setStyle("-fx-background-color: transparent;");
+        hole_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 2;
         	hole.setVisible(false);
         });
-        hole.setTranslateX(300);
-        hole.setTranslateY(150);
+        hole_button.setTranslateX(300);
+        hole_button.setTranslateY(150);
         
-        Button surprise = new Button("", new ImageView(image("item/surprise.png")));
-        surprise.setStyle("-fx-background-color: transparent;");
-        surprise.setOnAction(e-> {
+        surprise_button = new Button("", new ImageView(image("item/surprise.png")));
+        surprise_button.setStyle("-fx-background-color: transparent;");
+        surprise_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 3;
-        	surprise.setVisible(false);
+        	surprise_button.setVisible(false);
         });
-        surprise.setTranslateX(600);
-        surprise.setTranslateY(150);
+        surprise_button.setTranslateX(600);
+        surprise_button.setTranslateY(150);
         
-        Button bomb = new Button("", new ImageView(image("item/bomb.png")));
-        bomb.setOnAction(e-> {
+        bomb_button = new Button("", new ImageView(image("item/bomb.png")));
+        bomb_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 4;
-        	bomb.setVisible(false);
+        	bomb_button.setVisible(false);
         });
-        bomb.setTranslateX(150);
-        bomb.setTranslateY(400);
+        bomb_button.setTranslateX(150);
+        bomb_button.setTranslateY(400);
         
-        Button brick = new Button("", new ImageView(image("item/brick.png")));
-        brick.setOnAction(e-> {
+        brick_button = new Button("", new ImageView(image("item/brick.png")));
+        brick_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
         	item = 5;
-        	brick.setVisible(false);
+        	brick_button.setVisible(false);
         });
-        brick.setTranslateX(300);
-        brick.setTranslateY(400);
+        brick_button.setTranslateX(300);
+        brick_button.setTranslateY(400);
         
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
         pane.setTranslateX(getAppWidth()/2 - 520);
         pane.setTranslateY(getAppHeight()/2 - 350);
         pane.setPrefSize(1040, 700);
-        pane.getChildren().addAll(redballoon);
-        pane.getChildren().addAll(hole);
-        pane.getChildren().addAll(surprise);
+        pane.getChildren().addAll(redballoon_button);
+        pane.getChildren().addAll(hole_button);
+        pane.getChildren().addAll(surprise_button);
         
         //getGameScene().addUINodes(pane);
         
-        pane.getChildren().addAll(bomb);
-        pane.getChildren().addAll(brick);
+        pane.getChildren().addAll(bomb_button);
+        pane.getChildren().addAll(brick_button);
 //        getGameScene().addUINodes(pane);
         
 
@@ -385,6 +389,7 @@ public class MapleGame extends GameApplication {
 		canPlace = false;
 		
 		if (chooseItem <= 0) {
+			System.out.println(chooseItem);
 			stage = MapleStage.PLAY;
 			playerFinish = 0;
 		} else {
@@ -520,9 +525,30 @@ public class MapleGame extends GameApplication {
 		for (int i = 0; i < 2; i++) {
 			player[i].getComponent(PlayerComponent.class).restore();
 			player[i].getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
-//			player[i].setPosition(new Point2D(50, 50));
-			
+			player[i].setOpacity(1);
 		}
+		
+		if (tomb != null) {
+			getGameWorld().removeEntity(tomb);
+		}
+		
+		getGameScene().addUINode(rank);
+		stage = MapleStage.RESULT;
+		
+		runOnce(() ->{
+			getGameScene().removeUINode(rank);
+			pane.setVisible(true);
+			stage = MapleStage.SELECT;
+			
+			// reset the mechanisms
+			redballoon_button.setVisible(true);
+	        brick_button.setVisible(true);
+	        bomb_button.setVisible(true);
+	        surprise_button.setVisible(true);
+	        hole_button.setVisible(true);
+			
+			chooseItem = 2;
+		}, Duration.seconds(3));
 	}
 	
 	public void playerDead() {

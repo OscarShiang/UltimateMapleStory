@@ -76,7 +76,6 @@ public class GroundComponent extends Component {
 			game.brick.getComponent(PhysicsComponent.class).overwritePosition(input.getMousePositionWorld());
     	}
     	
-    	System.out.println(game.chooseItem);
     	game.chooseItem--;
     	game.placeItem();
     }
