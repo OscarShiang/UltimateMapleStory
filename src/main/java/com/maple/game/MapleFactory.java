@@ -13,6 +13,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyDef;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 
+
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -67,6 +68,7 @@ public class MapleFactory implements EntityFactory {
 		PhysicsComponent physics = new PhysicsComponent();
 		physics.setBodyType(BodyType.DYNAMIC);
 		
+		
         return entityBuilder()
                 .type(MapleType.PLAYER)
                 .from(data)
@@ -86,7 +88,7 @@ public class MapleFactory implements EntityFactory {
                 .type(MapleType.PLAYER)
                 .from(data)
                 .with(physics)
-                .bbox(new HitBox(BoundingShape.box(100, 100)))
+                .bbox(new HitBox(BoundingShape.box(80, 80)))
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
                 .build();
@@ -213,7 +215,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.hole))
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.bbox(new HitBox(BoundingShape.box(25, 50)))
 				.build();
 	}
 	
@@ -226,7 +228,7 @@ public class MapleFactory implements EntityFactory {
 				.with(new PhysicsComponent())
 				.with(new CollidableComponent(true))
 				.with(new ItemComponent(ItemType.brick))
-				.bbox(new HitBox(BoundingShape.box(70, 140)))
+				.bbox(new HitBox(BoundingShape.box(110, 66)))
 				.build();
 	}
 	

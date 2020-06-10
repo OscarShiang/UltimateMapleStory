@@ -27,7 +27,6 @@ public class MapleGame extends GameApplication {
 	
 	private Entity[] player;
 
-	public Entity yeti, mushroom, slime, pig;
 	
 	private Entity destination;
 	private Entity tomb;
@@ -41,6 +40,7 @@ public class MapleGame extends GameApplication {
 	public Entity balloon;
     public Entity hole;
     public Entity surprise;
+    public Entity brick;
     
     private final int PLAYER_NUM = 2;
 	
@@ -154,7 +154,6 @@ public class MapleGame extends GameApplication {
         
         // initial show up
          getGameScene().addUINode(menuBox);
-
         
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
         redballoon.setStyle("-fx-background-color: transparent;");
@@ -252,9 +251,8 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
-					return;
-				
+				if (stage == MapleStage.PLAY)
+					return;		
 				player[0].getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.A);
@@ -262,7 +260,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
+				if (stage == MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).right();
 			}
@@ -271,7 +269,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump_P1") {
 			@Override
 			protected void onAction() {
-				if (stage != MapleStage.PLAY)
+				if (stage == MapleStage.PLAY)
 					return;
 				player[0].getComponent(PlayerComponent.class).jump();
 			}
@@ -286,7 +284,7 @@ public class MapleGame extends GameApplication {
 				player[1].getComponent(PlayerComponent.class).left();
 			}
 		}, KeyCode.LEFT);
-		
+
 		getInput().addAction(new UserAction("right_P2") {
 			@Override
 			protected void onAction() {
@@ -326,10 +324,34 @@ public class MapleGame extends GameApplication {
 		
 		destination = null;
 		destination = getGameWorld().spawn("redflag", new Point2D(1435, 413));
+
+		/*balloon = null;
+		balloon = getGameWorld().spawn("balloon");
+		balloon.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 413));
+		*/
+		/*isGenTeleport = false;
+		teleport1 = null;
+		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
+		teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(470, 380));*/
 		
+//		player = null;
+//		player = getGameWorld().spawn("player", 600, 10);
+//		Viewport viewport = getGameScene().getViewport();
+//
+//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
+//
+//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+//        viewport.setLazy(true);
+
 		isGenTeleport = false;
 		teleport1 = getGameWorld().spawn("teleport1", new Point2D(470, 380));
 	}
+	
+	@Override
+	protected void onPreInit() {
+        getSettings().setGlobalMusicVolume(0.5);
+        loopBGM("maplestory.wav");
+    }
 	
 	@Override
 	protected void initPhysics() {
@@ -410,6 +432,14 @@ public class MapleGame extends GameApplication {
 				getDialogService().showMessageBox("You died...");
 			}
 		});
+		
+		/*etPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.TMPPLAYER, MapleType.TELEPORT1) {
+			public void onCollisionBegin(Entity tmpPlayer, Entity teleport1) {
+				tmpPlayer.setPosition(new Point2D(100, 100));
+				//tmpPlayer.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
+				//teleport();
+			}
+		});*/
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
