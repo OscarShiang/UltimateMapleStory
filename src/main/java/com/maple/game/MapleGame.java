@@ -485,15 +485,12 @@ public class MapleGame extends GameApplication {
 			public void onCollisionBegin(Entity player, Entity redflag) {
 				player.getComponent(PlayerComponent.class).win();
 				playerWin(player);
-				getDialogService().showMessageBox("Finish!");
-				
 			}
 		});
 		
 		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.PLAYER, MapleType.TELEPORT1) {
 			public void onCollisionBegin(Entity player, Entity teleport1) {
 				player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(360, 627));
-				//teleport();
 			}
 		});
 	}
@@ -514,7 +511,6 @@ public class MapleGame extends GameApplication {
 		}
 	}
 
-	
 	public static void main(String[] args) {
 		launch(args);
 	}
