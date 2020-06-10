@@ -83,6 +83,16 @@ public class MapleGame extends GameApplication {
 	
 	private int chosenPlayer;
 	
+    Texture red;
+    Texture green;
+    Texture blue;    
+    Texture orange;
+
+    Texture red_icon;
+    Texture green_icon;
+    Texture blue_icon;           
+    Texture orange_icon;
+	
 	protected void initUI() {
 		player = new Entity[PLAYER_NUM];
 		
@@ -120,26 +130,27 @@ public class MapleGame extends GameApplication {
         rank.setPrefSize(700, 500);
         
         int i = 1;
-        Texture red  = new Texture(image("item/red.png"));
-        Texture green  = new Texture(image("item/green.png"));
-        Texture blue  = new Texture(image("item/blue.png"));    
-        Texture orange  = new Texture(image("item/orange.png"));
- 
-        Texture red_icon  = new Texture(image("item/rank_red.png"));
-        Texture green_icon  = new Texture(image("item/rank_green.png"));
-        Texture blue_icon  = new Texture(image("item/rank_blue.png"));           
-        Texture orange_icon  = new Texture(image("item/rank_orange.png"));
-        
+
+        red  = new Texture(image("item/red.png"));
+        green  = new Texture(image("item/green.png"));
+        blue  = new Texture(image("item/blue.png"));    
+        orange  = new Texture(image("item/orange.png"));
+
+        red_icon  = new Texture(image("item/rank_red.png"));
+        green_icon  = new Texture(image("item/rank_green.png"));
+        blue_icon  = new Texture(image("item/rank_blue.png"));           
+        orange_icon  = new Texture(image("item/rank_orange.png"));
         
         
         // setting up select box
         Button select_yeti = getUIFactoryService().newButton("Yeti");
         select_yeti.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "yeti";
-            green.setVisible(false);        
+            //green.setVisible(false);
+        	//green.setScaleX(10);
             green_icon.setTranslateY(178 + 80 * chosenPlayer);
-            green.setTranslateX(108 + 12 * 1 + green.getWidth()/2);
-            green.setTranslateY(195 + 80 * 1 + 80 * chosenPlayer);
+            //green.setTranslateX(108 + 10 * score[0] + green.getWidth()/2);
+            //green.setTranslateY(195 + 80 * chosenPlayer);
     		rank.getChildren().addAll( green_icon, green);
         	player[chosenPlayer] = getGameWorld().spawn("yeti");
         	select_yeti.setDisable(true);
@@ -156,10 +167,11 @@ public class MapleGame extends GameApplication {
         Button select_pig = getUIFactoryService().newButton("Pig");
         select_pig.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "pig";
-            orange.setVisible(false);
-            orange_icon.setTranslateY(178 + 80 * chosenPlayer);
-            orange.setTranslateX(107 + 12 * 1 + orange.getWidth()/2);
-            orange.setTranslateY(194 + 80 * 1 + 80 * chosenPlayer);
+            //orange.setVisible(false);
+        	//orange.setScaleX(20);
+        	orange_icon.setTranslateY(178 + 80 * chosenPlayer);
+            //orange.setTranslateX(107 + 15 * score[1] + orange.getWidth()/2);
+            //orange.setTranslateY(194 + 80 * chosenPlayer);
     		rank.getChildren().addAll( orange_icon, orange);
         	player[chosenPlayer] = getGameWorld().spawn("pig");
         	select_pig.setDisable(true);
@@ -176,10 +188,11 @@ public class MapleGame extends GameApplication {
         Button select_slime = getUIFactoryService().newButton("Slime");
         select_slime.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "slime";
-            blue.setVisible(false); 
+            //blue.setVisible(false); 
+        	//blue.setScaleX(20);
             blue_icon.setTranslateY(178 + 80 * chosenPlayer); 
-            blue.setTranslateX(108 + 12 * 1 + blue.getWidth()/2);
-            blue.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
+            //blue.setTranslateX(108 + 12 * 1 + 230 + blue.getWidth()/2);
+            //blue.setTranslateY(192 + 80 * chosenPlayer);
     		rank.getChildren().addAll( blue_icon, blue);
         	player[chosenPlayer] = getGameWorld().spawn("slime");
         	select_slime.setDisable(true);
@@ -196,10 +209,11 @@ public class MapleGame extends GameApplication {
         Button select_mushroom = getUIFactoryService().newButton("Mushroom");
         select_mushroom.setOnAction(e -> {
         	choosePlayer[chosenPlayer] = "mushroom";
-            red.setVisible(false);
+            //red.setVisible(false);
+        	//red.setScaleX(10);
             red_icon.setTranslateY(178 + 80 * chosenPlayer);
-   		 	red.setTranslateX(108 + 12 * 1 + red.getWidth()/2);
-	     	red.setTranslateY(192 + 80 * 1 + 80 * chosenPlayer);
+   		 	//red.setTranslateX(108 + 12 * 1 + 230 + red.getWidth()/2);
+	     	//red.setTranslateY(192 + 80 * chosenPlayer);
 	   		rank.getChildren().addAll( red_icon, red);
         	player[chosenPlayer] = getGameWorld().spawn("mushroom");
         	select_mushroom.setDisable(true);
@@ -302,9 +316,9 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(brick);
 //        getGameScene().addUINodes(pane);
         
-
-        
         scoreText = new Text[2];
+        //scoreText[0] = new Text("10");
+        //scoreText[1] = new Text("20");
         for(int j = 0; j < 2; j++) {
             scoreText[j] = new Text("0");
         	scoreText[j].setTranslateX(640);
@@ -523,6 +537,31 @@ public class MapleGame extends GameApplication {
 	public void addPoint() {
 		for(int j = 0; j < 2; j++) {
 			scoreText[j].setText(Integer.toString(score[j]));
+			
+			/*if(score[j] > 0) {
+				switch(choosePlayer[j]) {
+				case "yeti" :
+					green.setVisible(true);
+					green.setScaleX(score[j]);
+					green.setTranslateX(108 + 12 * score[j] + green.getWidth()/2);
+					break;
+				case "pig" :
+					orange.setVisible(true);
+					orange.setScaleX(score[j]);
+					orange.setTranslateX(108 + 12 * score[j] + orange.getWidth()/2);
+					break;
+				case "mushroom" :
+					red.setVisible(true);
+					red.setScaleX(score[j]);
+		   		 	red.setTranslateX(108 + 12 * score[j] + red.getWidth()/2);
+					break;
+				case "slime" :
+					blue.setVisible(true);
+					blue.setScaleX(score[j]);
+					blue.setTranslateX(108 + 12 * score[j] + blue.getWidth()/2);
+					break;
+				}
+			}*/
 		}
 	}
 	
