@@ -825,7 +825,6 @@
   <object id="18" type="platform" x="1363" y="600" width="10" height="33"/>
   <object id="19" type="platform" x="1364" y="675" width="9" height="18"/>
   <object id="20" type="platform" x="1363" y="721" width="10" height="33"/>
-  <object id="21" type="coin" x="1214" y="631" width="25" height="25"/>
   <object id="22" type="platform" x="733" y="225" width="210" height="49"/>
   <object id="23" type="platform" x="701" y="244" width="31" height="15"/>
   <object id="24" type="platform" x="723" y="259" width="9" height="14"/>
@@ -842,7 +841,6 @@
   <object id="35" type="wall" x="0" y="0" width="1" height="800"/>
   <object id="36" type="wall" x="0" y="0" width="1600" height="1"/>
   <object id="37" type="wall" x="1599" y="0" width="1" height="796"/>
-  <object id="38" type="coin" x="617" y="670" width="25" height="25"/>
   <object id="40" type="platform" x="1028" y="405" width="193" height="16"/>
   <object id="41" type="platform" x="1035" y="388" width="151" height="17"/>
  </objectgroup>
