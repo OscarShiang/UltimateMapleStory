@@ -89,6 +89,8 @@ public class MapleGame extends GameApplication {
 			score[i] = 0;
 		
 		isHost = false;
+		
+		System.setProperty("java.net.preferIPv4Stack", "true");
 	}
 	
 
@@ -100,6 +102,8 @@ public class MapleGame extends GameApplication {
 	private Client client;
 	
 	VBox menuBox, hostBox, clientBox, selectBox;
+	
+	TimerAction action;
 	
 	protected void initUI() {
 		// setting up menuBox
@@ -120,6 +124,12 @@ public class MapleGame extends GameApplication {
 				System.out.println("[SERVER] can not create a server");
 				e1.printStackTrace();
 			}
+        	
+        	action = run(() -> {
+				if (stage != MapleStage.SELECT)
+					return;
+				selectCharacter();
+			}, Duration.millis(300));
        	});
         
 		Button join = getUIFactoryService().newButton("JOIN");
@@ -167,7 +177,13 @@ public class MapleGame extends GameApplication {
 					client = new Client(this, ip.getText(), Integer.parseInt(port.getText()));
 					Thread thr = new Thread(client);
 					thr.start();
-				} catch (NumberFormatException | IOException e1) {
+					
+					action = run(() -> {
+						if (stage != MapleStage.SELECT)
+							return;
+						selectCharacter();
+					}, Duration.millis(300));
+				} catch (NumberFormatException e1) {
 					getDialogService().showMessageBox("Connection failed");
 					e1.printStackTrace();
 					fail = true;
@@ -257,7 +273,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
-        // getGameScene().addUINode(menuBox);
+         getGameScene().addUINode(menuBox);
 
         
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
@@ -298,7 +314,7 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
-        getGameScene().addUINodes(pane);
+//        getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank.png"), null, null, null, null)));
@@ -331,7 +347,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("left") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).left();
 			}
@@ -340,7 +356,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("right") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).right();
 			}
@@ -349,7 +365,7 @@ public class MapleGame extends GameApplication {
 		getInput().addAction(new UserAction("jump") {
 			@Override
 			protected void onAction() {
-				if (stage == MapleStage.PLAY)
+				if (stage != MapleStage.PLAY)
 					return;
 				player.getComponent(PlayerComponent.class).jump();
 			}
@@ -371,6 +387,7 @@ public class MapleGame extends GameApplication {
 	}
 	
 	public void selectCharacter() {
+		action.expire();
 		stage = MapleStage.SELECT;
 		if (isHost)
 			getGameScene().removeUINode(hostBox);
@@ -387,6 +404,15 @@ public class MapleGame extends GameApplication {
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         viewport.setLazy(true);
         
+        run( () -> {
+        	if (stage != MapleStage.PLAY)
+        		return;
+        	if (isHost)
+        		server.updateAll();
+        	else
+        		client.sendClientData();
+        }, Duration.millis(500));
+        
         stage = MapleStage.PLAY;
 	}
 	
@@ -401,15 +427,6 @@ public class MapleGame extends GameApplication {
 		destination = getGameWorld().spawn("redflag");
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1435, 413));
         
-        run( () -> {
-        	if (stage != MapleStage.PLAY)
-        		return;
-        	if (isHost)
-        		server.updateAll();
-        	else
-        		client.sendClientData();
-        }, Duration.millis(500));
-        
 		destination.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(1500, 367));
 		
 		/*balloon = null;
@@ -422,15 +439,15 @@ public class MapleGame extends GameApplication {
 		//teleport1.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(435, 450));
 		
 		
-		player = null;
-		player = getGameWorld().spawn("player", 250, 400);
-		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
-		Viewport viewport = getGameScene().getViewport();
-
-		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-
-		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-        viewport.setLazy(true);
+//		player = null;
+//		player = getGameWorld().spawn("player", 250, 400);
+//		player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(250, 400));
+//		Viewport viewport = getGameScene().getViewport();
+//
+//		viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
+//
+//		viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+//        viewport.setLazy(true);
 	}
 	
 	@Override

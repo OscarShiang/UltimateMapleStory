@@ -13,7 +13,7 @@ public class ServerWorker implements Runnable {
 	
 	private Socket socket;
 	
-	private ObjectInputStream input;
+	private ObjectInputStream clientInput;
 	private ObjectOutputStream buf;
 	
 	private boolean stop;
@@ -25,67 +25,66 @@ public class ServerWorker implements Runnable {
 	 * Setting up a server worker
 	 * @param socket set the socket
 	 * @param clientNum determine the client number to use for recording score
+	 * @throws IOException 
 	 */
-	public ServerWorker(MapleGame game, Socket socket, int clientNum) {
+	public ServerWorker(MapleGame game, Socket socket, int clientNum) throws IOException {
 		this.game = game;
 		this.socket = socket;
 		this.clientNum = clientNum;
 		stop = false;
 		scores = new int[4];
+		
+		socket.setKeepAlive(true);
+		buf = new ObjectOutputStream(socket.getOutputStream());
+		clientInput = new ObjectInputStream(socket.getInputStream());
 	}
 	
 	public void run() {
-		try  {
+
+		System.out.println("[SERVER] receive connection");
+		
+		try {
 			System.out.println("[SERVER] receive connection");
 			
-			try {
-			
-			input = new ObjectInputStream(socket.getInputStream());
-			buf = new ObjectOutputStream(socket.getOutputStream());
-			
-				while (!Thread.interrupted() && !stop) {
+			while (!Thread.interrupted() && !stop) {
+				
+					ClientPacket clientIn = (ClientPacket)clientInput.readObject();
 					
-						ClientPacket clientIn = (ClientPacket)input.readObject();
-						
-						// setting player entity
-						switch(clientIn.type) {
-						case YETI:
-							game.setYeti(clientIn.player);
-							break;
-						case SLIME:
-							game.setSlime(clientIn.player);
-							break;
-						case PIG:
-							game.setPig(clientIn.player);
-							break;
-						case MUSHROOM:
-							game.setMushroom(clientIn.player);
-							break;
-						}
-						
-						scores = clientIn.score;
-						
-						// setting up score
-						game.setScore(scores[clientNum], clientNum);
-						
+					// setting player entity
+					switch(clientIn.type) {
+					case YETI:
+						game.setYeti(clientIn.player);
+						break;
+					case SLIME:
+						game.setSlime(clientIn.player);
+						break;
+					case PIG:
+						game.setPig(clientIn.player);
+						break;
+					case MUSHROOM:
+						game.setMushroom(clientIn.player);
+						break;
+					}
 					
-				}
-			} catch (ClassNotFoundException e) {
-				System.out.println("[SERVER] worker: object read failed");
-				e.printStackTrace();
-			} catch (Exception e) {
-				System.out.println("[SERVER] worker: object read failed");
-				e.printStackTrace();
+					scores = clientIn.score;
+					
+					// setting up score
+					game.setScore(scores[clientNum], clientNum);
+					
+				
 			}
 			
 			System.out.println("[SERVER] worker: shutdown");
 			
 			socket.close();
-			input.close();
+			clientInput.close();
 			buf.close();
-			
-		} catch (IOException e) {
-			System.out.println("[SERVER] woker: connection failed");
+		} catch (IllegalStateException e) {
+			System.out.println("Test");
+			e.printStackTrace();
+
+		} catch (Exception e) {
+			System.out.println("[SERVER] worker: object read failed");
 			e.printStackTrace();
 		}
 	}

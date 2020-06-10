@@ -22,7 +22,7 @@ public class Client implements Runnable {
 	
 	private ServerPacket packet;
 	
-	public Client(MapleGame game, String ip, int port) throws UnknownHostException, IOException {
+	public Client(MapleGame game, String ip, int port) {
 		this.game = game;
 		this.ip = ip;
 		this.port = port;
@@ -43,9 +43,10 @@ public class Client implements Runnable {
 		try {
 			System.out.println("[CLIENT] try to make connection");
 			socket = new Socket(ip, port);
+			socket.setKeepAlive(true);
 			System.out.println("[CLIENT] connention accepted");
 			
-			game.selectCharacter();
+			game.setStage(MapleStage.SELECT);
 			
 			input = new ObjectInputStream(socket.getInputStream());
 			buf = new ObjectOutputStream(socket.getOutputStream());
