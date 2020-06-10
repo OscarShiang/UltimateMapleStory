@@ -163,7 +163,7 @@ public class MapleGame extends GameApplication {
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
-//        		getGameScene().addUINodes(pane);
+        		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
 //        		getGameScene().addUINode(rank);
@@ -292,6 +292,7 @@ public class MapleGame extends GameApplication {
         surprise_button.setTranslateY(150);
         
         bomb_button = new Button("", new ImageView(image("item/bomb.png")));
+        bomb_button.setStyle("-fx-background-color: transparent;");
         bomb_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
@@ -302,6 +303,7 @@ public class MapleGame extends GameApplication {
         bomb_button.setTranslateY(400);
         
         brick_button = new Button("", new ImageView(image("item/brick.png")));
+        brick_button.setStyle("-fx-background-color: transparent;");
         brick_button.setOnAction(e-> {
         	canPlace = true;
         	pane.setVisible(false);
@@ -563,6 +565,8 @@ public class MapleGame extends GameApplication {
 	        surprise_button.setVisible(true);
 	        hole_button.setVisible(true);
 			
+	        addPoint();
+	        
 			chooseItem = 2;
 		}, Duration.seconds(3));
 	}
