@@ -145,7 +145,7 @@ public class MapleGame extends GameApplication {
         	if (++chosenPlayer >= 2) {
         		stage = MapleStage.SELECT;
         		getGameScene().removeUINode(selectBox);
-        		getGameScene().addUINodes(pane);
+//        		getGameScene().addUINodes(pane);
         		chooseItem = 2;
         		
         		getGameScene().addUINode(rank);
