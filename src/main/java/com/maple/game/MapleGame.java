@@ -286,7 +286,7 @@ public class MapleGame extends GameApplication {
         );
         
         // initial show up
-         getGameScene().addUINode(menuBox);
+//         getGameScene().addUINode(menuBox);
 
         
         Button redballoon = new Button("", new ImageView(image("item/balloon.png")));
@@ -319,6 +319,26 @@ public class MapleGame extends GameApplication {
         surprise.setTranslateX(600);
         surprise.setTranslateY(150);
         
+        Button bomb = new Button("", new ImageView(image("item/bomb.png")));
+        bomb.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 4;
+        });
+        bomb.setTranslateX(150);
+        bomb.setTranslateY(400);
+        
+        Button brick = new Button("", new ImageView(image("item/brick.png")));
+        brick.setOnAction(e-> {
+        	pane.setVisible(false);
+        	player.getComponent(PlayerComponent.class).start();
+        	isChoose = true;
+        	item = 5;
+        });
+        brick.setTranslateX(300);
+        brick.setTranslateY(400);
+        
         pane = new Pane();
         pane.setBackground(new Background(new BackgroundImage(image("background/book.png"), null, null, null, null)));
         pane.setTranslateX(getAppWidth()/2 - 520);
@@ -327,7 +347,9 @@ public class MapleGame extends GameApplication {
         pane.getChildren().addAll(redballoon);
         pane.getChildren().addAll(hole);
         pane.getChildren().addAll(surprise);
-//        getGameScene().addUINodes(pane);
+        pane.getChildren().addAll(bomb);
+        pane.getChildren().addAll(brick);
+        getGameScene().addUINodes(pane);
         
         rank = new Pane();
         rank.setBackground(new Background(new BackgroundImage(image("background/rank.png"), null, null, null, null)));
@@ -547,13 +569,6 @@ public class MapleGame extends GameApplication {
 					player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(100, 100));
 				}
 				//teleport();
-			}
-		});
-		
-		getPhysicsWorld().addCollisionHandler(new CollisionHandler(MapleType.BOMB, MapleType.TRAP) {
-			@Override
-			public void onCollisionBegin(Entity hole, Entity surprise) {
-				surprise.removeFromWorld();
 			}
 		});
 	}

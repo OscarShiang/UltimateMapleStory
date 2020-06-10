@@ -54,6 +54,10 @@ public class ItemComponent extends Component {
 				image = image("item/prianha_sprite.png");
 				idle = new AnimationChannel(image, 12, 255, 119, Duration.seconds(2), 0, 11);
 				break;
+			case brick:
+				image = image("item/brick.png");
+				idle = new AnimationChannel(image, 1, 110, 36, Duration.seconds(1), 0, 0);
+				break;
 		}
 		
 		texture = new AnimatedTexture(idle);
