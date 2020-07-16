@@ -1,4 +1,4 @@
-# Ultimate Maplestroy 
+# Ultimate Maplestory 
 ![](gamescreen/menu.png)
 
 ## Introduction
@@ -59,5 +59,5 @@ If either a player first get 3 score, then the game will be overed.
 ![](gamescreen/score.png)
 
 ## TODO
-- the bomb may cause null value exception when trying to remove items
-- add networking function to the game
+- Null value exception may occur when we trying to use bombs to remove items
+- Add networking features to support playing across Internet
